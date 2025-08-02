@@ -1,5 +1,5 @@
 {
-  "name": "blog-monorepo",
+  "name": "blog",
   "private": true,
   "workspaces": [
     "apps/*",
