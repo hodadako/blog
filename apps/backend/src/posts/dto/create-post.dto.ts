@@ -10,11 +10,6 @@ export class CreatePostDto {
 
   @IsOptional()
   @IsString()
-  @Length(0, 500)
-  excerpt?: string;
-
-  @IsOptional()
-  @IsString()
   @Length(0, 100)
   author?: string;
 
