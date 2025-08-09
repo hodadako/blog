@@ -12,12 +12,6 @@ export class Post {
   @Property({ type: 'text' })
   content!: string;
 
-  @Property({ length: 500, nullable: true })
-  excerpt?: string;
-
-  @Property({ length: 100, nullable: true })
-  author?: string;
-
   @Property({ nullable: true })
   @Index()
   publishedAt?: Date;
