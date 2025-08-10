@@ -12,10 +12,6 @@ export class Post {
   @Property({ type: 'text' })
   content!: string;
 
-  @Property({ nullable: true })
-  @Index()
-  publishedAt?: Date;
-
   @Property()
   createdAt: Date = new Date();
 

@@ -3,6 +3,6 @@ import { EntityRepository } from '@mikro-orm/core';
 import { Post } from './entities/post.entity';
 
 @Injectable()
-export class PostsService {
+export class PostService {
   constructor(private readonly em: EntityRepository<Post>) {}
 }
