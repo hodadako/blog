@@ -1,4 +1,5 @@
-import { Entity, PrimaryKey, Property, Index } from '@mikro-orm/core';
+import {Entity, PrimaryKey, Property, Index, OneToMany, Collection} from '@mikro-orm/core';
+import {PostTag} from "./post-tag.entity";
 
 @Entity({ tableName: 'posts' })
 export class Post {
@@ -24,6 +25,6 @@ export class Post {
   @Property({ length: 255, nullable: true })
   slug?: string;
 
-  @Property({ type: 'json', nullable: true })
-  tags?: string[];
+  @OneToMany(() => PostTag, pt => pt.post)
+  tags = new Collection<PostTag>(this);
 }
