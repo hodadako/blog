@@ -30,4 +30,4 @@ export class Post {
 
   @Property({ type: 'json', nullable: true })
   tags?: string[];
-} 
+}
