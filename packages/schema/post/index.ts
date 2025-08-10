@@ -1,2 +1,3 @@
 export {postSchema} from './post.schema';
-export {}
+export {CreatePostRequest, UpdatePostRequest} from './post.request';
+export {GetPostResponse, GetPostListResponse} from './post.response';

@@ -10,6 +10,9 @@ export class Post {
   @Index()
   title!: string;
 
+  @Property()
+  description!: string;
+
   @Property({ type: 'text' })
   content!: string;
 

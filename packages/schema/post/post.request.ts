@@ -14,5 +14,5 @@ export const updatePostSchema = postSchema.omit({
     isPublished: true,
 })
 
-export type CreatePostSchema = z.infer<typeof createPostSchema>;
-export type UpdatePostSchema = z.infer<typeof updatePostSchema>;
+export type CreatePostRequest = z.infer<typeof createPostSchema>;
+export type UpdatePostRequest = z.infer<typeof updatePostSchema>;
