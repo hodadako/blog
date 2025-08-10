@@ -3,5 +3,5 @@ import { PostService } from './post.service';
 
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postsService: PostService) {}
+  constructor(private readonly postService: PostService) {}
 }
