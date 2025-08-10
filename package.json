@@ -16,5 +16,9 @@
     "eslint": "^9.32.0",
     "turbo": "^2.5.5",
     "typescript": "^5.8.3"
-  }
+  },
+  "dependencies": {
+    "zod": "^4.0.17"
+  },
+  "packageManager": "npm@10.2.4"
 }
