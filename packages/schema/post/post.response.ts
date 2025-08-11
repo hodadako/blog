@@ -15,7 +15,6 @@ export const getPostListSchema = getPostSchema.pick({
     id: true,
     title: true,
     description: true,
-    content: true,
     createdAt: true,
     updatedAt: true,
     slug: true,
