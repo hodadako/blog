@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths" : {
-      "@schema/*" : ["packages/schema/*"]
+      "#schema/*" : ["./packages/schema/post/post.request"]
     }
   }
 }
