@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths" : {
+      "@schema/*" : ["packages/schema/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}
