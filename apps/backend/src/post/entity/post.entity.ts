@@ -3,20 +3,15 @@ import {
     PrimaryKey,
     Property,
     OneToMany,
-    Collection,
+    Collection
 } from '@mikro-orm/core';
 import {PostTag} from './post-tag.entity';
+import {BaseEntity} from "../../base.entity";
 
 @Entity({tableName: 'posts'})
-export class Post {
+export class Post extends BaseEntity{
     @PrimaryKey()
     id!: number;
-
-    @Property()
-    createdAt: Date = new Date();
-
-    @Property({onUpdate: () => new Date()})
-    updatedAt: Date = new Date();
 
     @Property({default: false})
     isPublished: boolean = false;
