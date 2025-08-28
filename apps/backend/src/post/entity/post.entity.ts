@@ -7,6 +7,7 @@ import {
 } from '@mikro-orm/core';
 import {PostTag} from './post-tag.entity';
 import {BaseEntity} from "../../base.entity";
+import {PostContent} from "./post-content.entity";
 
 @Entity({tableName: 'posts'})
 export class Post extends BaseEntity{
@@ -18,6 +19,9 @@ export class Post extends BaseEntity{
 
     @Property({length: 255, nullable: true})
     slug?: string;
+
+    @OneToMany(() => PostContent, (pc) => pc.post)
+    contents = new Collection<PostContent>(this);
 
     @OneToMany(() => PostTag, (pt) => pt.post)
     tags = new Collection<PostTag>(this);
