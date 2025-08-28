@@ -1,9 +1,9 @@
-import {Property} from "@mikro-orm/core";
+import {Opt, Property} from "@mikro-orm/core";
 
 export abstract class BaseEntity {
     @Property()
-    createdAt: Date = new Date();
+    createdAt: Date & Opt = new Date();
 
     @Property({onUpdate: () => new Date()})
-    updatedAt: Date = new Date();
+    updatedAt: Date & Opt = new Date();
 }
