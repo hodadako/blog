@@ -1,6 +1,7 @@
 import {Entity, Enum, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
 import {BaseEntity} from "../../base.entity";
 import {Post} from "./post.entity";
+import {PostLanguageType} from "./post-content.enum";
 
 @Entity({tableName: 'post_contents'})
 export class PostContent extends BaseEntity {
@@ -17,6 +18,6 @@ export class PostContent extends BaseEntity {
     post!: Post;
 
     @Enum()
-    type!: string;
+    languageType!: PostLanguageType;
 }
 
