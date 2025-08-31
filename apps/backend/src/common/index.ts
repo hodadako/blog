@@ -1,3 +1,3 @@
-export {BaseEntity} from './entity/base.entity';
-export {Language} from './entity/language.enum';
-export {Translatable} from './entity/translatable.interface';
+export {BaseEntity} from './domain/base.entity';
+export {Language} from './domain/language.enum';
+export {Translatable} from './domain/translatable.interface';
