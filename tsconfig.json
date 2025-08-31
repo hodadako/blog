@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths" : {
-      "@schema/*" : ["packages/schema/*"]
+      "@schema/*" : ["packages/schema/*"],
+      "@backend/*" : ["apps/backend/src/*"],
     }
   },
   "exclude": ["node_modules", "dist"]
