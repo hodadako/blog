@@ -1,4 +1,4 @@
-export enum PostLanguageType {
+export enum Language {
     EN = 'English',
     KR = 'Korean',
     JP = 'Japanese'
