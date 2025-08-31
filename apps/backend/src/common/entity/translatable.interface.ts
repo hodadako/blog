@@ -1,4 +1,4 @@
-import {Language} from "./language.enum";
+import {Language} from "@backend/common";
 
 export interface Translatable {
   language: Language;
