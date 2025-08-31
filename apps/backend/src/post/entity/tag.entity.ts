@@ -5,8 +5,8 @@ import {
     PrimaryKey,
     Property,
 } from '@mikro-orm/core';
-import {PostTag} from './post-tag.entity';
-import {BaseEntity} from "../../base.entity";
+import {BaseEntity} from "@backend/common";
+import {PostTag} from "@backend/post";
 
 @Entity({tableName: 'tags'})
 export class Tag extends BaseEntity {

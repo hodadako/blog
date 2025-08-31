@@ -1,10 +1,9 @@
 import {Entity, Enum, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
-import {BaseEntity} from "../../base.entity";
-import {Post} from "./post.entity";
-import {PostLanguageType} from "./post-content.enum";
+import {BaseEntity, Language, Translatable} from "@backend/common";
+import {Post} from "@backend/post";
 
 @Entity({tableName: 'post_contents'})
-export class PostContent extends BaseEntity {
+export class PostContent extends BaseEntity implements Translatable {
     @PrimaryKey()
     id!: number;
 
@@ -14,10 +13,13 @@ export class PostContent extends BaseEntity {
     @Property({type: 'text'})
     content!: string;
 
+    @Property({length: 255, nullable: true})
+    slug?: string;
+
     @ManyToOne(() => Post)
     post!: Post;
 
-    @Enum()
-    languageType!: PostLanguageType;
+    @Enum(() => Language)
+    language!: Language;
 }
 

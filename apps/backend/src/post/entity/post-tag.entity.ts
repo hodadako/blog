@@ -1,7 +1,6 @@
 import {Entity, ManyToOne, PrimaryKey} from '@mikro-orm/core';
-import {Post} from './post.entity';
-import {Tag} from './tag.entity';
-import {BaseEntity} from "../../base.entity";
+import {BaseEntity} from "@backend/common";
+import {Post, Tag} from "@backend/post";
 
 @Entity({tableName: 'post_tags'})
 export class PostTag extends BaseEntity {

@@ -5,20 +5,16 @@ import {
     OneToMany,
     Collection
 } from '@mikro-orm/core';
-import {PostTag} from './post-tag.entity';
-import {BaseEntity} from "../../base.entity";
-import {PostContent} from "./post-content.entity";
+import {BaseEntity} from "@backend/common";
+import {PostContent, PostTag} from "@backend/post";
 
 @Entity({tableName: 'posts'})
-export class Post extends BaseEntity{
+export class Post extends BaseEntity {
     @PrimaryKey()
     id!: number;
 
     @Property({default: false})
     isPublished: boolean = false;
-
-    @Property({length: 255, nullable: true})
-    slug?: string;
 
     @OneToMany(() => PostContent, (pc) => pc.post)
     contents = new Collection<PostContent>(this);
