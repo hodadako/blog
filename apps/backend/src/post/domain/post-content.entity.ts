@@ -1,25 +1,32 @@
-import {Entity, Enum, ManyToOne, PrimaryKey, Property} from "@mikro-orm/core";
-import {BaseEntity, Language, Translatable} from "@backend/common";
-import {Post} from "@backend/post";
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
+import { BaseEntity, Language, Translatable } from '@backend/common';
+import { Post } from '@backend/post';
 
-@Entity({tableName: 'post_contents'})
+@Entity({ tableName: 'post_contents' })
 export class PostContent extends BaseEntity implements Translatable {
-    @PrimaryKey()
-    id!: number;
+  private constructor() {
+    super();
+  }
+  @PrimaryKey()
+  id!: number;
 
-    @Property({length: 255})
-    title!: string;
+  @Property({ length: 255 })
+  title!: string;
 
-    @Property({type: 'text'})
-    content!: string;
+  @Property({ type: 'text' })
+  content!: string;
 
-    @Property({length: 255, nullable: true})
-    slug?: string;
+  @Property({ default: true })
+  isPublished: boolean = true;
 
-    @ManyToOne(() => Post)
-    post!: Post;
+  @Property({ length: 255, nullable: true })
+  slug?: string;
 
-    @Enum(() => Language)
-    language!: Language;
+  @ManyToOne(() => Post)
+  post!: Post;
+
+  @Enum(() => Language)
+  language!: Language;
+
+  static create() {}
 }
-
