@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Post, PostRepository } from '@backend/post';
+import { Post } from '@backend/post';
+import { PostRepository } from '@backend/post/application/required/post.repository.port';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/core';
 
