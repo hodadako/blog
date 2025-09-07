@@ -3,16 +3,11 @@ import {z} from "zod";
 
 export const createPostSchema = postSchema.omit({
     id: true,
+    viewCount: true,
     createdAt: true,
     updatedAt: true,
-    isPublished: true,
-})
+}).extend({
 
-export const updatePostSchema = postSchema.omit({
-    createdAt: true,
-    updatedAt: true,
-    isPublished: true,
 })
 
 export type CreatePostRequest = z.infer<typeof createPostSchema>;
-export type UpdatePostRequest = z.infer<typeof updatePostSchema>;

@@ -7,7 +7,7 @@ export const postContentSchema = z.object({
     content: z.string().nonempty("게시글 내용이 필요합니다."),
     isPublished: z.boolean(),
     slug: z.string().optional(),
-    language: z.string().nonempty("언어가 필요합니다.").nonoptional(),
+    language: z.enum(["English", "Korean", "Japanese"]),
     createdAt: z.date(),
     updatedAt: z.date(),
 })
