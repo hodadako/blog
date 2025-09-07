@@ -18,5 +18,3 @@ describe('PostContent Entity', () => {
     });
   });
 });
-
-

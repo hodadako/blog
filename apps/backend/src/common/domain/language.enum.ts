@@ -5,7 +5,7 @@ export enum Language {
 }
 
 export const LabelToLanguage: Record<string, Language> = {
-  "English": Language.EN,
-  "Korean": Language.KR,
-  "Japanese": Language.JP,
+  English: Language.EN,
+  Korean: Language.KR,
+  Japanese: Language.JP,
 };
