@@ -13,13 +13,14 @@ import { CreatePostRequest } from '@schema/post';
 export class Post extends BaseEntity {
   private constructor() {
     super();
+    this.viewCount = 0;
   }
 
   @PrimaryKey()
   id!: number;
 
   @Property()
-  viewCount: number = 0;
+  viewCount!: number;
 
   @OneToMany(() => PostContent, (pc) => pc.post)
   contents = new Collection<PostContent>(this);
