@@ -12,8 +12,8 @@ export class PostRepositoryImpl implements PostRepository {
   ) {}
 
   async create(post: Post): Promise<Post> {
-    const managed = this.postRepository.create(post);
-    await this.postRepository.getEntityManager().persistAndFlush(managed);
-    return managed;
+    const created = this.postRepository.create(post);
+    await this.postRepository.getEntityManager().persist(created);
+    return created;
   }
 }
