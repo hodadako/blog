@@ -11,7 +11,7 @@ export class PostContentRepositoryImpl implements PostContentRepository {
     private readonly postContentRepository: EntityRepository<PostContent>,
   ) {}
 
-  async create(postContent: PostContent): Promise<PostContent> {
+  create(postContent: PostContent): PostContent {
     return this.postContentRepository.create(postContent);
   }
 }
