@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Post } from '@backend/post';
-import { PostRepository } from '@backend/post/application/required/post.repository.port';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/core';
+import {Injectable} from '@nestjs/common';
+import {Post} from '@backend/post';
+import {PostRepository} from '@backend/post/application/required/post.repository.port';
+import {InjectRepository} from '@mikro-orm/nestjs';
+import {EntityRepository} from '@mikro-orm/core';
 
 @Injectable()
 export class PostRepositoryImpl implements PostRepository {
@@ -12,8 +12,6 @@ export class PostRepositoryImpl implements PostRepository {
   ) {}
 
   async create(post: Post): Promise<Post> {
-    const created = this.postRepository.create(post);
-    await this.postRepository.getEntityManager().persist(created);
-    return created;
+    return this.postRepository.create(post);
   }
 }
