@@ -3,7 +3,7 @@ import { MySqlContainer, StartedMySqlContainer } from '@testcontainers/mysql';
 let container: StartedMySqlContainer;
 
 export const startMySqlContainer = async () => {
-  container = await new MySqlContainer("mysql:8.0.28")
+  container = await new MySqlContainer("mysql:8.0")
     .withDatabase('test')
     .withUsername('test-user')
     .withUserPassword('test-password')
