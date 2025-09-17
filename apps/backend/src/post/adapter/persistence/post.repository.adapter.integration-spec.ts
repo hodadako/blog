@@ -51,7 +51,7 @@ describe('PostRepositoryAdapter (Integration)', () => {
     const forkedEM = orm.em.fork();
     const postRepository: EntityRepository<Post> = forkedEM.getRepository(Post);
 
-    const post = Post.create({ contents: [] });
+    const post = Post.create();
     const createdPost = postRepository.create(post);
 
     await forkedEM.flush();
