@@ -28,7 +28,7 @@ export class PostContent extends BaseEntity implements Translatable {
   @Property({ length: 255 })
   description!: string;
 
-  @Property({ type: 'text' })
+  @Property({ length: 255 })
   content!: string;
 
   @Property({ default: true })
