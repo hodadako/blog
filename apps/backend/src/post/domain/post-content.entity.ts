@@ -17,6 +17,7 @@ export class PostContent extends BaseEntity implements Translatable {
     this.content = request.content;
     this.language = LabelToLanguage[request.language];
     this.slug = request.slug;
+    this.isPublished = true;
   }
 
   @PrimaryKey()
@@ -32,7 +33,7 @@ export class PostContent extends BaseEntity implements Translatable {
   content!: string;
 
   @Property({ default: true })
-  isPublished: boolean = true;
+  isPublished: boolean;
 
   @Property({ length: 255, nullable: true })
   slug?: string;
