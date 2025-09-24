@@ -5,7 +5,7 @@ import { StartedMySqlContainer } from '@testcontainers/mysql';
 import {
   startMySqlContainer,
   stopMySqlContainer,
-} from '../../../test/testcontainer.config';
+} from '@backend/test';
 import { Post, PostContent, PostTag, Tag } from '@backend/post';
 import { PostModule } from '../../post.module';
 import { MySqlDriver } from '@mikro-orm/mysql';
