@@ -1,15 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { EntityRepository, MikroORM } from '@mikro-orm/core';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { StartedMySqlContainer } from '@testcontainers/mysql';
-import {
-    startMySqlContainer,
-    stopMySqlContainer,
-} from '@backend/test';
-import { Post, PostContent, PostTag, Tag } from '@backend/post';
-import { PostModule } from '../../post.module';
-import { MySqlDriver } from '@mikro-orm/mysql';
-import { PostContentCreateRequest } from '@schema/post';
+import {TestingModule} from '@nestjs/testing';
+import {EntityRepository, MikroORM} from '@mikro-orm/core';
+import {StartedMySqlContainer} from '@testcontainers/mysql';
+import {teardownDatabaseTestModule,} from '@backend/test';
+import {Post, PostContent, PostTag, Tag} from '@backend/post';
+import {PostModule} from '../../post.module';
+import {PostContentCreateRequest} from '@schema/post';
 
 describe('PostContentRepositoryAdapter (Integration)', () => {
     let module: TestingModule;
@@ -17,31 +12,13 @@ describe('PostContentRepositoryAdapter (Integration)', () => {
     let container: StartedMySqlContainer;
 
     beforeAll(async () => {
-        container = await startMySqlContainer();
-
-        module = await Test.createTestingModule({
-            imports: [
-                MikroOrmModule.forRoot({
-                    dbName: 'test',
-                    user: 'test-user',
-                    password: 'test-password',
-                    host: container.getHost(),
-                    port: container.getPort(),
-                    driver: MySqlDriver,
-                    entities: [Post, PostContent, PostTag, Tag],
-                }),
-                PostModule,
-            ],
-        }).compile();
-
-        orm = module.get<MikroORM>(MikroORM);
-        await orm.getSchemaGenerator().updateSchema();
-    });
+        const result = await setupDatabaseTestModule(
+            [Post, PostContent, PostTag, Tag], [PostModule]);
+        ({module, orm, container} = result);
+    })
 
     afterAll(async () => {
-        await orm.close(true);
-        await stopMySqlContainer();
-        await module.close();
+        await teardownDatabaseTestModule({module, orm, container})
     });
 
     beforeEach(async () => {
@@ -71,7 +48,7 @@ describe('PostContentRepositoryAdapter (Integration)', () => {
 
         await forkedEM.flush();
 
-        const foundPostContent = await forkedEM.findOne(PostContent, { id: createdPostContent.id }, { populate: ['post'] });
+        const foundPostContent = await forkedEM.findOne(PostContent, {id: createdPostContent.id}, {populate: ['post']});
 
         expect(foundPostContent).not.toBeNull();
         expect(foundPostContent!.id).toEqual(createdPostContent.id);
