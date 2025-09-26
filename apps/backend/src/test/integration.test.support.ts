@@ -11,7 +11,7 @@ export interface TestSetupResult {
     container: StartedMySqlContainer;
 }
 
-export async function setupDatabaseTestModule(
+async function setupDatabaseTestModule(
     entities: any[],
     imports: any[] = [],
     dbName = 'test',
@@ -39,8 +39,26 @@ export async function setupDatabaseTestModule(
     return { module, orm, container };
 }
 
-export async function teardownDatabaseTestModule(result: TestSetupResult) {
+async function teardownDatabaseTestModule(result: TestSetupResult) {
     await result.orm.close(true);
     await stopMySqlContainer();
     await result.module.close();
+}
+
+export async function setupDatabaseTest(entities: any[], imports: any[] = []) {
+    let result: TestSetupResult;
+
+    beforeAll(async () => {
+        result = await setupDatabaseTestModule(entities, imports);
+    });
+
+    afterAll(() => {
+        await teardownDatabaseTestModule(result);
+    });
+
+    beforeEach(async () => {
+        await context.orm.getSchemaGenerator().clearDatabase();
+    })
+
+    return () => context;
 }

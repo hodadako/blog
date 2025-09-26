@@ -1,31 +1,14 @@
-import {TestingModule} from '@nestjs/testing';
-import {EntityRepository, MikroORM} from '@mikro-orm/core';
-import {StartedMySqlContainer} from '@testcontainers/mysql';
-import {teardownDatabaseTestModule,} from '@backend/test';
+import {EntityRepository} from '@mikro-orm/core';
+import {setupDatabaseTest,} from '@backend/test';
 import {Post, PostContent, PostTag, Tag} from '@backend/post';
 import {PostModule} from '../../post.module';
 import {PostContentCreateRequest} from '@schema/post';
 
 describe('PostContentRepositoryAdapter (Integration)', () => {
-    let module: TestingModule;
-    let orm: MikroORM;
-    let container: StartedMySqlContainer;
-
-    beforeAll(async () => {
-        const result = await setupDatabaseTestModule(
-            [Post, PostContent, PostTag, Tag], [PostModule]);
-        ({module, orm, container} = result);
-    })
-
-    afterAll(async () => {
-        await teardownDatabaseTestModule({module, orm, container})
-    });
-
-    beforeEach(async () => {
-        await orm.getSchemaGenerator().clearDatabase();
-    });
+    const context = setupDatabaseTest([Post, PostContent, PostTag, Tag], [PostModule]);
 
     it('should create a post content', async () => {
+        const {orm} = context;
         const forkedEM = orm.em.fork();
         const postRepository: EntityRepository<Post> = forkedEM.getRepository(Post);
         const postContentRepository: EntityRepository<PostContent> = forkedEM.getRepository(PostContent);
