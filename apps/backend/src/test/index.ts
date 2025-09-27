@@ -1,2 +1,5 @@
-export {startMySqlContainer, stopMySqlContainer} from './testcontainer.config'
-export {setupDatabaseTest} from './integration.test.support'
+export {
+  startMySqlContainer,
+  stopMySqlContainer,
+} from './testcontainer.config';
+export { setupDatabaseTest } from './integration.test.support';
