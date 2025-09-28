@@ -1,12 +1,12 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { Post, PostContent, PostTag, Tag } from '@backend/post';
 import { PostModule } from '../../post.module';
-import {setupDatabaseTest} from "@backend/test";
+import { setupDatabaseTest } from '@backend/test';
 
 describe('PostRepositoryAdapter (Integration)', () => {
   const context = setupDatabaseTest(
-      [Post, PostContent, PostTag, Tag],
-      [PostModule]
+    [Post, PostContent, PostTag, Tag],
+    [PostModule],
   );
 
   it('should create a post without content', async () => {

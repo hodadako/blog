@@ -13,7 +13,6 @@ describe('PostContentRepositoryAdapter (Integration)', () => {
   it('should create a post content', async () => {
     const { orm } = context();
     const forkedEM = orm.em.fork();
-    const postRepository: EntityRepository<Post> = forkedEM.getRepository(Post);
     const postContentRepository: EntityRepository<PostContent> =
       forkedEM.getRepository(PostContent);
 

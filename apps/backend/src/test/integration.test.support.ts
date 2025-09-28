@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MikroORM } from '@mikro-orm/core';
+import { EntityClass, MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { StartedMySqlContainer } from '@testcontainers/mysql';
 import { startMySqlContainer, stopMySqlContainer } from '@backend/test';
 import { MySqlDriver } from '@mikro-orm/mysql';
+import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
 
 export interface TestSetupResult {
   module: TestingModule;
@@ -12,8 +13,10 @@ export interface TestSetupResult {
 }
 
 async function setupDatabaseTestModule(
-  entities: any[],
-  imports: any[] = [],
+  entities: EntityClass<any>[],
+  imports: Array<
+    Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>
+  > = [],
   dbName = 'test',
 ): Promise<TestSetupResult> {
   const container = await startMySqlContainer();
@@ -45,7 +48,12 @@ async function teardownDatabaseTestModule(result: TestSetupResult) {
   await result.module.close();
 }
 
-export function setupDatabaseTest(entities: any[], imports: any[] = []) {
+export function setupDatabaseTest(
+  entities: EntityClass<any>[],
+  imports: Array<
+    Type<any> | DynamicModule | Promise<DynamicModule> | ForwardReference<any>
+  > = [],
+): () => TestSetupResult {
   let result: TestSetupResult;
 
   beforeAll(async () => {
