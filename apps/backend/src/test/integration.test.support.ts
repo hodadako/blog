@@ -45,20 +45,20 @@ async function teardownDatabaseTestModule(result: TestSetupResult) {
   await result.module.close();
 }
 
-export async function setupDatabaseTest(entities: any[], imports: any[] = []) {
+export function setupDatabaseTest(entities: any[], imports: any[] = []) {
   let result: TestSetupResult;
 
   beforeAll(async () => {
     result = await setupDatabaseTestModule(entities, imports);
   });
 
-  afterAll(() => {
+  afterAll(async () => {
     await teardownDatabaseTestModule(result);
   });
 
   beforeEach(async () => {
-    await context.orm.getSchemaGenerator().clearDatabase();
+    await result.orm.getSchemaGenerator().clearDatabase();
   });
 
-  return () => context;
+  return () => result;
 }
