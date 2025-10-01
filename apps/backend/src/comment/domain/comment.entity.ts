@@ -15,6 +15,9 @@ export class Comment extends BaseEntity implements Translatable {
     @Property({type: 'text'})
     content!: string;
 
+    @Property({ length: 255})
+    isBlocked!: boolean;
+
     @Property({length: 255})
     author!: string;
 
