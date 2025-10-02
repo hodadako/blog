@@ -6,6 +6,7 @@ import {Post} from "@backend/post";
 export class Comment extends BaseEntity implements Translatable {
     constructor(request: any) {
         super();
+        this.isBlocked = false;
         this.language = LabelToLanguage[request.language];
     }
 
