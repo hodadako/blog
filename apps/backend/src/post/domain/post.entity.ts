@@ -7,7 +7,7 @@ import {
 } from '@mikro-orm/core';
 import { BaseEntity } from '@backend/common';
 import { PostContent, PostTag } from '@backend/post';
-import {CreatePostRequest} from "@schema/post";
+import { CreatePostRequest } from '@schema/post';
 
 @Entity({ tableName: 'posts' })
 export class Post extends BaseEntity {
@@ -33,6 +33,6 @@ export class Post extends BaseEntity {
   tags = new Collection<PostTag>(this);
 
   static create(request: CreatePostRequest): Post {
-    return new Post(request,0);
+    return new Post(request, 0);
   }
 }

@@ -2,6 +2,7 @@ import { EntityRepository } from '@mikro-orm/core';
 import { Post, PostContent, PostTag, Tag } from '@backend/post';
 import { PostModule } from '../../post.module';
 import { setupDatabaseTest } from '@backend/test';
+import {createPostRequestFixture} from "@schema/post";
 
 describe('PostRepositoryAdapter (Integration)', () => {
   const context = setupDatabaseTest(
@@ -14,7 +15,8 @@ describe('PostRepositoryAdapter (Integration)', () => {
     const forkedEM = orm.em.fork();
     const postRepository: EntityRepository<Post> = forkedEM.getRepository(Post);
 
-    const post = Post.create();
+    const createPostRequest = createPostRequestFixture();
+    const post = Post.create(createPostRequest);
     const createdPost = postRepository.create(post);
 
     await forkedEM.flush();

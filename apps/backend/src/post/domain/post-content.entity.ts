@@ -6,7 +6,7 @@ import {
   Translatable,
 } from '@backend/common';
 import { Post } from '@backend/post';
-import {CreatePostContentRequest} from '@schema/post';
+import { CreatePostContentRequest } from '@schema/post';
 
 @Entity({ tableName: 'post_contents' })
 export class PostContent extends BaseEntity implements Translatable {
