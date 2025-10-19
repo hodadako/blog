@@ -7,16 +7,21 @@ import {
 } from '@mikro-orm/core';
 import { BaseEntity } from '@backend/common';
 import { PostContent, PostTag } from '@backend/post';
+import {CreatePostRequest} from "@schema/post";
 
 @Entity({ tableName: 'posts' })
 export class Post extends BaseEntity {
-  private constructor(viewCount: number) {
+  private constructor(request: CreatePostRequest, viewCount: number) {
     super();
     this.viewCount = viewCount;
+    this.name = request.name;
   }
 
   @PrimaryKey()
   id!: number;
+
+  @Property({ unique: true, length: 255 })
+  name!: string;
 
   @Property()
   viewCount!: number;
@@ -27,7 +32,7 @@ export class Post extends BaseEntity {
   @OneToMany(() => PostTag, (pt) => pt.post)
   tags = new Collection<PostTag>(this);
 
-  static create(): Post {
-    return new Post(0);
+  static create(request: CreatePostRequest): Post {
+    return new Post(request,0);
   }
 }

@@ -6,11 +6,11 @@ import {
   Translatable,
 } from '@backend/common';
 import { Post } from '@backend/post';
-import { PostContentCreateRequest } from '@schema/post';
+import {CreatePostContentRequest} from '@schema/post';
 
 @Entity({ tableName: 'post_contents' })
 export class PostContent extends BaseEntity implements Translatable {
-  private constructor(request: PostContentCreateRequest) {
+  private constructor(request: CreatePostContentRequest) {
     super();
     this.title = request.title;
     this.description = request.description;
@@ -44,7 +44,7 @@ export class PostContent extends BaseEntity implements Translatable {
   @Enum(() => Language)
   language!: Language;
 
-  static create(request: PostContentCreateRequest): PostContent {
+  static create(request: CreatePostContentRequest): PostContent {
     return new PostContent(request);
   }
 }

@@ -3,4 +3,4 @@ export {CreatePostRequest} from './post.request';
 export {GetPostResponse, GetPostListResponse} from './post.response';
 
 export {postContentSchema} from './post-content.schema';
-export {PostContentCreateRequest} from './post-content.request';
+export {CreatePostContentRequest} from './post-content.request';
