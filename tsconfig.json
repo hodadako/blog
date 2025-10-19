@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths" : {
       "@schema/*" : ["packages/schema/*"],
-      "@backend/*" : ["apps/backend/src/*"],
+      "@backend/*" : ["apps/backend/src/*", "apps/backend/*"],
     }
   },
   "exclude": ["node_modules", "dist"]
