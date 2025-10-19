@@ -85,7 +85,8 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "^@backend/(.*)$": "<rootDir>/src/$1",
-      "^@schema/(.*)$": "<rootDir>/../../packages/schema/$1"
+      "^@schema/(.*)$": "<rootDir>/../../packages/schema/$1",
+      "^@be-test/(.*)$": "<rootDir>/test/$1"
     }
   }
 }

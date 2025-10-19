@@ -2,9 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EntityClass, MikroORM } from '@mikro-orm/core';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { StartedMySqlContainer } from '@testcontainers/mysql';
-import { startMySqlContainer, stopMySqlContainer } from '@backend/test';
 import { MySqlDriver } from '@mikro-orm/mysql';
 import { DynamicModule, ForwardReference, Type } from '@nestjs/common';
+import {
+  startMySqlContainer,
+  stopMySqlContainer,
+} from '@be-test/integration/testcontainer.config';
 
 export interface TestSetupResult {
   module: TestingModule;

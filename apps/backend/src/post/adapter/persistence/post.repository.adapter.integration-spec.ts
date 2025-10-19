@@ -1,8 +1,8 @@
 import { EntityRepository } from '@mikro-orm/core';
 import { Post, PostContent, PostTag, Tag } from '@backend/post';
 import { PostModule } from '../../post.module';
-import { setupDatabaseTest } from '@backend/test';
-import {createPostRequestFixture} from "@schema/post";
+import { createPostRequestFixture } from '@schema/post';
+import { setupDatabaseTest } from '@be-test/integration';
 
 describe('PostRepositoryAdapter (Integration)', () => {
   const context = setupDatabaseTest(

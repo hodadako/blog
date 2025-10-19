@@ -1,4 +1,4 @@
-import {z} from "zod/index";
+import {z} from "zod";
 
 export const postContentSchema = z.object({
     id: z.number().nonoptional("게시글 ID가 필요합니다."),

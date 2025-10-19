@@ -1,4 +1,4 @@
-import {z} from "zod/index";
+import {z} from "zod";
 
 export const tagSchema = z.object({
     id: z.number().nonoptional("태그 ID가 필요합니다."),

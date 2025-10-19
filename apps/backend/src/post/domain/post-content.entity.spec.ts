@@ -1,5 +1,5 @@
 import { PostContent } from '@backend/post';
-import {CreatePostContentRequest, createPostContentRequestFixture} from '@schema/post';
+import { createPostContentRequestFixture } from '@schema/post';
 
 describe('PostContent Entity', () => {
   describe('create', () => {

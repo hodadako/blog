@@ -18,7 +18,7 @@ export class PostModifyService implements PostCreate {
 
   @Transactional()
   async create(createPostRequest: CreatePostRequest): Promise<Post> {
-    const post = Post.create();
+    const post = Post.create(createPostRequest);
     createPostRequest.contents.forEach((content) => {
       const postContent = PostContent.create(content);
       this.postContentRepository.create(postContent);
