@@ -1,0 +1,1 @@
+export { CreateCommentRequest } from './comment.request';
