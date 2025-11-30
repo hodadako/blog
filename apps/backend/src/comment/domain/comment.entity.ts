@@ -6,7 +6,7 @@ import {
   Translatable,
 } from '@backend/common';
 import { Post } from '@backend/post';
-import {CreateCommentRequest} from "@schema/comment";
+import { CreateCommentRequest } from '@schema/comment';
 
 @Entity()
 export class Comment extends BaseEntity implements Translatable {
