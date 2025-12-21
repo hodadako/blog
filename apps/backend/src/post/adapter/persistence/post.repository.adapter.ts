@@ -7,10 +7,9 @@ import { EntityRepository } from '@mikro-orm/core';
 @Injectable()
 export class MikroPostRepository implements PostRepository {
   constructor(
-      @InjectRepository(Post)
-      private readonly postRepository: EntityRepository<Post>,
-  ) {
-  }
+    @InjectRepository(Post)
+    private readonly postRepository: EntityRepository<Post>,
+  ) {}
 
   create(post: Post): Post {
     return this.postRepository.create(post);
