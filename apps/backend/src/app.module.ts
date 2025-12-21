@@ -3,6 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PostModule } from './post/post.module';
       },
     }),
     PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
