@@ -1,5 +1,5 @@
-import {Comment} from "@backend/comment/domain/comment.entity";
+import { Comment } from '@backend/comment/domain/comment.entity';
 
 export abstract class CommentRepository {
-    abstract create(comment: Comment): Comment;
+  abstract create(comment: Comment): Comment;
 }
