@@ -1,22 +1,28 @@
-import { Module } from '@nestjs/common';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PostModule } from './post/post.module';
-import { CommentModule } from './comment/comment.module';
+import {Module} from '@nestjs/common';
+import {MikroOrmModule} from '@mikro-orm/nestjs';
+import {AppController} from './app.controller';
+import {AppService} from './app.service';
+import {PostModule} from './post/post.module';
+import {CommentModule} from './comment/comment.module';
+import {CacheModule} from "@nestjs/cache-manager";
 
 @Module({
-  imports: [
-    MikroOrmModule.forRoot({
-      migrations: {
-        path: 'dist/migrations',
-        pathTs: 'src/migrations',
-      },
-    }),
-    PostModule,
-    CommentModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        MikroOrmModule.forRoot({
+            migrations: {
+                path: 'dist/migrations',
+                pathTs: 'src/migrations',
+            },
+        }),
+        PostModule,
+        CommentModule,
+        CacheModule.register({
+            ttl: 5  * 60 * 1000,
+            isGlobal: true,
+        }),
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+}
