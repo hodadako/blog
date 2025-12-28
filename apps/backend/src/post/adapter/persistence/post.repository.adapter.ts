@@ -11,6 +11,10 @@ export class MikroPostRepository implements PostRepository {
     private readonly postRepository: EntityRepository<Post>,
   ) {}
 
+  async findById(id: number): Promise<Post | null> {
+    return await this.postRepository.findOne({ id });
+  }
+
   create(post: Post): Post {
     return this.postRepository.create(post);
   }
