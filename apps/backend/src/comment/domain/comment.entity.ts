@@ -26,7 +26,7 @@ export class Comment extends BaseEntity implements Translatable {
   @Property({ type: 'text' })
   content!: string;
 
-  @Property({ type: 'boolean' })
+  @Property({ type: 'text'})
   password!: string;
 
   @Property({ length: 255 })
