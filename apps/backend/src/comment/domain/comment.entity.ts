@@ -10,12 +10,13 @@ import { CreateCommentRequest } from '@schema/comment';
 
 @Entity()
 export class Comment extends BaseEntity implements Translatable {
-  private constructor(request: CreateCommentRequest) {
+  private constructor(request: CreateCommentRequest, post: Post) {
     super();
     this.content = request.content;
     this.password = request.password;
     this.author = request.author;
     this.isBlocked = false;
+    this.post = post;
     this.language = LabelToLanguage[request.language];
   }
 
@@ -40,7 +41,7 @@ export class Comment extends BaseEntity implements Translatable {
   @Enum(() => Language)
   language: Language;
 
-  static create(request: CreateCommentRequest): Comment {
-    return new Comment(request);
+  static create(request: CreateCommentRequest, post: Post): Comment {
+    return new Comment(request, post);
   }
 }
