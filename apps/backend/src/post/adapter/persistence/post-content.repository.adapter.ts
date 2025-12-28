@@ -5,7 +5,7 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/core';
 
 @Injectable()
-export class PostContentRepositoryImpl implements PostContentRepository {
+export class MikroPostContentRepository implements PostContentRepository {
   constructor(
     @InjectRepository(PostContent)
     private readonly postContentRepository: EntityRepository<PostContent>,
