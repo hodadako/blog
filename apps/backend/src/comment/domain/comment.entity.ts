@@ -1,23 +1,18 @@
 import { Entity, Enum, ManyToOne, PrimaryKey, Property } from '@mikro-orm/core';
-import {
-  BaseEntity,
-  LabelToLanguage,
-  Language,
-  Translatable,
-} from '@backend/common';
+import { BaseEntity, Language, Translatable } from '@backend/common';
 import { Post } from '@backend/post';
-import { CreateCommentRequest } from '@schema/comment';
+import { PendingCommentPayload } from '@backend/comment';
 
 @Entity()
 export class Comment extends BaseEntity implements Translatable {
-  private constructor(request: CreateCommentRequest, post: Post) {
+  private constructor(payload: PendingCommentPayload, post: Post) {
     super();
-    this.content = request.content;
-    this.password = request.password;
-    this.author = request.author;
+    this.content = payload.content;
+    this.password = payload.password;
+    this.author = payload.author;
     this.isBlocked = false;
     this.post = post;
-    this.language = LabelToLanguage[request.language];
+    this.language = payload.language;
   }
 
   @PrimaryKey()
@@ -41,7 +36,7 @@ export class Comment extends BaseEntity implements Translatable {
   @Enum(() => Language)
   language: Language;
 
-  static create(request: CreateCommentRequest, post: Post): Comment {
-    return new Comment(request, post);
+  static create(payload: PendingCommentPayload, post: Post): Comment {
+    return new Comment(payload, post);
   }
 }
