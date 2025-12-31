@@ -1,5 +1,5 @@
 import { setupDatabaseTest } from '@be-test/integration';
-import { Comment } from '@backend/comment';
+import { Comment, PendingCommentPayload } from '@backend/comment';
 import { CommentModule } from '@backend/comment/comment.module';
 import { createCommentRequestFixture } from '@schema/comment';
 import { Post } from '@backend/post';
@@ -14,7 +14,10 @@ describe('CommentRepositoryAdapter (Integration)', () => {
     const commentRepository = forkedEM.getRepository(Comment);
 
     const post = Post.create(createPostRequestFixture());
-    const comment = Comment.create(createCommentRequestFixture(), post);
+    const comment = Comment.create(
+      PendingCommentPayload.create(createCommentRequestFixture(), post.id),
+      post,
+    );
     const createdComment = commentRepository.create(comment);
 
     await forkedEM.flush();
