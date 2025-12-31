@@ -4,5 +4,9 @@ export { Translatable } from './domain/translatable.interface';
 
 export {
   throwIfNull,
-  throwNotFoundExceptionIfNull,
-} from './utils/entity.utils';
+  throwServiceExceptionIfNull,
+  throwIfEntityNotFound,
+} from './utils/exception.utils';
+
+export { ErrorCode } from './exception/error.code';
+export { ServiceException } from './exception/service.exception';
