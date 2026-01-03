@@ -9,6 +9,8 @@ import { PostContent } from '@backend/post/domain/post-content.entity';
 import { Tag } from '@backend/post/domain/tag.entity';
 import { PostTag } from '@backend/post/domain/post-tag.entity';
 import { MikroPostRepository } from '@backend/post/adapter/persistence/post.repository.adapter';
+import { PostQueryService } from '@backend/post/application/post.query.service';
+import { PostController } from '@backend/post/adapter/rest/post.controller';
 
 @Module({
   imports: [MikroOrmModule.forFeature([Post, PostContent, Tag, PostTag])],
@@ -16,7 +18,9 @@ import { MikroPostRepository } from '@backend/post/adapter/persistence/post.repo
     PostModifyService,
     { provide: PostRepository, useClass: MikroPostRepository },
     { provide: PostContentRepository, useClass: MikroPostContentRepository },
+    PostQueryService,
   ],
   exports: [PostModifyService],
+  controllers: [PostController],
 })
 export class PostModule {}
