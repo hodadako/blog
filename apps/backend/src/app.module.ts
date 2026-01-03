@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import {ServiceExceptionFilter} from "@backend/common/exception/exception.filter";
 
 @Module({
   imports: [
@@ -22,6 +23,12 @@ import { CacheModule } from '@nestjs/cache-manager';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+      AppService,
+      {
+        provide: 'APP_FILTER',
+        useClass: ServiceExceptionFilter,
+      }
+  ],
 })
 export class AppModule {}
