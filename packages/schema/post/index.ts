@@ -1,5 +1,7 @@
 export {CreatePostRequest} from './post.request';
-export {GetPostResponse, GetPostListResponse} from './post.response';
+export {
+    FindPostResponse, FindPostsResponse
+} from './post.response';
 export {createPostRequestFixture} from './post.fixture';
 
 export {CreatePostContentRequest} from './post-content.request';

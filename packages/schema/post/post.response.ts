@@ -1,25 +1,26 @@
-import {postSchema} from "./post.schema";
-import {z} from "zod";
+export interface FindPostResponse {
+    id: number;
+    title: string;
+    content: string;
+    createdAt: Date;
+    updatedAt: Date;
+    slug?: string;
+    tags: string[];
+}
 
-export const getPostSchema = postSchema.pick({
-    id: true,
-    title: true,
-    content: true,
-    createdAt: true,
-    updatedAt: true,
-    slug: true,
-    tags: true,
-})
+export interface FindPostsItem {
+    id: number;
+    title: string;
+    description: string;
+    createdAt: Date;
+    updatedAt: Date;
+    slug?: string;
+    tags: string[];
+}
 
-export const getPostListSchema = getPostSchema.pick({
-    id: true,
-    title: true,
-    description: true,
-    createdAt: true,
-    updatedAt: true,
-    slug: true,
-    tags: true,
-})
-
-export type GetPostResponse = z.infer<typeof getPostSchema>;
-export type GetPostListResponse = z.infer<typeof getPostListSchema[]>;
+export interface FindPostsResponse {
+    posts: FindPostsItem[];
+    hasNextPage: boolean;
+    nextCursor?: number;
+    totalCount: number;
+}
