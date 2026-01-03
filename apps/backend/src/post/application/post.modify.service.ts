@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { CreatePostRequest } from '@schema/post';
 import { Post, PostContent } from '@backend/post';
-import { PostCreate } from '@backend/post/application/provided/post.create';
+import { PostModify } from '@backend/post/application/provided/post.modify';
 import { PostRepository } from '@backend/post/application/required/post.repository.port';
 import { PostContentRepository } from '@backend/post/application/required/post-content.repository.port';
 import { EntityManager, Transactional } from '@mikro-orm/core';
 
 @Injectable()
-export class PostModifyService implements PostCreate {
+export class PostModifyService implements PostModify {
   constructor(
     @Inject()
     private readonly postRepository: PostRepository,
