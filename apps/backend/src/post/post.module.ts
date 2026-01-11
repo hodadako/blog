@@ -11,16 +11,17 @@ import { PostTag } from '@backend/post/domain/post-tag.entity';
 import { MikroPostRepository } from '@backend/post/adapter/persistence/post.repository.adapter';
 import { PostQueryService } from '@backend/post/application/post.query.service';
 import { PostController } from '@backend/post/adapter/rest/post.controller';
+import { PostModify } from '@backend/post/application/provided/post.modify';
+import { PostQuery } from '@backend/post/application/provided/post.query';
 
 @Module({
   imports: [MikroOrmModule.forFeature([Post, PostContent, Tag, PostTag])],
   providers: [
-    PostModifyService,
+    { provide: PostModify, useClass: PostModifyService },
+    { provide: PostQuery, useClass: PostQueryService },
     { provide: PostRepository, useClass: MikroPostRepository },
     { provide: PostContentRepository, useClass: MikroPostContentRepository },
-    PostQueryService,
   ],
-  exports: [PostModifyService],
   controllers: [PostController],
 })
 export class PostModule {}
