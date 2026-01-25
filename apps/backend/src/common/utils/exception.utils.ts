@@ -29,3 +29,13 @@ export async function throwIfEntityNotFound<T>(
     ErrorCode.ENTITY_NOT_FOUND,
   );
 }
+
+export function assertNotNull<T>(
+  value: T | null | undefined,
+  errorMessage: string,
+): T {
+  if (value == null) {
+    throw new ServiceException(ErrorCode.ENTITY_NOT_FOUND, errorMessage);
+  }
+  return value;
+}

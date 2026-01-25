@@ -6,6 +6,7 @@ export {
   throwIfNull,
   throwServiceExceptionIfNull,
   throwIfEntityNotFound,
+  assertNotNull,
 } from './utils/exception.utils';
 
 export { ErrorCode } from './exception/error.code';
