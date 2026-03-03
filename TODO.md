@@ -3,4 +3,4 @@
 * 모든 API 요청에서 API Key 검사하기
 * cursor 기반 pagination 완성
 * export는 외부 모듈에서 보기 위한 구문
-* 
+* husky -> checkstyle, detekt같은거 (git hooks)용 도구
