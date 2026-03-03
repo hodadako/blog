@@ -19,6 +19,5 @@ describe('PostModifyService', () => {
   it('should be found in orm ', async () => {
     const { orm } = context();
     const forkedEM = orm.em.fork();
-
   });
 });

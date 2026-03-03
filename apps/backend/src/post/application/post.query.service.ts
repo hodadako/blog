@@ -5,24 +5,27 @@ import {
 } from '@backend/post/application/provided/post.query';
 import { FindPostsResponse } from '@schema/post';
 import { PostRepository } from '@backend/post/application/required/post.repository.port';
-import { EntityManager } from '@mikro-orm/core';
+import { Transactional } from '@mikro-orm/core';
+import { PostMapper } from '@backend/post/application/post.mapper';
 
 @Injectable()
 export class PostQueryService implements PostQuery {
   constructor(
     @Inject()
     private readonly postRepository: PostRepository,
-    @Inject()
-    private readonly entityManager: EntityManager,
   ) {}
 
+  @Transactional({ readOnly: true })
   async findAll(query: FindPostsParams): Promise<FindPostsResponse> {
-    //TODO: implement cursor-based pagination
-    const decodedCursor = query.cursor
-      ? Buffer.from(query.cursor, 'base64').toString('ascii')
-      : null;
+    const fetchedLimit = query.limit + 1;
 
-    await this.postRepository.findById(1);
-    throw new Error('Not implemented' + decodedCursor);
+    const posts = await this.postRepository.findAll(
+      query.limit + 1,
+      query.language,
+      query.tags,
+      query.cursor,
+    );
+
+    return PostMapper.toFindPostsResponse(posts, query.limit);
   }
 }
