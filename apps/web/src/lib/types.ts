@@ -54,6 +54,7 @@ export interface CommentModerationItem {
   createdAt: string;
   updatedAt: string;
   parentId: string | null;
+  ipHashPreview: string | null;
 }
 
 export interface AdminPostListItem {

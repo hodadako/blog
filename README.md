@@ -89,8 +89,14 @@ slug: "low-cost-stack"
 2. Worker issues a short-lived verification token on correct answer.
 3. `/api/comments` verifies the token again and inserts into Supabase.
 4. Edit/delete operations verify the per-comment password hash.
+5. Admins can blacklist a commenter by hashed IP from the moderation screen.
 
-SQL lives in `infra/supabase/migrations/0001_comments.sql`.
+SQL lives in:
+
+- `infra/supabase/migrations/0001_comments.sql`
+- `infra/supabase/migrations/0002_comment_ip_blacklist.sql`
+
+Apply both migrations before testing admin IP blacklist controls.
 
 ## Admin flow
 

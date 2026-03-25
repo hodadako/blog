@@ -1,4 +1,4 @@
-import { createComment } from "@/lib/comments";
+import { createComment, hashCommentIp } from "@/lib/comments";
 import { verifyQuizPassToken } from "@/lib/quiz-token";
 
 const ANON_COOKIE_NAME = "blog_anon_id";
@@ -14,6 +14,19 @@ function buildRedirectUrl(request: Request, redirectTo: string, status: "fronten
   return url.toString();
 }
 
+function getClientIp(request: Request): string | null {
+  const forwardedFor = request.headers.get("x-forwarded-for");
+
+  if (forwardedFor) {
+    const firstIp = forwardedFor.split(",")[0]?.trim();
+    if (firstIp) {
+      return firstIp;
+    }
+  }
+
+  return request.headers.get("cf-connecting-ip") ?? request.headers.get("x-real-ip");
+}
+
 export async function POST(request: Request): Promise<Response> {
   const formData = await request.formData();
   const canonicalSlug = readString(formData, "canonicalSlug");
@@ -24,6 +37,7 @@ export async function POST(request: Request): Promise<Response> {
   const parentId = readString(formData, "parentId");
   const quizToken = readString(formData, "quizToken");
   const quizStatus = readString(formData, "quizStatus");
+  const ipHash = getClientIp(request) ? hashCommentIp(getClientIp(request) as string) : null;
 
   if (quizStatus === "frontend-only" || !quizToken) {
     return Response.redirect(buildRedirectUrl(request, redirectTo, "frontend-only"), 303);
@@ -41,6 +55,7 @@ export async function POST(request: Request): Promise<Response> {
     authorName: author,
     content,
     password,
+    ipHash,
   });
 
   const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";

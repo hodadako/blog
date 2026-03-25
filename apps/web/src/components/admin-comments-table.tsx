@@ -24,6 +24,7 @@ export function AdminCommentsTable({copy, items, locale}: AdminCommentsTableProp
                 <span className="meta-row">
                   {item.slug} · {item.createdAt}
                 </span>
+                {item.ipHashPreview ? <span className="meta-row">{copy.ipHashLabel} · {item.ipHashPreview}</span> : null}
               </div>
               <div className="tag-list">
                 <span className={`status-pill status-pill--${item.status}`}>{item.status}</span>
@@ -41,8 +42,13 @@ export function AdminCommentsTable({copy, items, locale}: AdminCommentsTableProp
                </button>
                <button className="button" name="decision" type="submit" value="hidden">
                  {copy.hideLabel}
-               </button>
-             </form>
+                </button>
+               {item.ipHashPreview ? (
+                 <button className="button button--secondary" name="decision" type="submit" value="blacklist_ip">
+                   {copy.blacklistIpLabel}
+                 </button>
+               ) : null}
+              </form>
           </article>
         ))}
       </div>

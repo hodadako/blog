@@ -1,6 +1,6 @@
 "use client";
 
-import {useMemo, useState} from "react";
+import {useState} from "react";
 import type {AppLocale} from "@/lib/site";
 import { QuizGate } from "@/components/quiz-gate";
 
@@ -25,7 +25,6 @@ interface CommentFormProps {
     unavailable: string;
     frontendOnly: string;
   };
-  fallbackNotice?: string;
 }
 
 export function CommentForm({
@@ -41,17 +40,17 @@ export function CommentForm({
   contentLabel,
   parentLabel,
   quizLabels,
-  fallbackNotice,
 }: CommentFormProps) {
-  const [quizStatus, setQuizStatus] = useState<"loading" | "ready" | "frontend-only">("loading");
+  const [quizStatus, setQuizStatus] = useState<"loading" | "ready" | "frontend-only">("frontend-only");
   const shouldShowFields = quizStatus === "ready";
-  const activeNotice = useMemo(() => {
-    if (quizStatus !== "frontend-only") {
-      return undefined;
-    }
 
-    return fallbackNotice;
-  }, [fallbackNotice, quizStatus]);
+  if (!shouldShowFields) {
+    return (
+      <div className="sr-only" aria-hidden="true">
+        <QuizGate labels={quizLabels} locale={locale} onStatusChange={setQuizStatus} slug={canonicalSlug} />
+      </div>
+    );
+  }
 
   return (
     <section className="surface-card stack-md">
@@ -68,34 +67,28 @@ export function CommentForm({
 
         <QuizGate labels={quizLabels} locale={locale} onStatusChange={setQuizStatus} slug={canonicalSlug} />
 
-        {shouldShowFields ? (
-          <>
-            {parentId ? <p className="status-text">{parentLabel}</p> : null}
+        {parentId ? <p className="status-text">{parentLabel}</p> : null}
 
-            <label className="field">
-              <span className="field__label">{authorLabel}</span>
-              <input className="field__input" maxLength={80} name="author" required type="text" />
-            </label>
+        <label className="field">
+          <span className="field__label">{authorLabel}</span>
+          <input className="field__input" maxLength={80} name="author" required type="text" />
+        </label>
 
-            <label className="field">
-              <span className="field__label">{passwordLabel}</span>
-              <input className="field__input" maxLength={40} name="password" required type="password" />
-            </label>
+        <label className="field">
+          <span className="field__label">{passwordLabel}</span>
+          <input className="field__input" maxLength={40} name="password" required type="password" />
+        </label>
 
-            <label className="field">
-              <span className="field__label">{contentLabel}</span>
-              <textarea className="field__textarea" name="content" required />
-            </label>
+        <label className="field">
+          <span className="field__label">{contentLabel}</span>
+          <textarea className="field__textarea" name="content" required />
+        </label>
 
-            <div className="button-row">
-              <button className="button" type="submit">
-                {submitLabel}
-              </button>
-            </div>
-          </>
-        ) : null}
-
-        {activeNotice ? <p className="status-text">{activeNotice}</p> : null}
+        <div className="button-row">
+          <button className="button" type="submit">
+            {submitLabel}
+          </button>
+        </div>
       </form>
     </section>
   );

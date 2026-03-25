@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { getSupabaseAdminClient } from "@/lib/supabase";
 import { requireCommentPepper } from "@/lib/env";
 import type { CommentItem, CommentModerationItem, CommentStatus } from "@/lib/types";
@@ -19,6 +19,11 @@ interface CommentRow {
   updated_at: string;
   password_hash: string;
   canonical_slug: string;
+  ip_hash: string | null;
+}
+
+interface BlacklistRow {
+  ip_hash: string;
 }
 
 function formatPasswordHash(salt: Buffer, hash: Buffer): string {
@@ -48,6 +53,45 @@ export function verifyCommentPassword(password: string, passwordHash: string): b
   const { salt, hash } = parsePasswordHash(passwordHash);
   const candidate = scryptSync(`${password}${requireCommentPepper()}`, salt, 64);
   return timingSafeEqual(hash, candidate);
+}
+
+function getSupabaseErrorCode(error: { code?: string } | null): string | undefined {
+  return error?.code;
+}
+
+export function hashCommentIp(ipAddress: string): string {
+  return createHash("sha256").update(`${requireCommentPepper()}:${ipAddress.trim()}`).digest("hex");
+}
+
+export function formatIpHashPreview(ipHash: string | null): string | null {
+  if (!ipHash) {
+    return null;
+  }
+
+  return `${ipHash.slice(0, 10)}…`;
+}
+
+export async function isBlockedIpHash(ipHash: string | null): Promise<boolean> {
+  if (!ipHash) {
+    return false;
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("comment_ip_blacklist")
+    .select("ip_hash")
+    .eq("ip_hash", ipHash)
+    .maybeSingle();
+
+  if (getSupabaseErrorCode(error) === "42P01") {
+    return false;
+  }
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return Boolean(data);
 }
 
 async function getThreadBySlug(slug: string): Promise<ThreadRecord | null> {
@@ -177,6 +221,7 @@ export async function listAdminComments(): Promise<CommentModerationItem[]> {
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     parentId: row.parent_id,
+    ipHashPreview: formatIpHashPreview(row.ip_hash),
   }));
 }
 
@@ -186,7 +231,12 @@ export async function createComment(input: {
   authorName: string;
   content: string;
   password: string;
+  ipHash: string | null;
 }): Promise<void> {
+  if (await isBlockedIpHash(input.ipHash)) {
+    throw new Error("Comment blocked by IP blacklist.");
+  }
+
   const thread = await ensureCommentThread(input.slug);
   const supabase = getSupabaseAdminClient();
   const { error } = await supabase.from("comments").insert({
@@ -199,7 +249,30 @@ export async function createComment(input: {
     status: "published",
     password_hash: hashCommentPassword(input.password),
     quiz_verified_at: new Date().toISOString(),
+    ip_hash: input.ipHash,
   });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function blacklistCommentIp(commentId: string): Promise<void> {
+  const row = await getCommentRow(commentId);
+
+  if (!row.ip_hash) {
+    throw new Error("Comment has no IP hash.");
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { error } = await supabase.from("comment_ip_blacklist").upsert({
+    ip_hash: row.ip_hash,
+    source_comment_id: commentId,
+  });
+
+  if (getSupabaseErrorCode(error) === "42P01") {
+    throw new Error("comment_ip_blacklist table is missing. Run the latest migration.");
+  }
 
   if (error) {
     throw new Error(error.message);

@@ -37,6 +37,8 @@ export interface AdminCommentsCopy {
   tableCopy: string;
   approveLabel: string;
   hideLabel: string;
+  blacklistIpLabel: string;
+  ipHashLabel: string;
 }
 
 interface HomeFeatureItem {
@@ -253,6 +255,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
         tableCopy: "댓글은 locale을 공유하지 않고 slug 기준으로 하나의 스레드를 형성합니다.",
         approveLabel: "승인",
         hideLabel: "숨김",
+        blacklistIpLabel: "IP 차단",
+        ipHashLabel: "IP",
       },
   },
   en: {
@@ -377,6 +381,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
         tableCopy: "Use this screen to publish or hide comments after they are written to Supabase.",
         approveLabel: "Approve",
         hideLabel: "Hide",
+        blacklistIpLabel: "Block IP",
+        ipHashLabel: "IP",
       },
   },
 };

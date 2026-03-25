@@ -1,3 +1,4 @@
+import {CommentAvailabilityGate} from "@/components/comment-availability-gate";
 import {CommentForm} from "@/components/comment-form";
 import {CommentList} from "@/components/comment-list";
 import { MarkdownArticle } from "@/lib/markdown";
@@ -82,7 +83,6 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
   const replyTo = typeof resolvedSearchParams?.replyTo === "string" ? resolvedSearchParams.replyTo : null;
   const commentAction = typeof resolvedSearchParams?.commentAction === "string" ? resolvedSearchParams.commentAction : undefined;
   const commentId = typeof resolvedSearchParams?.commentId === "string" ? resolvedSearchParams.commentId : undefined;
-  const commentStatus = typeof resolvedSearchParams?.commentStatus === "string" ? resolvedSearchParams.commentStatus : undefined;
   const activeEditor: CommentEditorState | null =
     commentAction && commentId && (commentAction === "edit" || commentAction === "delete")
       ? { id: commentId, mode: commentAction }
@@ -136,47 +136,48 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
         </aside>
       </section>
 
-      <section className="page-section comment-grid">
-        <CommentList
-          activeEditor={activeEditor}
-          comments={comments}
-          contentLabel={dictionary.post.commentContentLabel}
-          deleteLabel={dictionary.post.deleteLabel}
-          editLabel={dictionary.post.editLabel}
-          heading={dictionary.post.commentsHeading}
-          emptyLabel={dictionary.post.commentsEmpty}
-          locale={locale}
-          passwordLabel={dictionary.post.commentPasswordLabel}
-          postSlug={post.slug}
-          replyLabel={dictionary.post.replyLabel}
-          submitDeleteLabel={dictionary.post.submitDeleteLabel}
-          submitEditLabel={dictionary.post.submitEditLabel}
-          summaryLabel={`${comments.length} ${dictionary.post.commentsCountLabel}`}
-        />
-        <CommentForm
-          locale={locale}
-          canonicalSlug={post.canonicalSlug}
-          heading={dictionary.post.commentFormHeading}
-          helperText={dictionary.post.commentFormCopy}
-          parentId={replyTo}
-          parentLabel={dictionary.post.parentLabel}
-          quizLabels={{
-            loading: dictionary.post.quizLoading,
-            question: dictionary.post.quizQuestion,
-            answer: dictionary.post.quizAnswer,
-            verify: dictionary.post.quizVerify,
-            verified: dictionary.post.quizVerified,
-            unavailable: dictionary.post.quizUnavailable,
-            frontendOnly: dictionary.post.quizFrontendOnly,
-          }}
-          fallbackNotice={commentStatus === "frontend-only" ? dictionary.post.commentFrontendOnlyNotice : undefined}
-          redirectTo={`/${locale}/blog/${post.slug}`}
-          submitLabel={dictionary.post.commentSubmitLabel}
-          authorLabel={dictionary.post.commentAuthorLabel}
-          passwordLabel={dictionary.post.commentPasswordLabel}
-          contentLabel={dictionary.post.commentContentLabel}
-        />
-      </section>
+      <CommentAvailabilityGate locale={locale} slug={post.canonicalSlug}>
+        <section className="page-section comment-grid">
+          <CommentList
+            activeEditor={activeEditor}
+            comments={comments}
+            contentLabel={dictionary.post.commentContentLabel}
+            deleteLabel={dictionary.post.deleteLabel}
+            editLabel={dictionary.post.editLabel}
+            heading={dictionary.post.commentsHeading}
+            emptyLabel={dictionary.post.commentsEmpty}
+            locale={locale}
+            passwordLabel={dictionary.post.commentPasswordLabel}
+            postSlug={post.slug}
+            replyLabel={dictionary.post.replyLabel}
+            submitDeleteLabel={dictionary.post.submitDeleteLabel}
+            submitEditLabel={dictionary.post.submitEditLabel}
+            summaryLabel={`${comments.length} ${dictionary.post.commentsCountLabel}`}
+          />
+          <CommentForm
+            locale={locale}
+            canonicalSlug={post.canonicalSlug}
+            heading={dictionary.post.commentFormHeading}
+            helperText={dictionary.post.commentFormCopy}
+            parentId={replyTo}
+            parentLabel={dictionary.post.parentLabel}
+            quizLabels={{
+              loading: dictionary.post.quizLoading,
+              question: dictionary.post.quizQuestion,
+              answer: dictionary.post.quizAnswer,
+              verify: dictionary.post.quizVerify,
+              verified: dictionary.post.quizVerified,
+              unavailable: dictionary.post.quizUnavailable,
+              frontendOnly: dictionary.post.quizFrontendOnly,
+            }}
+            redirectTo={`/${locale}/blog/${post.slug}`}
+            submitLabel={dictionary.post.commentSubmitLabel}
+            authorLabel={dictionary.post.commentAuthorLabel}
+            passwordLabel={dictionary.post.commentPasswordLabel}
+            contentLabel={dictionary.post.commentContentLabel}
+          />
+        </section>
+      </CommentAvailabilityGate>
     </div>
   );
 }
