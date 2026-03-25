@@ -1,0 +1,18 @@
+{
+  "name": "infra-pulumi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preview": "pulumi preview",
+    "up": "pulumi up"
+  },
+  "dependencies": {
+    "@pulumi/cloudflare": "^6.0.0",
+    "@pulumi/github": "^6.5.0",
+    "@pulumi/pulumi": "^3.153.1",
+    "@pulumiverse/vercel": "^1.13.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

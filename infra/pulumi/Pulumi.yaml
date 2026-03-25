@@ -1,0 +1,3 @@
+name: blog-infra
+runtime: nodejs
+description: Core low-cost blog infrastructure

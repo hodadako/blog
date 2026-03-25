@@ -1,0 +1,6 @@
+name = "blog-quiz-worker"
+main = "src/index.ts"
+compatibility_date = "2025-03-01"
+
+[vars]
+QUIZ_TTL_SECONDS = "300"
