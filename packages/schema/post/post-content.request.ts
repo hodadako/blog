@@ -1,4 +1,4 @@
-import z from "zod";
+import {z} from "zod";
 import {postContentSchema} from "@schema/post/post-content.schema";
 
 export const createPostContentRequest = postContentSchema.omit({

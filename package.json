@@ -17,11 +17,7 @@
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
-    "turbo": "^2.5.5",
-    "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "zod": "^4.0.17"
+    "turbo": "^2.5.5"
   },
   "packageManager": "pnpm@10.17.1"
 }

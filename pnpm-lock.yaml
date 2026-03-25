@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      zod:
-        specifier: ^4.0.17
-        version: 4.3.6
     devDependencies:
       husky:
         specifier: ^9.1.7
@@ -21,9 +17,6 @@ importers:
       turbo:
         specifier: ^2.5.5
         version: 2.8.20
-      typescript:
-        specifier: ^5.8.3
-        version: 5.9.3
 
   apps/backend:
     dependencies:
@@ -227,6 +220,10 @@ importers:
         version: 5.9.3
 
   packages/schema:
+    dependencies:
+      zod:
+        specifier: ^4.0.17
+        version: 4.3.6
     devDependencies:
       typescript:
         specifier: ^5.8.3
