@@ -1,3 +1,6 @@
+"use client";
+
+import {useMemo, useState} from "react";
 import type {AppLocale} from "@/lib/site";
 import { QuizGate } from "@/components/quiz-gate";
 
@@ -40,6 +43,16 @@ export function CommentForm({
   quizLabels,
   fallbackNotice,
 }: CommentFormProps) {
+  const [quizStatus, setQuizStatus] = useState<"loading" | "ready" | "frontend-only">("loading");
+  const shouldShowFields = quizStatus === "ready";
+  const activeNotice = useMemo(() => {
+    if (quizStatus !== "frontend-only") {
+      return undefined;
+    }
+
+    return fallbackNotice;
+  }, [fallbackNotice, quizStatus]);
+
   return (
     <section className="surface-card stack-md">
       <div className="stack-sm">
@@ -53,32 +66,36 @@ export function CommentForm({
         <input name="redirectTo" type="hidden" value={redirectTo} />
         <input name="parentId" type="hidden" value={parentId ?? ""} />
 
-        {parentId ? <p className="status-text">{parentLabel}</p> : null}
+        <QuizGate labels={quizLabels} locale={locale} onStatusChange={setQuizStatus} slug={canonicalSlug} />
 
-        <label className="field">
-          <span className="field__label">{authorLabel}</span>
-          <input className="field__input" maxLength={80} name="author" required type="text" />
-        </label>
+        {shouldShowFields ? (
+          <>
+            {parentId ? <p className="status-text">{parentLabel}</p> : null}
 
-        <label className="field">
-          <span className="field__label">{passwordLabel}</span>
-          <input className="field__input" maxLength={40} name="password" required type="password" />
-        </label>
+            <label className="field">
+              <span className="field__label">{authorLabel}</span>
+              <input className="field__input" maxLength={80} name="author" required type="text" />
+            </label>
 
-        <label className="field">
-          <span className="field__label">{contentLabel}</span>
-          <textarea className="field__textarea" name="content" required />
-        </label>
+            <label className="field">
+              <span className="field__label">{passwordLabel}</span>
+              <input className="field__input" maxLength={40} name="password" required type="password" />
+            </label>
 
-        <QuizGate labels={quizLabels} locale={locale} slug={canonicalSlug} />
+            <label className="field">
+              <span className="field__label">{contentLabel}</span>
+              <textarea className="field__textarea" name="content" required />
+            </label>
 
-        {fallbackNotice ? <p className="status-text">{fallbackNotice}</p> : null}
+            <div className="button-row">
+              <button className="button" type="submit">
+                {submitLabel}
+              </button>
+            </div>
+          </>
+        ) : null}
 
-        <div className="button-row">
-          <button className="button" type="submit">
-            {submitLabel}
-          </button>
-        </div>
+        {activeNotice ? <p className="status-text">{activeNotice}</p> : null}
       </form>
     </section>
   );

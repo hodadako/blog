@@ -7,6 +7,7 @@ import type { QuizChallenge, QuizVerificationResult } from "@/lib/types";
 interface QuizGateProps {
   locale: AppLocale;
   slug: string;
+  onStatusChange?: (status: "loading" | "ready" | "frontend-only") => void;
   labels: {
     loading: string;
     question: string;
@@ -26,7 +27,7 @@ function createTimedSignal(timeoutMs: number): AbortSignal {
   return controller.signal;
 }
 
-export function QuizGate({ locale, slug, labels }: QuizGateProps) {
+export function QuizGate({ locale, slug, onStatusChange, labels }: QuizGateProps) {
   const workerUrl = process.env.NEXT_PUBLIC_QUIZ_WORKER_URL;
   const [challenge, setChallenge] = useState<QuizChallenge | null>(null);
   const [answer, setAnswer] = useState("");
@@ -35,9 +36,12 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
   const [workerAvailable, setWorkerAvailable] = useState(false);
 
   useEffect(() => {
+    onStatusChange?.("loading");
+
     if (!workerUrl) {
       setWorkerAvailable(false);
       setMessage(labels.frontendOnly);
+      onStatusChange?.("frontend-only");
       return;
     }
 
@@ -55,13 +59,15 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
         setWorkerAvailable(true);
         setChallenge(payload);
         setMessage("");
+        onStatusChange?.("ready");
       })
       .catch(() => {
         setWorkerAvailable(false);
         setChallenge(null);
         setMessage(labels.frontendOnly);
+        onStatusChange?.("frontend-only");
       });
-  }, [labels.frontendOnly, locale, slug, workerUrl]);
+  }, [labels.frontendOnly, locale, onStatusChange, slug, workerUrl]);
 
   const isDisabled = useMemo(() => !workerAvailable || !challenge || Boolean(verifiedToken), [challenge, verifiedToken, workerAvailable]);
 
@@ -88,12 +94,14 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
       setWorkerAvailable(false);
       setChallenge(null);
       setMessage(labels.frontendOnly);
+      onStatusChange?.("frontend-only");
       return;
     }
 
     const payload = (await response.json()) as QuizVerificationResult;
     setVerifiedToken(payload.verifiedToken);
     setMessage(labels.verified);
+    onStatusChange?.("ready");
   }
 
   return (
