@@ -26,10 +26,11 @@ export default async function LocaleHomePage({params}: HomePageProps) {
   const locale = resolveLocale(routeParams.locale);
   const dictionary = getDictionary(locale);
   const data = await getHomePageData(locale);
+  const recentPosts = data.recentPosts.length > 0 ? data.recentPosts : data.hero ? [data.hero] : [];
 
   return (
     <div className="page-main">
-      <section className="page-section hero-grid">
+      <section className="page-section hero-grid home-hero">
         <div className="stack-md">
           <p className="section-eyebrow">{dictionary.home.eyebrow}</p>
           <h1 className="page-title">{dictionary.home.heading}</h1>
@@ -38,14 +39,14 @@ export default async function LocaleHomePage({params}: HomePageProps) {
             <a className="button" href={`/${locale}/blog`}>
               {dictionary.home.primaryCta}
             </a>
-            <a className="button button--secondary" href={`/${locale}/admin/login`}>
+            <a className="button button--secondary" href={`/${locale}#inspirations`}>
               {dictionary.home.secondaryCta}
             </a>
           </div>
         </div>
 
         {data.hero ? (
-          <article className="surface-card hero-card stack-md">
+          <article className="surface-card hero-card feature-story stack-md">
             <p className="section-eyebrow">{dictionary.home.featuredLabel}</p>
             <h2 className="section-title">{data.hero.title}</h2>
             <p className="list-copy">{data.hero.description}</p>
@@ -68,32 +69,32 @@ export default async function LocaleHomePage({params}: HomePageProps) {
         ) : null}
       </section>
 
-      <section className="page-section">
+      <section className="page-section anchor-section" id="projects">
         <div className="page-header">
-          <p className="section-eyebrow">{dictionary.home.statsLabel}</p>
-          <h2 className="section-title">{dictionary.home.statsHeading}</h2>
+          <p className="section-eyebrow">{dictionary.home.projectsLabel}</p>
+          <h2 className="section-title">{dictionary.home.projectsHeading}</h2>
+          <p className="page-copy">{dictionary.home.projectsCopy}</p>
         </div>
-        <div className="stats-grid">
-          {data.stats.map((stat) => (
-            <div className="stat-card" key={stat.label}>
-              <p className="stat-card__value">{stat.value}</p>
-              <p className="stat-card__label">{stat.label}</p>
-            </div>
+        <div className="project-grid">
+          {dictionary.home.projects.map((project, index) => (
+            <article className="project-card" key={project.title}>
+              <p className="project-card__index">{String(index + 1).padStart(2, "0")}</p>
+              <h3 className="card-title">{project.title}</h3>
+              <p className="card-copy">{project.description}</p>
+            </article>
           ))}
         </div>
       </section>
 
-      <section className="page-section">
+      <section className="page-section anchor-section" id="inspirations">
         <div className="page-header">
           <p className="section-eyebrow">{dictionary.home.recentLabel}</p>
           <h2 className="section-title">{dictionary.home.recentHeading}</h2>
           <p className="page-copy">{dictionary.home.recentCopy}</p>
         </div>
         <div className="cards-grid">
-          {data.recentPosts.map((post) => (
-            <div key={post.slug}>
-              <PostCard locale={locale} post={post} />
-            </div>
+          {recentPosts.map((post) => (
+            <PostCard key={post.slug} locale={locale} post={post} />
           ))}
         </div>
       </section>

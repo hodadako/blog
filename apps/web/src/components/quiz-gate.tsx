@@ -14,7 +14,16 @@ interface QuizGateProps {
     verify: string;
     verified: string;
     unavailable: string;
+    frontendOnly: string;
   };
+}
+
+const QUIZ_REQUEST_TIMEOUT_MS = 2500;
+
+function createTimedSignal(timeoutMs: number): AbortSignal {
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), timeoutMs);
+  return controller.signal;
 }
 
 export function QuizGate({ locale, slug, labels }: QuizGateProps) {
@@ -23,14 +32,18 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
   const [answer, setAnswer] = useState("");
   const [verifiedToken, setVerifiedToken] = useState("");
   const [message, setMessage] = useState(labels.loading);
+  const [workerAvailable, setWorkerAvailable] = useState(false);
 
   useEffect(() => {
     if (!workerUrl) {
-      setMessage(labels.unavailable);
+      setWorkerAvailable(false);
+      setMessage(labels.frontendOnly);
       return;
     }
 
-    void fetch(`${workerUrl}/challenge?slug=${encodeURIComponent(slug)}&locale=${encodeURIComponent(locale)}`)
+    void fetch(`${workerUrl}/challenge?slug=${encodeURIComponent(slug)}&locale=${encodeURIComponent(locale)}`, {
+      signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
+    })
       .then(async (response) => {
         if (!response.ok) {
           throw new Error("Failed to load challenge.");
@@ -39,18 +52,21 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
         return (await response.json()) as QuizChallenge;
       })
       .then((payload) => {
+        setWorkerAvailable(true);
         setChallenge(payload);
         setMessage("");
       })
       .catch(() => {
-        setMessage(labels.unavailable);
+        setWorkerAvailable(false);
+        setChallenge(null);
+        setMessage(labels.frontendOnly);
       });
-  }, [labels.loading, labels.unavailable, locale, slug, workerUrl]);
+  }, [labels.frontendOnly, locale, slug, workerUrl]);
 
-  const isDisabled = useMemo(() => !workerUrl || !challenge || Boolean(verifiedToken), [challenge, verifiedToken, workerUrl]);
+  const isDisabled = useMemo(() => !workerAvailable || !challenge || Boolean(verifiedToken), [challenge, verifiedToken, workerAvailable]);
 
   async function verify(): Promise<void> {
-    if (!workerUrl || !challenge) {
+    if (!workerUrl || !challenge || !workerAvailable) {
       return;
     }
 
@@ -65,10 +81,13 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
         challengeToken: challenge.challengeToken,
         answer,
       }),
+      signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
     });
 
     if (!response.ok) {
-      setMessage(labels.unavailable);
+      setWorkerAvailable(false);
+      setChallenge(null);
+      setMessage(labels.frontendOnly);
       return;
     }
 
@@ -80,8 +99,9 @@ export function QuizGate({ locale, slug, labels }: QuizGateProps) {
   return (
     <div className="stack-sm">
       <input name="quizToken" type="hidden" value={verifiedToken} />
+      <input name="quizStatus" type="hidden" value={workerAvailable ? "ready" : "frontend-only"} />
       <p className="card-copy">{message}</p>
-      {challenge ? (
+      {workerAvailable && challenge ? (
         <>
           <label className="field">
             <span className="field__label">{labels.question}</span>

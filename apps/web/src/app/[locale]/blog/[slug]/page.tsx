@@ -82,6 +82,7 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
   const replyTo = typeof resolvedSearchParams?.replyTo === "string" ? resolvedSearchParams.replyTo : null;
   const commentAction = typeof resolvedSearchParams?.commentAction === "string" ? resolvedSearchParams.commentAction : undefined;
   const commentId = typeof resolvedSearchParams?.commentId === "string" ? resolvedSearchParams.commentId : undefined;
+  const commentStatus = typeof resolvedSearchParams?.commentStatus === "string" ? resolvedSearchParams.commentStatus : undefined;
   const activeEditor: CommentEditorState | null =
     commentAction && commentId && (commentAction === "edit" || commentAction === "delete")
       ? { id: commentId, mode: commentAction }
@@ -90,8 +91,8 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
   return (
     <div className="page-main">
       <section className="page-section content-grid">
-        <article className="stack-lg">
-          <header className="article-header">
+        <article className="stack-lg article-column">
+          <header className="article-header article-header--framed">
             <a className="text-link" href={`/${locale}/blog`}>
               {dictionary.post.backToBlog}
             </a>
@@ -116,7 +117,7 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
         </article>
 
         <aside className="sidebar-stack">
-          <div className="surface-card stack-sm">
+          <div className="surface-card stack-sm article-sidebar-card">
             <h2 className="card-title">{dictionary.post.sidebarTitle}</h2>
             <p className="card-copy">{dictionary.post.sidebarCopy}</p>
             <div className="meta-row">
@@ -166,7 +167,9 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
             verify: dictionary.post.quizVerify,
             verified: dictionary.post.quizVerified,
             unavailable: dictionary.post.quizUnavailable,
+            frontendOnly: dictionary.post.quizFrontendOnly,
           }}
+          fallbackNotice={commentStatus === "frontend-only" ? dictionary.post.commentFrontendOnlyNotice : undefined}
           redirectTo={`/${locale}/blog/${post.slug}`}
           submitLabel={dictionary.post.commentSubmitLabel}
           authorLabel={dictionary.post.commentAuthorLabel}

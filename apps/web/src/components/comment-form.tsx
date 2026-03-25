@@ -20,7 +20,9 @@ interface CommentFormProps {
     verify: string;
     verified: string;
     unavailable: string;
+    frontendOnly: string;
   };
+  fallbackNotice?: string;
 }
 
 export function CommentForm({
@@ -36,6 +38,7 @@ export function CommentForm({
   contentLabel,
   parentLabel,
   quizLabels,
+  fallbackNotice,
 }: CommentFormProps) {
   return (
     <section className="surface-card stack-md">
@@ -68,6 +71,8 @@ export function CommentForm({
         </label>
 
         <QuizGate labels={quizLabels} locale={locale} slug={canonicalSlug} />
+
+        {fallbackNotice ? <p className="status-text">{fallbackNotice}</p> : null}
 
         <div className="button-row">
           <button className="button" type="submit">

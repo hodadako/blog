@@ -39,14 +39,23 @@ export interface AdminCommentsCopy {
   hideLabel: string;
 }
 
+interface HomeFeatureItem {
+  title: string;
+  description: string;
+}
+
 interface SiteDictionary {
   siteName: string;
   siteTagline: string;
   navigation: {
     label: string;
     home: string;
+    projects: string;
     blog: string;
+    inspirations: string;
     admin: string;
+    languageLabel: string;
+    localeNames: Record<AppLocale, string>;
   };
   footer: {
     note: string;
@@ -59,8 +68,10 @@ interface SiteDictionary {
     secondaryCta: string;
     featuredLabel: string;
     featuredCta: string;
-    statsLabel: string;
-    statsHeading: string;
+    projectsLabel: string;
+    projectsHeading: string;
+    projectsCopy: string;
+    projects: HomeFeatureItem[];
     recentLabel: string;
     recentHeading: string;
     recentCopy: string;
@@ -97,6 +108,8 @@ interface SiteDictionary {
     quizVerify: string;
     quizVerified: string;
     quizUnavailable: string;
+    quizFrontendOnly: string;
+    commentFrontendOnlyNotice: string;
     notFoundEyebrow: string;
     notFoundTitle: string;
     notFoundCopy: string;
@@ -120,43 +133,65 @@ interface SiteDictionary {
 const dictionaries: Record<AppLocale, SiteDictionary> = {
   ko: {
     siteName: "Stone & Story",
-    siteTagline: "낮은 비용으로 운영하는 다국어 블로그",
+    siteTagline: "독립적으로 운영하는 기술 저널",
     navigation: {
       label: "주요 탐색",
       home: "홈",
-      blog: "블로그",
+      projects: "Projects",
+      blog: "Blog",
+      inspirations: "Inspirations",
       admin: "관리",
+      languageLabel: "Language",
+      localeNames: {
+        ko: "한국어",
+        en: "English",
+      },
     },
     footer: {
-      note: "Next App Router 기반 공개 블로그/관리자 스캐폴드입니다.",
+      note: "제품, 엔지니어링, 운영 메모를 차분하게 축적하는 개인 기술 블로그입니다.",
     },
     home: {
-      eyebrow: "Public blog",
-      heading: "언어별 포스트와 최소 운영 UI를 한곳에 담은 블로그",
-      intro: "`apps/web` 안에서 공개 블로그, 댓글 입력, 간단한 관리자 편집 화면까지 바로 이어지는 최소 구조를 준비했습니다.",
-      primaryCta: "포스트 둘러보기",
-      secondaryCta: "관리자 로그인",
-      featuredLabel: "대표 포스트",
-      featuredCta: "포스트 상세 보기",
-      statsLabel: "Current scaffold",
-      statsHeading: "바로 연결할 수 있는 핵심 화면",
-      recentLabel: "Recent posts",
-      recentHeading: "최근 포스트 미리보기",
-      recentCopy: "마크다운 읽기, SEO 메타데이터, 댓글 경로 연결을 붙이기 좋은 구조로 시작합니다.",
+      eyebrow: "Independent publication",
+      heading: "제품과 엔지니어링 사이의 실험을 담아내는 기술 블로그",
+      intro: "작게 운영하되 읽기 쉽게 정리한 메모, 구현 기록, 운영 관찰을 로케일별로 차곡차곡 쌓아갑니다.",
+      primaryCta: "Blog 둘러보기",
+      secondaryCta: "Inspirations 보기",
+      featuredLabel: "Latest article",
+      featuredCta: "계속 읽기",
+      projectsLabel: "Projects",
+      projectsHeading: "지금 다루는 주제와 작업",
+      projectsCopy: "출판 흐름, 다국어 운영, 댓글 경험처럼 블로그를 꾸준히 움직이게 하는 작은 시스템을 기록합니다.",
+      projects: [
+        {
+          title: "Multilingual publishing",
+          description: "로케일별 포스트 구조를 단순한 파일 기반으로 유지하며, 번역과 공개 흐름을 가볍게 다룹니다.",
+        },
+        {
+          title: "Reader discussion",
+          description: "글마다 이어지는 댓글 흐름을 분리하지 않고, 하나의 대화처럼 정리하는 방식을 실험합니다.",
+        },
+        {
+          title: "Solo operations",
+          description: "혼자 운영해도 유지 가능한 관리 화면, 게시 절차, 배포 리듬을 가능한 단순하게 다듬습니다.",
+        },
+      ],
+      recentLabel: "Inspirations",
+      recentHeading: "최근에 남긴 글",
+      recentCopy: "짧은 실험부터 운영 메모까지, 최근 업데이트를 한눈에 훑을 수 있는 촘촘한 아카이브입니다.",
     },
     blogIndex: {
-      eyebrow: "Archive",
-      heading: "블로그 목록",
-      intro: "로케일별로 분리된 공개 포스트 목록입니다. 이후 `src/lib/**` 헬퍼를 실제 콘텐츠 소스로 교체하면 됩니다.",
+      eyebrow: "Blog",
+      heading: "전체 글",
+      intro: "최근 기록과 실험, 운영 메모를 한곳에서 읽을 수 있는 로케일별 아카이브입니다.",
     },
-     post: {
-       backToBlog: "블로그 목록으로 돌아가기",
-       readMoreLabel: "포스트 읽기",
-       sidebarTitle: "게시 구조",
-       sidebarCopy: "상세 페이지는 로컬 markdown를 읽고, 댓글은 canonical slug 기준으로 Supabase에 저장되도록 연결됩니다.",
-       localeLabel: "현재 로케일",
-       commentsHeading: "댓글",
-       commentsCountLabel: "개의 댓글",
+      post: {
+        backToBlog: "블로그 목록으로 돌아가기",
+        readMoreLabel: "포스트 읽기",
+        sidebarTitle: "Article details",
+        sidebarCopy: "같은 글은 여러 로케일로 이어지고, 독자 대화는 하나의 스레드로 정리됩니다.",
+        localeLabel: "현재 로케일",
+        commentsHeading: "댓글",
+        commentsCountLabel: "개의 댓글",
        commentsEmpty: "아직 댓글이 없습니다.",
        commentFormHeading: "댓글 남기기",
        commentFormCopy: "퀴즈 검증을 통과하면 댓글을 저장할 수 있습니다. 수정/삭제는 댓글 비밀번호로 처리합니다.",
@@ -173,10 +208,12 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        quizLoading: "퀴즈를 불러오는 중입니다.",
        quizQuestion: "퀴즈 문제",
        quizAnswer: "정답 입력",
-       quizVerify: "퀴즈 검증",
-       quizVerified: "검증 완료",
-       quizUnavailable: "퀴즈 서비스가 준비되지 않았습니다.",
-       notFoundEyebrow: "Missing post",
+        quizVerify: "퀴즈 검증",
+        quizVerified: "검증 완료",
+        quizUnavailable: "퀴즈 서비스가 준비되지 않았습니다.",
+        quizFrontendOnly: "현재 Cloudflare Worker 응답이 없어 프론트 화면만 동작합니다.",
+        commentFrontendOnlyNotice: "현재 댓글 저장은 일시적으로 비활성화되어 있습니다. 페이지 탐색과 읽기는 계속 가능합니다.",
+        notFoundEyebrow: "Missing post",
        notFoundTitle: "포스트를 찾을 수 없습니다",
        notFoundCopy: "요청한 로케일에 해당 포스트가 없거나 아직 게시되지 않았습니다.",
      },
@@ -220,43 +257,65 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
   },
   en: {
     siteName: "Stone & Story",
-    siteTagline: "A low-cost multilingual publishing scaffold",
+    siteTagline: "An independent journal for technical notes",
     navigation: {
       label: "Primary navigation",
       home: "Home",
+      projects: "Projects",
       blog: "Blog",
+      inspirations: "Inspirations",
       admin: "Admin",
+      languageLabel: "Language",
+      localeNames: {
+        ko: "한국어",
+        en: "English",
+      },
     },
     footer: {
-      note: "Next App Router scaffold for a public blog and lightweight admin tools.",
+      note: "A small editorial tech blog for product notes, engineering experiments, and operational patterns.",
     },
     home: {
-      eyebrow: "Public blog",
-      heading: "A minimal blog shell for multilingual posts and lightweight operations",
-      intro: "The new `apps/web` workspace now includes the public blog, comment entry surface, and a simple admin editor skeleton in one place.",
-      primaryCta: "Browse posts",
-      secondaryCta: "Admin login",
-      featuredLabel: "Featured post",
+      eyebrow: "Independent publication",
+      heading: "A compact tech blog for product experiments and engineering notes",
+      intro: "Writing, observations, and implementation details are organized into a publication surface that stays lightweight but deliberate.",
+      primaryCta: "Browse blog",
+      secondaryCta: "View inspirations",
+      featuredLabel: "Latest article",
       featuredCta: "Open article",
-      statsLabel: "Current scaffold",
-      statsHeading: "Pages ready for real data wiring",
-      recentLabel: "Recent posts",
-      recentHeading: "Latest entries",
-      recentCopy: "This structure is ready for markdown loaders, SEO metadata, and route handlers without adding heavy UI dependencies.",
+      projectsLabel: "Projects",
+      projectsHeading: "Current tracks and ongoing work",
+      projectsCopy: "The publication focuses on small systems that make the blog sustainable: publishing flow, multilingual structure, and reader discussion.",
+      projects: [
+        {
+          title: "Multilingual publishing",
+          description: "Posts stay file-backed and locale-aware so writing can ship in a simple, predictable editorial flow.",
+        },
+        {
+          title: "Reader discussion",
+          description: "Comments are treated as part of the reading experience rather than a separate tool surface.",
+        },
+        {
+          title: "Solo operations",
+          description: "The stack favors maintainability and low operational cost for a single-editor publication rhythm.",
+        },
+      ],
+      recentLabel: "Inspirations",
+      recentHeading: "Latest writing",
+      recentCopy: "Recent essays, experiments, and operational notes collected in a tighter editorial archive.",
     },
     blogIndex: {
-      eyebrow: "Archive",
-      heading: "Blog index",
-      intro: "This locale-specific archive is intentionally simple so you can replace the placeholder helpers in `src/lib/**` with real content loaders.",
+      eyebrow: "Blog",
+      heading: "All writing",
+      intro: "A locale-specific archive for recent essays, implementation notes, and observations from the publication.",
     },
-     post: {
-       backToBlog: "Back to blog index",
-       readMoreLabel: "Read post",
-       sidebarTitle: "Page wiring",
-       sidebarCopy: "The article page reads markdown content, while comments are stored by canonical slug in Supabase.",
-       localeLabel: "Current locale",
-       commentsHeading: "Comments",
-       commentsCountLabel: "comments",
+      post: {
+        backToBlog: "Back to blog index",
+        readMoreLabel: "Read post",
+        sidebarTitle: "Article details",
+        sidebarCopy: "Each article is available across locales, while reader discussion stays connected as one thread.",
+        localeLabel: "Current locale",
+        commentsHeading: "Comments",
+        commentsCountLabel: "comments",
        commentsEmpty: "No comments yet.",
        commentFormHeading: "Leave a comment",
        commentFormCopy: "Pass the quiz first, then submit your comment. The same password is used later for edit and delete actions.",
@@ -273,10 +332,12 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        quizLoading: "Loading quiz challenge.",
        quizQuestion: "Quiz challenge",
        quizAnswer: "Answer",
-       quizVerify: "Verify quiz",
-       quizVerified: "Verified",
-       quizUnavailable: "Quiz verification is not available right now.",
-       notFoundEyebrow: "Missing post",
+        quizVerify: "Verify quiz",
+        quizVerified: "Verified",
+        quizUnavailable: "Quiz verification is not available right now.",
+        quizFrontendOnly: "Cloudflare Worker is not responding right now, so the frontend stays available without comment submission.",
+        commentFrontendOnlyNotice: "Comment submission is temporarily disabled. Reading and navigation still work normally.",
+        notFoundEyebrow: "Missing post",
        notFoundTitle: "The requested post could not be found",
        notFoundCopy: "The requested locale is missing or the post is not published.",
      },

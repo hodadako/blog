@@ -8,6 +8,12 @@ function readString(formData: FormData, key: string): string {
   return typeof value === "string" ? value : "";
 }
 
+function buildRedirectUrl(request: Request, redirectTo: string, status: "frontend-only"): string {
+  const url = new URL(redirectTo || "/ko/blog", request.url);
+  url.searchParams.set("commentStatus", status);
+  return url.toString();
+}
+
 export async function POST(request: Request): Promise<Response> {
   const formData = await request.formData();
   const canonicalSlug = readString(formData, "canonicalSlug");
@@ -17,8 +23,18 @@ export async function POST(request: Request): Promise<Response> {
   const redirectTo = readString(formData, "redirectTo");
   const parentId = readString(formData, "parentId");
   const quizToken = readString(formData, "quizToken");
+  const quizStatus = readString(formData, "quizStatus");
 
-  verifyQuizPassToken(quizToken, canonicalSlug);
+  if (quizStatus === "frontend-only" || !quizToken) {
+    return Response.redirect(buildRedirectUrl(request, redirectTo, "frontend-only"), 303);
+  }
+
+  try {
+    verifyQuizPassToken(quizToken, canonicalSlug);
+  } catch {
+    return Response.redirect(buildRedirectUrl(request, redirectTo, "frontend-only"), 303);
+  }
+
   await createComment({
     slug: canonicalSlug,
     parentId: parentId || null,
