@@ -1,7 +1,5 @@
-import {AdminPostEditor} from "@/components/admin-post-editor";
 import { requireAdmin } from "@/lib/auth";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
-import {getAdminEditorPageData} from "@/lib/server/blog";
 
 interface AdminPageParams {
   locale: string;
@@ -31,7 +29,6 @@ export default async function AdminPage({params}: AdminPageProps) {
   const locale = resolveLocale(routeParams.locale);
   await requireAdmin(locale);
   const dictionary = getDictionary(locale);
-  const data = await getAdminEditorPageData(locale);
 
   return (
     <div className="page-main">
@@ -43,24 +40,28 @@ export default async function AdminPage({params}: AdminPageProps) {
         </header>
 
         <div className="summary-grid">
-          {data.stats.map((item) => (
-            <div className="stat-card" key={item.label}>
-              <p className="stat-card__value">{item.value}</p>
-              <p className="stat-card__label">{item.label}</p>
-            </div>
-          ))}
+          <div className="stat-card">
+            <p className="stat-card__value">Comments</p>
+            <p className="stat-card__label">{locale === "ko" ? "현재 어드민은 댓글 관리 전용입니다." : "Admin is now dedicated to comment moderation."}</p>
+          </div>
         </div>
       </section>
 
       <section className="page-section">
-        <AdminPostEditor
-          commentsHref={`/${locale}/admin/comments`}
-          copy={dictionary.admin}
-          locale={locale}
-          posts={data.posts}
-          sessionLabel={locale === "ko" ? "로그인된 관리자 세션이 확인되었습니다." : "Authenticated admin session is active."}
-          draft={data.draft}
-        />
+        <div className="surface-card stack-md surface-card--narrow">
+          <p className="section-eyebrow">Comment moderation</p>
+          <h2 className="card-title">{locale === "ko" ? "포스트 작성은 로컬 markdown로 관리합니다." : "Post authoring now happens in local markdown files."}</h2>
+          <p className="card-copy">
+            {locale === "ko"
+              ? "content/posts/{slug}/{locale}.md 파일을 로컬에서 수정하고 Git으로 배포하세요. 어드민에서는 댓글 검수만 수행합니다."
+              : "Edit content/posts/{slug}/{locale}.md locally and deploy through Git. The admin area now focuses on comment moderation only."}
+          </p>
+          <div className="button-row">
+            <a className="button" href={`/${locale}/admin/comments`}>
+              {dictionary.admin.commentsLink}
+            </a>
+          </div>
+        </div>
       </section>
     </div>
   );

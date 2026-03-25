@@ -13,10 +13,6 @@ export const env = {
   contentRoot: process.env.CONTENT_ROOT,
   adminPassword: process.env.ADMIN_PASSWORD,
   adminSessionSecret: process.env.ADMIN_SESSION_SECRET,
-  githubToken: process.env.GITHUB_TOKEN,
-  githubOwner: process.env.GITHUB_OWNER,
-  githubRepo: process.env.GITHUB_REPO,
-  githubBranch: process.env.GITHUB_BRANCH ?? "main",
   supabaseUrl: process.env.SUPABASE_URL,
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   commentPepper: process.env.COMMENT_PASSWORD_PEPPER,
@@ -28,20 +24,6 @@ export function requireAdminSecrets(): { password: string; sessionSecret: string
   return {
     password: readRequiredEnv("ADMIN_PASSWORD"),
     sessionSecret: readRequiredEnv("ADMIN_SESSION_SECRET"),
-  };
-}
-
-export function requireGithubConfig(): {
-  token: string;
-  owner: string;
-  repo: string;
-  branch: string;
-} {
-  return {
-    token: readRequiredEnv("GITHUB_TOKEN"),
-    owner: readRequiredEnv("GITHUB_OWNER"),
-    repo: readRequiredEnv("GITHUB_REPO"),
-    branch: env.githubBranch,
   };
 }
 

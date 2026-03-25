@@ -174,65 +174,6 @@ export async function findLocalizedSlug(canonicalSlug: string, locale: AppLocale
   return exact?.slug ?? fallback?.slug ?? null;
 }
 
-export async function getAdminDashboardData(locale: AppLocale): Promise<{
-  posts: Array<{ slug: string; locale: AppLocale; title: string; status: "draft" | "published"; updatedAt: string }>;
-  draft: {
-    slug: string;
-    locale: AppLocale;
-    title: string;
-    description: string;
-    publishedAt: string;
-    updatedAt: string;
-    tags: string;
-    draft: boolean;
-    body: string;
-  };
-  stats: Array<{ label: string; value: string }>;
-}> {
-  const allPosts = await getAllLocalizedPosts();
-  const localePosts = allPosts.filter((post) => post.locale === locale);
-  const latestPost = localePosts[0];
-  const now = new Date().toISOString().slice(0, 10);
-
-  return {
-    posts: localePosts.map((post) => ({
-      slug: post.slug,
-      locale: post.locale,
-      title: post.title,
-      status: post.draft ? "draft" : "published",
-      updatedAt: post.updatedAt ?? post.publishedAt,
-    })),
-    draft: latestPost
-      ? {
-          slug: latestPost.slug,
-          locale,
-          title: latestPost.title,
-          description: latestPost.description,
-          publishedAt: latestPost.publishedAt,
-          updatedAt: latestPost.updatedAt ?? latestPost.publishedAt,
-          tags: latestPost.tags.join(", "),
-          draft: latestPost.draft,
-          body: (await getPostBySlug(locale, latestPost.slug))?.body ?? "",
-        }
-      : {
-          slug: "",
-          locale,
-          title: "",
-          description: "",
-          publishedAt: now,
-          updatedAt: now,
-          tags: "",
-          draft: true,
-          body: "",
-        },
-    stats: [
-      { label: locale === "ko" ? "게시 글" : "Posts", value: String(localePosts.filter((post) => !post.draft).length) },
-      { label: locale === "ko" ? "초안" : "Drafts", value: String(localePosts.filter((post) => post.draft).length) },
-      { label: locale === "ko" ? "로케일" : "Locales", value: String(SUPPORTED_LOCALES.length) },
-    ],
-  };
-}
-
 function formatArray(values: string[]): string {
   if (values.length === 0) {
     return "[]";

@@ -1,5 +1,5 @@
 import type { AppLocale } from "@/lib/site";
-import { getAdminDashboardData, getPostBySlug, getPostsByLocale } from "@/lib/content";
+import { getPostBySlug, getPostsByLocale } from "@/lib/content";
 
 export async function getHomePageData(locale: AppLocale) {
   const posts = await getPostsByLocale(locale);
@@ -23,8 +23,4 @@ export async function getBlogIndexPageData(locale: AppLocale) {
 
 export async function getBlogPostPageData(locale: AppLocale, slug: string) {
   return getPostBySlug(locale, slug);
-}
-
-export async function getAdminEditorPageData(locale: AppLocale) {
-  return getAdminDashboardData(locale);
 }

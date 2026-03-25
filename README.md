@@ -30,7 +30,7 @@ packages/
 
 ## Current architecture decision
 
-The target end state retires `apps/backend` from the deploy path. Public pages, admin auth, GitHub content writes, and comment APIs all live in `apps/web`.
+The target end state retires `apps/backend` from the deploy path. Public pages, admin auth, and comment APIs live in `apps/web`, while post authoring stays file-based under `content/posts`.
 
 See `docs/architecture/target-architecture.md` for the keep/replace analysis.
 
@@ -51,10 +51,6 @@ The web app expects the repo root to be available so it can read `content/posts/
 - `CONTENT_ROOT` (optional override)
 - `ADMIN_PASSWORD`
 - `ADMIN_SESSION_SECRET`
-- `GITHUB_TOKEN`
-- `GITHUB_OWNER`
-- `GITHUB_REPO`
-- `GITHUB_BRANCH`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `COMMENT_PASSWORD_PEPPER`
@@ -103,7 +99,14 @@ Apply both migrations before testing admin IP blacklist controls.
 1. Login at `/{locale}/admin/login`
 2. Password is checked against `ADMIN_PASSWORD`
 3. App sets a signed cookie session
-4. Admin saves markdown through the GitHub Contents API
+4. Admin moderates comments only
+
+## Post publishing flow
+
+1. Write or edit `content/posts/{slug}/{locale}.md` locally
+2. Preview with `pnpm --filter web dev`
+3. Commit and push through Git
+4. Let Vercel deploy the repository update
 
 ## Deployment
 
@@ -118,5 +121,5 @@ Apply both migrations before testing admin IP blacklist controls.
 3. Move or write initial markdown content under `content/posts`
 4. Apply Supabase migration
 5. Deploy Worker and configure `QUIZ_TOKEN_SECRET`
-6. Configure GitHub and admin secrets
+6. Configure admin and comment secrets
 7. Point Vercel at repo root and deploy

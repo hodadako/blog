@@ -1,6 +1,5 @@
 import type { AppLocale } from "@/lib/site";
 
-export type PostStatus = "draft" | "published";
 export type CommentStatus = "published" | "hidden" | "deleted";
 
 export interface PostFrontmatter {
@@ -57,44 +56,8 @@ export interface CommentModerationItem {
   ipHashPreview: string | null;
 }
 
-export interface AdminPostListItem {
-  slug: string;
-  locale: AppLocale;
-  title: string;
-  status: PostStatus;
-  updatedAt: string;
-}
-
-export interface PostEditorDraft {
-  slug: string;
-  locale: AppLocale;
-  title: string;
-  description: string;
-  publishedAt: string;
-  updatedAt: string;
-  tags: string;
-  draft: boolean;
-  body: string;
-}
-
-export interface AdminDashboardData {
-  posts: AdminPostListItem[];
-  draft: PostEditorDraft;
-  stats: Array<{ label: string; value: string }>;
-}
-
 export interface PaginationResult<T> {
   items: T[];
-}
-
-export interface GithubContentFile {
-  sha: string;
-  content: string;
-}
-
-export interface GithubWriteResult {
-  fileSha: string;
-  commitSha: string;
 }
 
 export interface QuizChallenge {

@@ -12,21 +12,10 @@ export interface RouteProps<T> {
 }
 
 export interface AdminCopy {
-  sidebarHeading: string;
+  eyebrow: string;
+  heading: string;
+  intro: string;
   commentsLink: string;
-  editorEyebrow: string;
-  editorHeading: string;
-  editorCopy: string;
-  fields: {
-    slug: string;
-    title: string;
-    description: string;
-    tags: string;
-    status: string;
-    content: string;
-  };
-  saveDraftLabel: string;
-  publishLabel: string;
 }
 
 export interface AdminCommentsCopy {
@@ -219,34 +208,20 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        notFoundTitle: "포스트를 찾을 수 없습니다",
        notFoundCopy: "요청한 로케일에 해당 포스트가 없거나 아직 게시되지 않았습니다.",
      },
-      adminLogin: {
-        eyebrow: "Admin access",
-        heading: "관리자 로그인",
-        intro: "단일 비밀번호와 서명 쿠키 세션으로 글 작성과 댓글 관리 기능에 접근합니다.",
-        passwordLabel: "관리자 비밀번호",
-        submitLabel: "로그인",
-        helperText: "로그인 후에는 locale별 markdown 저장과 댓글 검수를 같은 앱에서 처리합니다.",
-      },
-    admin: {
-      eyebrow: "Admin editor",
-        heading: "포스트 편집기",
-        intro: "GitHub API를 통해 locale별 markdown 파일을 저장하는 단일 관리자 화면입니다.",
-      sidebarHeading: "현재 게시물",
-      commentsLink: "댓글 검수 화면으로 이동",
-      editorEyebrow: "Post draft",
-      editorHeading: "포스트 작성/수정",
-      editorCopy: "마크다운 저장, 미리보기, 업서트는 이후 서버 액션 또는 API 핸들러에 연결하기 좋게 폼 형태로 열어 두었습니다.",
-      fields: {
-        slug: "로케일 슬러그",
-        title: "제목",
-        description: "요약",
-        tags: "태그 (쉼표 구분)",
-        status: "상태",
-        content: "본문",
-      },
-      saveDraftLabel: "초안 저장",
-      publishLabel: "게시하기",
-    },
+       adminLogin: {
+         eyebrow: "Admin access",
+         heading: "관리자 로그인",
+         intro: "단일 비밀번호와 서명 쿠키 세션으로 댓글 관리 기능에 접근합니다.",
+         passwordLabel: "관리자 비밀번호",
+         submitLabel: "로그인",
+         helperText: "로그인 후에는 댓글 검수와 차단 관리 기능에 접근합니다.",
+       },
+     admin: {
+       eyebrow: "Admin moderation",
+         heading: "댓글 관리",
+         intro: "포스트 작성은 로컬 markdown와 Git으로 처리하고, 어드민은 댓글 검수에만 사용합니다.",
+       commentsLink: "댓글 검수 화면으로 이동",
+     },
     adminComments: {
       eyebrow: "Comment moderation",
       heading: "댓글 검수",
@@ -345,34 +320,20 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        notFoundTitle: "The requested post could not be found",
        notFoundCopy: "The requested locale is missing or the post is not published.",
      },
-      adminLogin: {
-        eyebrow: "Admin access",
-        heading: "Admin login",
-        intro: "Sign in with a single password to write markdown posts and moderate comments.",
-        passwordLabel: "Admin password",
-        submitLabel: "Sign in",
-        helperText: "After login, the admin area writes locale-specific markdown files through the GitHub Contents API.",
-      },
-    admin: {
-      eyebrow: "Admin editor",
-        heading: "Post editor",
-        intro: "A compact admin surface for locale-aware markdown editing, GitHub commits, and comment moderation links.",
-      sidebarHeading: "Current entries",
-      commentsLink: "Open comment moderation",
-      editorEyebrow: "Post draft",
-      editorHeading: "Create or update a post",
-      editorCopy: "The form surface is ready for markdown content, save/publish intents, and locale-aware persistence once your server logic is in place.",
-      fields: {
-        slug: "Locale slug",
-        title: "Title",
-        description: "Summary",
-        tags: "Tags (comma separated)",
-        status: "Status",
-        content: "Content",
-      },
-      saveDraftLabel: "Save draft",
-      publishLabel: "Publish",
-    },
+       adminLogin: {
+         eyebrow: "Admin access",
+         heading: "Admin login",
+         intro: "Sign in with a single password to moderate comments.",
+         passwordLabel: "Admin password",
+         submitLabel: "Sign in",
+         helperText: "After login, the admin area focuses on comment moderation and blocking tools.",
+       },
+     admin: {
+       eyebrow: "Admin moderation",
+         heading: "Comment moderation",
+         intro: "Post authoring happens in local markdown files and Git, while admin stays focused on comment moderation.",
+       commentsLink: "Open comment moderation",
+     },
     adminComments: {
       eyebrow: "Comment moderation",
       heading: "Comment moderation",

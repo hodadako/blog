@@ -22,6 +22,6 @@ This project uses **GitHub as the content source**, **Supabase for comments**, *
 
 ## Operations
 
-When the admin saves a post, the app commits `content/posts/{slug}/{locale}.md` through the GitHub Contents API.
+Posts are edited directly in `content/posts/{slug}/{locale}.md` and deployed through normal Git commits.
 
-That commit becomes the deployment trigger, which keeps editing simple and versioned without adding a separate CMS.
+That keeps publishing simple and versioned without adding a separate CMS.

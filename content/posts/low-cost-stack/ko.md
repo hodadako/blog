@@ -22,6 +22,6 @@ slug: "low-cost-stack"
 
 ## 운영 방식
 
-관리자 화면에서 글을 저장하면 GitHub Contents API를 통해 `content/posts/{slug}/{locale}.md` 파일이 커밋됩니다.
+포스트는 `content/posts/{slug}/{locale}.md` 파일을 로컬에서 직접 수정하고 Git으로 배포합니다.
 
-그 커밋이 배포를 유발하므로, 별도 CMS 없이도 콘텐츠 이력이 남고 운영이 단순해집니다.
+즉, 별도 CMS 없이도 콘텐츠 이력이 남고 운영이 단순해집니다.
