@@ -2,23 +2,35 @@
   --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
-  --color-bg: #f2f2ed;
-  --color-surface: #fafaf7;
-  --color-surface-strong: #ffffff;
-  --color-surface-muted: #f6f6f1;
-  --color-text: #131416;
-  --color-text-muted: #5b6068;
-  --color-border: #d5d8d1;
-  --color-border-strong: #b9bdb5;
-  --color-accent: #2754c5;
-  --color-accent-soft: #e9eefc;
-  --color-success: #1e674f;
-  --color-success-soft: #eaf5f1;
-  --color-warning: #8c611f;
-  --color-warning-soft: #f8f1e4;
-  --color-danger: #9c4138;
-  --color-danger-soft: #f8eae8;
-  --color-header: rgba(242, 242, 237, 0.94);
+  --color-bg: #07101d;
+  --color-surface: rgba(12, 20, 35, 0.72);
+  --color-surface-strong: #09111f;
+  --color-surface-muted: rgba(20, 34, 58, 0.82);
+  --color-text: #f5f7ff;
+  --color-text-muted: rgba(214, 223, 246, 0.82);
+  --color-border: rgba(142, 165, 216, 0.22);
+  --color-border-strong: rgba(184, 204, 255, 0.32);
+  --color-accent: #9db8ff;
+  --color-accent-soft: rgba(109, 137, 214, 0.24);
+  --color-success: #8ad9b8;
+  --color-success-soft: rgba(23, 102, 76, 0.24);
+  --color-warning: #f0c47e;
+  --color-warning-soft: rgba(129, 89, 26, 0.24);
+  --color-danger: #ffb4ab;
+  --color-danger-soft: rgba(146, 66, 58, 0.24);
+  --color-surface-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(12, 20, 35, 0.72);
+  --color-surface-panel-strong: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%), rgba(17, 28, 48, 0.82);
+  --color-header: var(--color-surface-panel);
+  --color-sky-top: #0b1733;
+  --color-sky-base: #020611;
+  --color-sky-glow: rgba(100, 128, 246, 0.2);
+  --color-sky-star: rgba(247, 249, 255, 0.92);
+  --color-sky-star-soft: rgba(168, 187, 255, 0.4);
+  --color-shell-frame: rgba(110, 132, 182, 0.12);
+  --color-shell-frame-strong: rgba(176, 196, 247, 0.16);
+  --color-meteor-core: rgba(245, 248, 255, 0.98);
+  --color-meteor-tail: rgba(168, 196, 255, 0.46);
+  --color-meteor-glow: rgba(180, 208, 255, 0.56);
 
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -37,6 +49,7 @@
   --border-width: 1px;
   --shadow-sm: none;
   --shadow-md: none;
+  --shadow-lg: 0 1.75rem 4rem rgba(5, 11, 23, 0.34);
 
   --container-width: 78rem;
   --measure-width: 46rem;
@@ -48,7 +61,7 @@
 }
 
 html {
-  background: var(--color-bg);
+  background: linear-gradient(180deg, var(--color-sky-top) 0%, #050c1a 52%, #01040b 100%);
   color: var(--color-text);
   font-family: var(--font-body);
   scroll-behavior: smooth;
@@ -57,7 +70,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--color-bg);
+  background: transparent;
 }
 
 a {
@@ -86,16 +99,172 @@ img {
 }
 
 .site-shell {
+  position: relative;
   min-height: 100vh;
+  isolation: isolate;
+}
+
+.site-shell__chrome {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+.site-shell__content {
+  width: min(calc(100% - (var(--space-5) * 2)), calc(var(--container-width) + (var(--space-6) * 2)));
+  margin: var(--space-4) auto var(--space-6);
+  padding-bottom: var(--space-6);
+  border: var(--border-width) solid var(--color-shell-frame-strong);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015) 18%, transparent 34%),
+    linear-gradient(180deg, rgba(8, 14, 26, 0.34) 0%, rgba(8, 14, 26, 0.18) 100%);
+  box-shadow: 0 1.25rem 3.5rem rgba(1, 4, 10, 0.24);
+  backdrop-filter: blur(0.55rem);
+}
+
+.site-shell__sky,
+.site-shell__sky-layer,
+.site-shell__meteor {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.site-shell__sky {
+  z-index: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 16%, rgba(88, 122, 228, 0.16), transparent 24%),
+    radial-gradient(circle at 80% 12%, rgba(108, 96, 202, 0.14), transparent 22%),
+    radial-gradient(circle at 56% 32%, rgba(38, 58, 116, 0.14), transparent 30%),
+    linear-gradient(180deg, var(--color-sky-top) 0%, #06101f 42%, var(--color-sky-base) 100%);
+}
+
+.site-shell__sky-layer {
+  display: block;
+}
+
+.site-shell__sky-layer--glow {
+  background:
+    radial-gradient(circle at 14% 22%, var(--color-sky-glow), transparent 22%),
+    radial-gradient(circle at 84% 14%, rgba(132, 122, 245, 0.14), transparent 18%),
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.06), transparent 36%);
+}
+
+.site-shell__sky-layer--stars,
+.site-shell__sky-layer--stars-far {
+  background-repeat: no-repeat;
+  animation: sky-drift 22s ease-in-out infinite alternate;
+}
+
+.site-shell__sky-layer--stars {
+  opacity: 0.85;
+  background-image:
+    radial-gradient(circle at 8% 14%, var(--color-sky-star) 0 0.08rem, transparent 0.12rem),
+    radial-gradient(circle at 16% 38%, var(--color-sky-star-soft) 0 0.07rem, transparent 0.11rem),
+    radial-gradient(circle at 24% 22%, var(--color-sky-star) 0 0.09rem, transparent 0.13rem),
+    radial-gradient(circle at 34% 12%, var(--color-sky-star-soft) 0 0.06rem, transparent 0.1rem),
+    radial-gradient(circle at 42% 28%, var(--color-sky-star) 0 0.08rem, transparent 0.12rem),
+    radial-gradient(circle at 56% 18%, var(--color-sky-star-soft) 0 0.07rem, transparent 0.11rem),
+    radial-gradient(circle at 64% 34%, var(--color-sky-star) 0 0.08rem, transparent 0.12rem),
+    radial-gradient(circle at 74% 12%, var(--color-sky-star-soft) 0 0.06rem, transparent 0.1rem),
+    radial-gradient(circle at 82% 26%, var(--color-sky-star) 0 0.09rem, transparent 0.13rem),
+    radial-gradient(circle at 92% 16%, var(--color-sky-star-soft) 0 0.06rem, transparent 0.1rem),
+    radial-gradient(circle at 12% 62%, var(--color-sky-star) 0 0.08rem, transparent 0.12rem),
+    radial-gradient(circle at 28% 72%, var(--color-sky-star-soft) 0 0.06rem, transparent 0.1rem),
+    radial-gradient(circle at 48% 64%, var(--color-sky-star) 0 0.08rem, transparent 0.12rem),
+    radial-gradient(circle at 68% 76%, var(--color-sky-star-soft) 0 0.07rem, transparent 0.11rem),
+    radial-gradient(circle at 88% 68%, var(--color-sky-star) 0 0.08rem, transparent 0.12rem);
+}
+
+.site-shell__sky-layer--stars-far {
+  opacity: 0.54;
+  animation-duration: 30s;
+  background-image:
+    radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.62) 0 0.05rem, transparent 0.09rem),
+    radial-gradient(circle at 22% 8%, rgba(164, 183, 255, 0.46) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 36% 18%, rgba(255, 255, 255, 0.62) 0 0.05rem, transparent 0.09rem),
+    radial-gradient(circle at 44% 10%, rgba(164, 183, 255, 0.42) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 58% 20%, rgba(255, 255, 255, 0.62) 0 0.05rem, transparent 0.09rem),
+    radial-gradient(circle at 70% 10%, rgba(164, 183, 255, 0.46) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 84% 20%, rgba(255, 255, 255, 0.62) 0 0.05rem, transparent 0.09rem),
+    radial-gradient(circle at 94% 8%, rgba(164, 183, 255, 0.42) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 18% 48%, rgba(255, 255, 255, 0.56) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 32% 58%, rgba(164, 183, 255, 0.42) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 52% 50%, rgba(255, 255, 255, 0.56) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 74% 60%, rgba(164, 183, 255, 0.42) 0 0.04rem, transparent 0.08rem),
+    radial-gradient(circle at 90% 52%, rgba(255, 255, 255, 0.56) 0 0.04rem, transparent 0.08rem);
+}
+
+.site-shell__meteor {
+  inset: auto;
+  width: 14rem;
+  height: 2px;
+  opacity: 0;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-meteor-core) 0%, rgba(225, 236, 255, 0.94) 16%, var(--color-meteor-tail) 48%, rgba(168, 196, 255, 0) 100%);
+  box-shadow:
+    0 0 1rem var(--color-meteor-glow),
+    0 0 2.2rem rgba(96, 132, 248, 0.24);
+  transform: rotate(-44deg);
+  transform-origin: left center;
+  animation: meteor-fall 17s linear infinite;
+}
+
+.site-shell__meteor--one {
+  top: 11%;
+  right: 4%;
+}
+
+.site-shell__meteor--two {
+  top: 23%;
+  right: 18%;
+  width: 11rem;
+  animation-delay: 5.5s;
+  animation-duration: 20s;
+}
+
+.site-shell__meteor--three {
+  top: 7%;
+  right: 28%;
+  width: 8.5rem;
+  animation-delay: 11s;
+  animation-duration: 23s;
+}
+
+.site-shell__meteor--four {
+  top: 16%;
+  right: 22%;
+  width: 10rem;
+  animation-delay: 2.5s;
+  animation-duration: 18.5s;
+}
+
+.site-shell__meteor--five {
+  top: 27%;
+  right: 8%;
+  width: 9rem;
+  animation-delay: 8.2s;
+  animation-duration: 19.5s;
+}
+
+.site-shell__meteor--six {
+  top: 5%;
+  right: 16%;
+  width: 7.5rem;
+  animation-delay: 14.5s;
+  animation-duration: 22s;
 }
 
 .site-header {
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: var(--border-width) solid var(--color-border);
+  border-bottom: var(--border-width) solid var(--color-border-strong);
   backdrop-filter: blur(0.75rem);
   background: var(--color-header);
+  box-shadow: 0 0.8rem 2rem rgba(1, 4, 10, 0.12);
 }
 
 .site-header__inner,
@@ -264,24 +433,24 @@ img {
 }
 
 .locale-switcher {
-  gap: var(--space-1);
+  gap: 0.375rem;
 }
 
 .locale-switcher__label {
   white-space: nowrap;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
 }
 
 .locale-switcher__select {
   width: auto;
-  min-width: 6.5rem;
-  min-height: 2.125rem;
-  padding: 0.35rem 2rem 0.35rem 0.625rem;
-  border-color: var(--color-border-strong);
-  background: var(--color-surface-strong);
+  min-width: 5.35rem;
+  min-height: 1.875rem;
+  padding: 0.25rem 1.75rem 0.25rem 0.5rem;
+  border-color: var(--color-border);
+  background: var(--color-surface-panel-strong);
   color: var(--color-text);
   cursor: pointer;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
 }
 
 .page-main {
@@ -401,8 +570,8 @@ img {
 .project-card {
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface-strong);
-  box-shadow: var(--shadow-sm);
+  background: var(--color-surface-panel);
+  box-shadow: 0 0.8rem 2rem rgba(1, 4, 10, 0.16);
 }
 
 .surface-card,
@@ -421,7 +590,7 @@ img {
 .feature-story,
 .article-sidebar-card {
   border-color: var(--color-border-strong);
-  background: var(--color-surface-strong);
+  background: var(--color-surface-panel-strong);
 }
 
 .post-card {
@@ -738,6 +907,8 @@ img {
   gap: var(--space-4);
   padding: var(--space-6) 0;
   border-top: var(--border-width) solid var(--color-border);
+  background: var(--color-surface-panel);
+  backdrop-filter: blur(0.35rem);
 }
 
 .footer-note {
@@ -752,7 +923,7 @@ img {
   padding: var(--space-5);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background: var(--color-surface-panel);
 }
 
 .sr-only {
@@ -783,6 +954,12 @@ img {
 }
 
 @media (max-width: 45rem) {
+  .site-shell__content {
+    width: min(calc(100% - (var(--space-4) * 2)), calc(var(--container-width) + (var(--space-5) * 2)));
+    margin-top: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+
   .site-header__inner,
   .site-footer,
   .site-nav {
@@ -817,5 +994,54 @@ img {
   .page-title,
   .article-title {
     max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-shell__sky-layer--stars,
+  .site-shell__sky-layer--stars-far,
+  .site-shell__meteor {
+    animation: none;
+  }
+
+  .site-shell__meteor {
+    opacity: 0.14;
+  }
+}
+
+@keyframes sky-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-1.25rem, 0.75rem, 0);
+  }
+}
+
+@keyframes meteor-fall {
+  0%,
+  60% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-44deg) scaleX(0.78);
+  }
+
+  62% {
+    opacity: 0.92;
+  }
+
+  72% {
+    opacity: 0.48;
+    transform: translate3d(-14rem, 14rem, 0) rotate(-44deg) scaleX(1);
+  }
+
+  82% {
+    opacity: 0.12;
+    transform: translate3d(-22rem, 22rem, 0) rotate(-44deg) scaleX(1.02);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(-28rem, 28rem, 0) rotate(-44deg) scaleX(1.04);
   }
 }
