@@ -30,17 +30,6 @@ export function SiteShell({children, locale}: SiteShellProps) {
           <main>{children}</main>
           <footer className="site-footer">
             <p className="footer-note">{dictionary.footer.note}</p>
-            <div className="site-footer__nav">
-              <a className="text-link" href={`/${locale}#projects`}>
-                {dictionary.navigation.projects}
-              </a>
-              <a className="text-link" href={`/${locale}/blog`}>
-                {dictionary.navigation.blog}
-              </a>
-              <a className="text-link" href={`/${locale}#inspirations`}>
-                {dictionary.navigation.inspirations}
-              </a>
-            </div>
           </footer>
         </div>
       </div>
