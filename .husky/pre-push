@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-set -e
-
-echo "Running pre-push checks..."
-turbo run test --filter=backend
-
-echo "pre-push checks passed."

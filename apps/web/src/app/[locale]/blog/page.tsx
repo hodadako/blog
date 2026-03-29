@@ -37,7 +37,7 @@ export default async function BlogIndexPage({params}: BlogIndexProps) {
         </header>
         <div className="archive-list">
           {data.posts.map((post) => (
-            <PostCard key={post.slug} locale={locale} post={post} variant="wide" />
+            <PostCard key={post.slug} locale={locale} post={post} />
           ))}
         </div>
       </section>
