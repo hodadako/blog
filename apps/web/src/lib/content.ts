@@ -1,21 +1,92 @@
 import { existsSync, promises as fs } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import { z } from "zod";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type AppLocale, isSupportedLocale } from "@/lib/site";
 import { env } from "@/lib/env";
 import type { LocalizedPostInput, PostDetail, PostFrontmatter, PostSummary } from "@/lib/types";
 
-const frontmatterSchema = z.object({
-  title: z.string().min(1),
-  description: z.string().min(1),
-  publishedAt: z.string().min(1),
-  updatedAt: z.string().optional(),
-  tags: z.array(z.string()).default([]),
-  draft: z.boolean().default(false),
-  locale: z.enum(SUPPORTED_LOCALES),
-  slug: z.string().min(1),
-});
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function readRequiredString(input: Record<string, unknown>, key: string): string {
+  const value = input[key];
+
+  if (typeof value !== "string" || value.trim().length === 0) {
+    throw new Error(`Invalid frontmatter field: ${key}`);
+  }
+
+  return value;
+}
+
+function readOptionalString(input: Record<string, unknown>, key: string): string | undefined {
+  const value = input[key];
+
+  if (value === undefined) {
+    return undefined;
+  }
+
+  if (typeof value !== "string") {
+    throw new Error(`Invalid frontmatter field: ${key}`);
+  }
+
+  return value;
+}
+
+function readStringArray(input: Record<string, unknown>, key: string): string[] {
+  const value = input[key];
+
+  if (value === undefined) {
+    return [];
+  }
+
+  if (!Array.isArray(value) || !value.every((item) => typeof item === "string")) {
+    throw new Error(`Invalid frontmatter field: ${key}`);
+  }
+
+  return value;
+}
+
+function readBoolean(input: Record<string, unknown>, key: string): boolean {
+  const value = input[key];
+
+  if (value === undefined) {
+    return false;
+  }
+
+  if (typeof value !== "boolean") {
+    throw new Error(`Invalid frontmatter field: ${key}`);
+  }
+
+  return value;
+}
+
+function readLocale(input: Record<string, unknown>): AppLocale {
+  const locale = readRequiredString(input, "locale");
+
+  if (!isSupportedLocale(locale)) {
+    throw new Error(`Invalid frontmatter field: locale`);
+  }
+
+  return locale;
+}
+
+function parseFrontmatter(input: unknown): PostFrontmatter {
+  if (!isRecord(input)) {
+    throw new Error("Invalid frontmatter");
+  }
+
+  return {
+    title: readRequiredString(input, "title"),
+    description: readRequiredString(input, "description"),
+    publishedAt: readRequiredString(input, "publishedAt"),
+    updatedAt: readOptionalString(input, "updatedAt"),
+    tags: readStringArray(input, "tags"),
+    draft: readBoolean(input, "draft"),
+    locale: readLocale(input),
+    slug: readRequiredString(input, "slug"),
+  };
+}
 
 function resolveContentDirectory(): string {
   if (env.contentRoot) {
@@ -69,7 +140,7 @@ async function readPostDirectory(canonicalSlug: string): Promise<ContentRecord[]
       const absolutePath = path.join(slugDirectory, file.name);
       const source = await fs.readFile(absolutePath, "utf8");
       const parsed = matter(source);
-      const frontmatter = frontmatterSchema.parse(parsed.data);
+      const frontmatter = parseFrontmatter(parsed.data);
 
       return {
         canonicalSlug,
