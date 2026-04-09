@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import {SiteFooter} from "@/components/site-footer";
 import {SiteHeader} from "@/components/site-header";
 import type {AppLocale} from "@/lib/site";
 
@@ -27,7 +26,6 @@ export function SiteShell({children, locale}: SiteShellProps) {
         <SiteHeader locale={locale} />
         <div className="site-shell__content">
           <main>{children}</main>
-          <SiteFooter locale={locale} />
         </div>
       </div>
     </div>
