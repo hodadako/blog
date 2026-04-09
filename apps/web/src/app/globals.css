@@ -581,12 +581,12 @@ img {
 
 .article-column--detail .article-title {
   max-width: 24ch;
-  font-size: clamp(2.05rem, 4.2vw, 3.35rem);
-  line-height: 1.06;
+  font-size: clamp(1.85rem, 3.4vw, 2.8rem);
+  line-height: 1.08;
 }
 
 .blog-post-page__article .article-title {
-  max-width: min(100%, calc(var(--measure-width) + (var(--space-8) * 3)));
+  max-width: min(100%, calc(var(--measure-width) + (var(--space-8) * 7)));
 }
 
 .post-card__title,
@@ -612,7 +612,7 @@ img {
 
 .blog-post-page__article .article-summary,
 .blog-post-page__article .detail-content p {
-  max-width: min(100%, calc(var(--measure-width) + (var(--space-8) * 4)));
+  max-width: min(100%, calc(var(--measure-width) + (var(--space-8) * 7)));
 }
 
 .hero-grid,
