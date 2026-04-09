@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
+import {SiteFooter} from "@/components/site-footer";
 import {SiteHeader} from "@/components/site-header";
-import {getDictionary, type AppLocale} from "@/lib/site";
+import type {AppLocale} from "@/lib/site";
 
 interface SiteShellProps {
   children: ReactNode;
@@ -8,8 +9,6 @@ interface SiteShellProps {
 }
 
 export function SiteShell({children, locale}: SiteShellProps) {
-  const dictionary = getDictionary(locale);
-
   return (
     <div className="site-shell">
       <div aria-hidden="true" className="site-shell__sky">
@@ -28,9 +27,7 @@ export function SiteShell({children, locale}: SiteShellProps) {
         <SiteHeader locale={locale} />
         <div className="site-shell__content">
           <main>{children}</main>
-          <footer className="site-footer">
-            <p className="footer-note">{dictionary.footer.note}</p>
-          </footer>
+          <SiteFooter locale={locale} />
         </div>
       </div>
     </div>
