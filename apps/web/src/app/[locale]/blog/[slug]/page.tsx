@@ -77,7 +77,6 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
     );
   }
 
-  const variants = await getLocalizedPostVariants(post.canonicalSlug);
   const comments = await listPublishedComments(post.canonicalSlug).catch(() => []);
   const resolvedSearchParams = (await Promise.resolve(searchParams)) as Record<string, string | string[] | undefined> | undefined;
   const replyTo = typeof resolvedSearchParams?.replyTo === "string" ? resolvedSearchParams.replyTo : null;
@@ -89,14 +88,10 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
       : null;
 
   return (
-    <div className="page-main">
-      <section className="page-section content-grid">
-        <article className="stack-lg article-column">
+    <div className="page-main blog-post-page">
+      <section className="page-section page-section--article">
+        <article className="stack-lg article-column article-column--detail blog-post-page__article">
           <header className="article-header article-header--framed">
-            <a className="text-link" href={`/${locale}/blog`}>
-              {dictionary.post.backToBlog}
-            </a>
-            <p className="section-eyebrow">{post.canonicalSlug}</p>
             <h1 className="article-title">{post.title}</h1>
             <p className="article-summary">{post.description}</p>
             <div className="meta-row">
@@ -115,25 +110,6 @@ export default async function BlogPostPage({params, searchParams}: BlogPostProps
 
           <MarkdownArticle content={post.body} />
         </article>
-
-        <aside className="sidebar-stack">
-          <div className="surface-card stack-sm article-sidebar-card">
-            <h2 className="card-title">{dictionary.post.sidebarTitle}</h2>
-            <p className="card-copy">{dictionary.post.sidebarCopy}</p>
-            <div className="meta-row">
-              <span>{dictionary.post.localeLabel}</span>
-              <span>·</span>
-              <span>{locale.toUpperCase()}</span>
-            </div>
-            <div className="tag-list">
-              {variants.map((variant) => (
-                <a className="pill" href={`/${variant.locale}/blog/${variant.slug}`} key={variant.locale}>
-                  {variant.locale.toUpperCase()}
-                </a>
-              ))}
-            </div>
-          </div>
-        </aside>
       </section>
 
       <CommentAvailabilityGate locale={locale} slug={post.canonicalSlug}>
