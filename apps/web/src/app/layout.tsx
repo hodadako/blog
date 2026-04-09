@@ -4,8 +4,8 @@ import { env } from "@/lib/env";
 
 const metadata = {
   title: {
-    default: "Stone & Story",
-    template: "%s | Stone & Story",
+    default: "hodako's blog",
+    template: "%s | hodako's blog",
   },
   description: "Minimal multilingual blog scaffold for public posts and lightweight admin flows.",
   metadataBase: new URL(env.siteUrl),

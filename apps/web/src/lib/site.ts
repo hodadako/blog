@@ -123,8 +123,8 @@ interface SiteDictionary {
 
 const dictionaries: Record<AppLocale, SiteDictionary> = {
   ko: {
-    siteName: "Stone & Story",
-    siteTagline: "독립적으로 운영하는 기술 저널",
+    siteName: "hodako's blog",
+    siteTagline: "사라지지 않게, 기록합니다.",
     navigation: {
       label: "주요 탐색",
       home: "홈",
@@ -235,8 +235,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       },
   },
   en: {
-    siteName: "Stone & Story",
-    siteTagline: "An independent journal for technical notes",
+    siteName: "hodako's blog",
+    siteTagline: "write things not to forget",
     navigation: {
       label: "Primary navigation",
       home: "Home",
