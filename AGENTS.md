@@ -18,10 +18,6 @@ Use this file as the default behavior contract when changing code.
   - `infra/*`
 - Current runtime target:
   - `apps/web` — Next.js App Router app for public pages, admin routes, and API handlers
-- Legacy reference app:
-  - `apps/backend` — NestJS/MikroORM code kept as reference, not the primary deploy target
-- Shared contracts/types:
-  - `packages/schema`
 - Content source:
   - `content/posts/{slug}/{locale}.md`
 - Infrastructure code:
@@ -50,13 +46,6 @@ Run from root unless command says otherwise.
 - Start production build: `pnpm --filter web start`
 - Typecheck: `pnpm --filter web typecheck`
 
-### Backend scripts (`--filter backend`)
-- Build: `pnpm --filter backend build`
-- Lint: `pnpm --filter backend lint`
-- Test: `pnpm --filter backend test`
-- Coverage: `pnpm --filter backend test:cov`
-- Integration: `pnpm --filter backend test:integration`
-
 ### Infrastructure scripts
 - Worker dev: `pnpm --dir infra/cloudflare-worker dev`
 - Worker deploy: `pnpm --dir infra/cloudflare-worker deploy`
@@ -71,7 +60,6 @@ Run from root unless command says otherwise.
   1. `pnpm --dir infra/cloudflare-worker exec tsc --noEmit`
 - For `infra/pulumi` changes:
   1. `pnpm --dir infra/pulumi exec tsc --noEmit`
-- For backend-only changes, keep validation scoped to backend.
 
 ## 5) Commit Message Rules
 From `docs/git-rules.md`:
@@ -82,17 +70,12 @@ From `docs/git-rules.md`:
 
 ## 6) Architecture Guidance
 - Prefer the current production path: `apps/web` + `content` + `infra`.
-- Do not add new product behavior to `apps/backend` unless the task is explicitly about preserving or extracting legacy logic.
 - Posts are file-backed content, not database-backed entities.
 - Comments are dynamic and belong to the Supabase-backed path in `apps/web`.
 - Keep locale handling explicit and route-based.
 - Prefer low-ops, serverless-friendly choices over always-on infrastructure.
 
 ## 7) Imports and Paths
-- Root aliases currently include:
-  - `@backend/*` -> `apps/backend/src/*`
-  - `@schema/*` -> `packages/schema/*`
-  - `@be-test/*` -> `apps/backend/test/*`
 - In `apps/web`, prefer the local alias:
   - `@/*` -> `apps/web/src/*`
 - Use relative imports only for local-neighbor files.
@@ -105,8 +88,7 @@ From `docs/git-rules.md`:
 
 ## 9) Local Quality Gates
 - Pre-commit (`.husky/pre-commit`): `pnpm exec lint-staged`
-- Current `lint-staged` configuration is still backend-focused; do not assume web files are auto-checked by hooks.
-- Pre-push (`.husky/pre-push`): backend test pipeline remains configured; do not bypass hooks unless explicitly instructed.
+- Keep `lint-staged` aligned with active workspaces; do not assume removed workspaces are still checked by hooks.
 
 ## 10) Naming Conventions
 - Classes/types/interfaces: PascalCase
@@ -118,7 +100,7 @@ From `docs/git-rules.md`:
 
 ## 11) Change Checklist
 1. Read `docs/git-rules.md` first.
-2. Check whether the task belongs in `apps/web`, `content`, `infra`, or legacy `apps/backend`.
+2. Check whether the task belongs in `apps/web`, `content`, or `infra`.
 3. Apply minimal, scoped edits.
 4. Run the narrowest relevant validation commands.
 5. Update docs when workflow or architecture changes.

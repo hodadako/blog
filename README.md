@@ -13,7 +13,6 @@ Low-cost multilingual blog architecture built around:
 
 ```txt
 apps/
-  backend/                  # legacy Nest reference, not target runtime
   web/                      # Next.js public/admin app
 content/
   posts/
@@ -24,15 +23,13 @@ infra/
   cloudflare-worker/
   pulumi/
   supabase/
-packages/
-  schema/
 ```
 
 ## Current architecture decision
 
-The target end state retires `apps/backend` from the deploy path. Public pages, admin auth, and comment APIs live in `apps/web`, while post authoring stays file-based under `content/posts`.
+The current runtime lives in `apps/web`. Public pages, admin auth, and comment APIs live there, while post authoring stays file-based under `content/posts`.
 
-See `docs/architecture/target-architecture.md` for the keep/replace analysis.
+See `docs/architecture/target-architecture.md` for the current system overview.
 
 ## Local development
 

@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths" : {
-      "@schema/*" : ["packages/schema/*"],
-      "@backend/*" : ["apps/backend/src/*"],
-      "@be-test/*" : ["apps/backend/test/*"],
-    }
+    "baseUrl": "."
   },
   "exclude": ["node_modules", "dist"]
 }

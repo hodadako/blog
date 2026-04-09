@@ -1,19 +1,21 @@
 # Target Architecture
 
-## Keep
+## Core structure
 
-- `apps/backend/src/post/domain/*`: naming and modeling reference only
-- `apps/backend/src/comment/domain/*`: naming reference only
-- `packages/schema`: salvageable shared-contract area, but currently legacy-shaped
-- `turbo.json`: still useful for monorepo orchestration
+- `apps/web`: public pages, admin routes, and API handlers
+- `content/posts/{slug}/{locale}.md`: file-backed post source of truth
+- `infra/supabase`: comment schema and migrations
+- `infra/cloudflare-worker`: quiz verification flow
+- `infra/pulumi`: infrastructure ownership and deployment wiring
+- `turbo.json`: monorepo orchestration
 
-## Replace
+## Runtime choices
 
-- Public runtime: Nest backend -> Next.js App Router in `apps/web`
-- Post storage: MySQL entities -> markdown files in `content/posts/{slug}/{locale}.md`
-- Comment persistence: local ORM/MySQL -> Supabase/Postgres
-- Comment anti-spam: cache-confirm flow -> Worker-issued quiz pass token + server-side re-verification
-- Admin access: absent -> single password + signed cookie session
+- Public runtime: Next.js App Router in `apps/web`
+- Post storage: markdown files in `content/posts/{slug}/{locale}.md`
+- Comment persistence: Supabase/Postgres
+- Comment anti-spam: Worker-issued quiz pass token + server-side re-verification
+- Admin access: single password + signed cookie session
 
 ## Service roles
 
@@ -40,7 +42,7 @@
 4. Comment form fetches a challenge from Cloudflare Worker.
 5. Worker verifies the answer and returns a signed pass token.
 6. Next.js route re-verifies the token and writes the comment to Supabase.
-7. Admin post save writes markdown through the GitHub Contents API.
+7. Admin post updates are reflected in file-backed content workflows.
 
 ## Deliberate simplifications
 
