@@ -24,17 +24,11 @@ export async function generateMetadata({params}: BlogIndexProps) {
 export default async function BlogIndexPage({params}: BlogIndexProps) {
   const routeParams = await resolveRouteParams(params);
   const locale = resolveLocale(routeParams.locale);
-  const dictionary = getDictionary(locale);
   const data = await getBlogIndexPageData(locale);
 
   return (
     <div className="page-main">
       <section className="page-section">
-        <header className="page-header">
-          <p className="section-eyebrow">{dictionary.blogIndex.eyebrow}</p>
-          <h1 className="page-title">{dictionary.blogIndex.heading}</h1>
-          <p className="page-copy">{dictionary.blogIndex.intro}</p>
-        </header>
         <div className="archive-list">
           {data.posts.map((post) => (
             <PostCard key={post.slug} locale={locale} post={post} />
