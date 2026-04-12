@@ -5,6 +5,8 @@ import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type AppLocale, isSupportedLocale } 
 import { env } from "@/lib/env";
 import type { LocalizedPostInput, PostDetail, PostFrontmatter, PostSummary } from "@/lib/types";
 
+export const POST_ICON_FILENAME = "icon.png";
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -108,6 +110,7 @@ interface ContentRecord {
   canonicalSlug: string;
   frontmatter: PostFrontmatter;
   body: string;
+  iconUrl?: string;
 }
 
 function formatReadingTime(locale: AppLocale, body: string): string {
@@ -121,13 +124,30 @@ function toSummary(record: ContentRecord, availableLocales: AppLocale[]): PostSu
     canonicalSlug: record.canonicalSlug,
     availableLocales,
     readingTime: formatReadingTime(record.frontmatter.locale, record.body),
+    iconUrl: record.iconUrl,
   };
+}
+
+export function buildPostIconUrl(canonicalSlug: string): string {
+  return `/posts/${encodeURIComponent(canonicalSlug)}/${POST_ICON_FILENAME}`;
+}
+
+export function resolvePostIconFilePath(canonicalSlug: string): string | null {
+  if (path.basename(canonicalSlug) !== canonicalSlug) {
+    return null;
+  }
+
+  const iconPath = path.join(contentDirectory, canonicalSlug, POST_ICON_FILENAME);
+  return existsSync(iconPath) ? iconPath : null;
 }
 
 async function readPostDirectory(canonicalSlug: string): Promise<ContentRecord[]> {
   const slugDirectory = path.join(contentDirectory, canonicalSlug);
   const entries = await fs.readdir(slugDirectory, { withFileTypes: true });
   const markdownFiles = entries.filter((entry) => entry.isFile() && entry.name.endsWith(".md"));
+  const iconUrl = resolvePostIconFilePath(canonicalSlug)
+    ? buildPostIconUrl(canonicalSlug)
+    : undefined;
 
   const records = await Promise.all(
     markdownFiles.map(async (file) => {
@@ -146,6 +166,7 @@ async function readPostDirectory(canonicalSlug: string): Promise<ContentRecord[]
         canonicalSlug,
         frontmatter,
         body: parsed.content.trim(),
+        iconUrl,
       } satisfies ContentRecord;
     }),
   );

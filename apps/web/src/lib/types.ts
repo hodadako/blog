@@ -17,6 +17,7 @@ export interface PostSummary extends PostFrontmatter {
   readingTime: string;
   canonicalSlug: string;
   availableLocales: AppLocale[];
+  iconUrl?: string;
 }
 
 export interface PostDetail extends PostSummary {
