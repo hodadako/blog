@@ -18,13 +18,13 @@ export function SiteHeader({locale}: SiteHeaderProps) {
 
         <div className="site-nav">
           <nav className="site-nav__links" aria-label={dictionary.navigation.label}>
-            <a className="site-nav__link" href={`/${locale}#projects`}>
+            <a className="site-nav__link" href={`/${locale}/projects`}>
               {dictionary.navigation.projects}
             </a>
             <a className="site-nav__link" href={`/${locale}/blog`}>
               {dictionary.navigation.blog}
             </a>
-            <a className="site-nav__link" href={`/${locale}#inspirations`}>
+            <a className="site-nav__link" href={`/${locale}/inspirations`}>
               {dictionary.navigation.inspirations}
             </a>
           </nav>
