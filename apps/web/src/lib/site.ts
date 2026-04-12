@@ -2,6 +2,7 @@ export const SUPPORTED_LOCALES = ["ko", "en"] as const;
 export const DEFAULT_LOCALE = "ko" as const;
 
 export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
+export type InspirationType = "book" | "article" | "film" | "exhibition" | "anime" | "album" | "conference";
 
 export function isSupportedLocale(locale: string): locale is AppLocale {
   return SUPPORTED_LOCALES.includes(locale as AppLocale);
@@ -30,11 +31,6 @@ export interface AdminCommentsCopy {
   ipHashLabel: string;
 }
 
-interface HomeFeatureItem {
-  title: string;
-  description: string;
-}
-
 interface SiteDictionary {
   siteName: string;
   siteTagline: string;
@@ -55,6 +51,10 @@ interface SiteDictionary {
     eyebrow: string;
     heading: string;
     intro: string;
+    aboutLabel: string;
+    aboutHeading: string;
+    aboutBody: string;
+    aboutFocus: string;
     primaryCta: string;
     secondaryCta: string;
     featuredLabel: string;
@@ -62,10 +62,25 @@ interface SiteDictionary {
     projectsLabel: string;
     projectsHeading: string;
     projectsCopy: string;
-    projects: HomeFeatureItem[];
+    projectsCta: string;
     recentLabel: string;
     recentHeading: string;
     recentCopy: string;
+  };
+  projectsPage: {
+    heading: string;
+    intro: string;
+  };
+  inspirationsPage: {
+    heading: string;
+    intro: string;
+    note: string;
+    yearLabel: string;
+    entriesLabel: string;
+    yearsStatLabel: string;
+    entriesStatLabel: string;
+    typesStatLabel: string;
+    types: Record<InspirationType, string>;
   };
   blogIndex: {
     eyebrow: string;
@@ -143,32 +158,48 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
     },
     home: {
       eyebrow: "Independent publication",
-      heading: "제품과 엔지니어링 사이의 실험을 담아내는 기술 블로그",
-      intro: "작게 운영하되 읽기 쉽게 정리한 메모, 구현 기록, 운영 관찰을 로케일별로 차곡차곡 쌓아갑니다.",
+      heading: "hodako입니다.",
+      intro: "배우고 만들고 경험한 것을 기록합니다.",
+      aboutLabel: "소개",
+      aboutHeading: "현재 관심사",
+      aboutBody: "웹 백엔드 개발 ",
+      aboutFocus: "최근 글을 통해서 더 많은",
       primaryCta: "Blog 둘러보기",
       secondaryCta: "Inspirations 보기",
-      featuredLabel: "Latest article",
-      featuredCta: "계속 읽기",
+      featuredLabel: "최근 글",
+      featuredCta: "포스트 읽기",
       projectsLabel: "Projects",
-      projectsHeading: "지금 다루는 주제와 작업",
-      projectsCopy: "출판 흐름, 다국어 운영, 댓글 경험처럼 블로그를 꾸준히 움직이게 하는 작은 시스템을 기록합니다.",
-      projects: [
-        {
-          title: "Multilingual publishing",
-          description: "로케일별 포스트 구조를 단순한 파일 기반으로 유지하며, 번역과 공개 흐름을 가볍게 다룹니다.",
-        },
-        {
-          title: "Reader discussion",
-          description: "글마다 이어지는 댓글 흐름을 분리하지 않고, 하나의 대화처럼 정리하는 방식을 실험합니다.",
-        },
-        {
-          title: "Solo operations",
-          description: "혼자 운영해도 유지 가능한 관리 화면, 게시 절차, 배포 리듬을 가능한 단순하게 다듬습니다.",
-        },
-      ],
+      projectsHeading: "지금 걸어두는 프로젝트 링크",
+      projectsCopy: "확인된 프로젝트만 짧게 남기고, 자세한 맥락은 블로그 글에서 이어갑니다.",
+      projectsCta: "Projects 페이지 보기",
       recentLabel: "Inspirations",
       recentHeading: "최근에 남긴 글",
       recentCopy: "짧은 실험부터 운영 메모까지, 최근 업데이트를 한눈에 훑을 수 있는 촘촘한 아카이브입니다.",
+    },
+    projectsPage: {
+      heading: "Projects",
+      intro: "현재 확인된 프로젝트 링크만 간단히 모아둔 목록입니다.",
+    },
+    inspirationsPage: {
+      heading: "Inspirations",
+      intro:
+        "생각의 흐름과 영감을 주는 경험들을 연도와 월 단위로 차분히 모아둔 아카이브입니다.",
+      note:
+        "다시 열어보고 싶은 문장, 화면, 공간을 생각하며 기록합니다.",
+      yearLabel: "연도",
+      entriesLabel: "항목",
+      yearsStatLabel: "정리한 연도",
+      entriesStatLabel: "모아둔 레퍼런스",
+      typesStatLabel: "분류",
+      types: {
+        book: "책",
+        article: "아티클",
+        film: "필름",
+        exhibition: "전시",
+        anime: "애니메이션",
+        album: "앨범",
+        conference: "컨퍼런스",
+      },
     },
     blogIndex: {
       eyebrow: "Blog",
@@ -255,32 +286,48 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
     },
     home: {
       eyebrow: "Independent publication",
-      heading: "A compact tech blog for product experiments and engineering notes",
-      intro: "Writing, observations, and implementation details are organized into a publication surface that stays lightweight but deliberate.",
+      heading: "Hi, I'm hodako, a developer who likes building web experiences that last.",
+      intro: "I keep this site as a quiet place to collect what I build, learn, and revisit over time.",
+      aboutLabel: "About me",
+      aboutHeading: "What I spend time on",
+      aboutBody: "I like working across frontend implementation, product shaping, and the small operational decisions that make a service feel steady.",
+      aboutFocus: "This homepage is meant to introduce me first, while the latest post stays nearby as a small window into what I have been thinking about recently.",
       primaryCta: "Browse blog",
       secondaryCta: "View inspirations",
-      featuredLabel: "Latest article",
+      featuredLabel: "Latest post",
       featuredCta: "Open article",
       projectsLabel: "Projects",
-      projectsHeading: "Current tracks and ongoing work",
-      projectsCopy: "The publication focuses on small systems that make the blog sustainable: publishing flow, multilingual structure, and reader discussion.",
-      projects: [
-        {
-          title: "Multilingual publishing",
-          description: "Posts stay file-backed and locale-aware so writing can ship in a simple, predictable editorial flow.",
-        },
-        {
-          title: "Reader discussion",
-          description: "Comments are treated as part of the reading experience rather than a separate tool surface.",
-        },
-        {
-          title: "Solo operations",
-          description: "The stack favors maintainability and low operational cost for a single-editor publication rhythm.",
-        },
-      ],
+      projectsHeading: "Current project links",
+      projectsCopy: "Only confirmed projects are listed here for now, with fuller context left to blog posts.",
+      projectsCta: "Open Projects page",
       recentLabel: "Inspirations",
       recentHeading: "Latest writing",
       recentCopy: "Recent essays, experiments, and operational notes collected in a tighter editorial archive.",
+    },
+    projectsPage: {
+      heading: "Projects",
+      intro: "A minimal list of currently confirmed project links.",
+    },
+    inspirationsPage: {
+      heading: "Inspirations",
+      intro:
+        "A quiet archive of books, essays, films, and exhibitions that keep nudging how I design, write, and build.",
+      note:
+        "Instead of aiming for a finished canon, I keep track of the moods, structures, and editorial cues I return to over time. It is a slow, hand-curated reference shelf for ongoing work.",
+      yearLabel: "Year",
+      entriesLabel: "entries",
+      yearsStatLabel: "Years tracked",
+      entriesStatLabel: "References logged",
+      typesStatLabel: "Types",
+      types: {
+        book: "Book",
+        article: "Article",
+        film: "Film",
+        exhibition: "Exhibition",
+        anime: "Anime",
+        album: "Album",
+        conference: "Conference",
+      },
     },
     blogIndex: {
       eyebrow: "Blog",
