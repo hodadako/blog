@@ -40,93 +40,21 @@ export interface InspirationArchiveYear {
 
 const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
   {
-    id: "creative-act",
-    publishedOn: "2026-03-18",
-    type: "book",
-    href: "https://www.penguinrandomhouse.com/books/717356/the-creative-act-by-rick-rubin/",
+    id: "yorushika-second-person",
+    publishedOn: "2026-04-01",
+    type: "album",
+    href: "https://yorushika.com/discography/detail/70/",
     source: {
-      ko: "Rick Rubin · Penguin Random House",
-      en: "Rick Rubin · Penguin Random House",
+      ko: "Yorushika",
+      en: "Yorushika",
     },
     title: {
-      ko: "The Creative Act",
-      en: "The Creative Act",
+      ko: "Second Person",
+      en: "Second Person",
     },
     summary: {
-      ko: "완성도를 앞당기기보다 작업의 리듬을 지키는 태도가 왜 중요한지 다시 확인하게 만든 책.",
-      en: "A reminder that keeping a creative rhythm often matters more than forcing premature polish.",
-    },
-  },
-  {
-    id: "makers-schedule",
-    publishedOn: "2026-03-04",
-    type: "article",
-    href: "https://paulgraham.com/makersschedule.html",
-    source: {
-      ko: "Paul Graham",
-      en: "Paul Graham",
-    },
-    title: {
-      ko: "Maker's Schedule, Manager's Schedule",
-      en: "Maker's Schedule, Manager's Schedule",
-    },
-    summary: {
-      ko: "집중이 필요한 제작 시간과 운영 시간이 어떻게 다르게 흘러야 하는지 명확하게 짚어주는 오래된 글.",
-      en: "An old but sharp essay about why maker time and coordination time need very different shapes.",
-    },
-  },
-  {
-    id: "perfect-days",
-    publishedOn: "2026-01-27",
-    type: "film",
-    href: "https://www.imdb.com/title/tt27503384/",
-    source: {
-      ko: "Wim Wenders · Perfect Days",
-      en: "Wim Wenders · Perfect Days",
-    },
-    title: {
-      ko: "Perfect Days",
-      en: "Perfect Days",
-    },
-    summary: {
-      ko: "반복되는 일상 안에서도 화면의 밀도와 여백이 얼마나 조용하게 감정을 만들 수 있는지 보여준 영화.",
-      en: "A film that shows how repetition, framing, and quiet gaps can carry emotion without excess.",
-    },
-  },
-  {
-    id: "mark-rothko",
-    publishedOn: "2025-11-09",
-    type: "exhibition",
-    href: "https://www.fondationlouisvuitton.fr/en/events/mark-rothko",
-    source: {
-      ko: "Fondation Louis Vuitton",
-      en: "Fondation Louis Vuitton",
-    },
-    title: {
-      ko: "Mark Rothko",
-      en: "Mark Rothko",
-    },
-    summary: {
-      ko: "큰 색면이 어떻게 서늘한 긴장과 몰입을 동시에 만드는지 다시 생각하게 한 전시 기록.",
-      en: "An exhibition record that keeps pulling me back to how scale and restraint can create deep tension.",
-    },
-  },
-  {
-    id: "tyranny-of-structurelessness",
-    publishedOn: "2025-11-02",
-    type: "article",
-    href: "https://www.jofreeman.com/joreen/tyranny.htm",
-    source: {
-      ko: "Jo Freeman",
-      en: "Jo Freeman",
-    },
-    title: {
-      ko: "The Tyranny of Structurelessness",
-      en: "The Tyranny of Structurelessness",
-    },
-    summary: {
-      ko: "보이지 않는 규칙이야말로 가장 강한 구조가 될 수 있다는 사실을 팀 운영 관점에서 다시 보게 만든 에세이.",
-      en: "A foundational essay on how invisible rules become the strongest structure in collaborative work.",
+      ko: "관찰자 시점과 감정의 거리감을 교차시키는 요루시카 특유의 서사 방식이 인상적인 앨범.",
+      en: "An album that highlights Yorushika’s narrative style, shifting between observer perspective and emotional distance.",
     },
   },
   {
@@ -135,8 +63,8 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     type: "exhibition",
     href: "https://groundseesaw.cafe24.com/product/detail.html?product_no=1313&cate_no=48&display_group=1",
     source: {
-      ko: "그라운드시소 · 요시고",
-      en: "GROUNDSEESAW · YOSIGO",
+      ko: "그라운드시소, YOSIGO",
+      en: "GROUNDSEESAW, YOSIGO",
     },
     title: {
       ko: "요시고 사진전: 끝나지 않은 여행",
@@ -145,6 +73,24 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     summary: {
       ko: "따스한 지중해의 빛, 도쿄의 밤, 끝나지 않은 여행을 엿볼 수 있었다.",
       en: "",
+    },
+  },
+  {
+    id: "mschf-nothing-is-sacred",
+    publishedOn: "2024-03-04",
+    type: "exhibition",
+    href: "https://www.daelimmuseum.org/exhibition/current/PRG202309220002",
+    source: {
+      ko: "대림미술관 · MSCHF",
+      en: "Daelim Museum · MSCHF",
+    },
+    title: {
+      ko: "MSCHF: NOTHING IS SACRED",
+      en: "MSCHF: NOTHING IS SACRED",
+    },
+    summary: {
+      ko: "인터넷 밈, 상업 이미지, 제품 문법을 뒤집는 방식이 얼마나 직접적으로 시선을 끄는지 보여준 전시.",
+      en: "An exhibition that shows how aggressively MSCHF flips internet, product, and commercial language into attention-grabbing objects.",
     },
   },
 ];
