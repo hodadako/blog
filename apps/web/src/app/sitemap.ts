@@ -1,8 +1,8 @@
 import { env } from "@/lib/env";
-import { getAllLocalizedPosts } from "@/lib/content";
+import { getAllLocalizedPostSitemapEntries } from "@/lib/content";
 
 export default async function sitemap() {
-  const posts = await getAllLocalizedPosts();
+  const posts = await getAllLocalizedPostSitemapEntries();
 
   return posts
     .filter((post) => !post.draft)
@@ -11,7 +11,7 @@ export default async function sitemap() {
       lastModified: post.updatedAt ?? post.publishedAt,
       alternates: {
         languages: Object.fromEntries(
-          post.availableLocales.map((locale) => [locale, `${env.siteUrl}/${locale}/blog/${post.slug}`]),
+          Object.entries(post.alternates).map(([locale, slug]) => [locale, `${env.siteUrl}/${locale}/blog/${slug}`]),
         ),
       },
     }));

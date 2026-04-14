@@ -2,7 +2,7 @@ import type { AppLocale } from "@/lib/site";
 import { getPostBySlug, getPostsByLocale } from "@/lib/content";
 
 export async function getHomePageData(locale: AppLocale) {
-  const posts = await getPostsByLocale(locale);
+  const posts = await getPostsByLocale(locale, 4);
 
   return {
     hero: posts[0] ?? null,

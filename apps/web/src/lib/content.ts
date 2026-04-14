@@ -106,11 +106,21 @@ function resolveContentDirectory(): string {
 
 const contentDirectory = resolveContentDirectory();
 
-interface ContentRecord {
+interface IndexedPostRecord {
+  availableLocales: AppLocale[];
   canonicalSlug: string;
   frontmatter: PostFrontmatter;
-  body: string;
   iconUrl?: string;
+  sourcePath: string;
+}
+
+interface ContentIndex {
+  allPostParams: Array<{ locale: AppLocale; slug: string }>;
+  canonicalByLocalizedSlug: Map<string, string>;
+  indexedPostsByLocalizedSlug: Map<string, IndexedPostRecord>;
+  localizedPosts: IndexedPostRecord[];
+  postsByLocale: Map<AppLocale, IndexedPostRecord[]>;
+  variantsByCanonicalSlug: Map<string, IndexedPostRecord[]>;
 }
 
 function formatReadingTime(locale: AppLocale, body: string): string {
@@ -118,12 +128,12 @@ function formatReadingTime(locale: AppLocale, body: string): string {
   return locale === "ko" ? `${minutes}분` : `${minutes} min`;
 }
 
-function toSummary(record: ContentRecord, availableLocales: AppLocale[]): PostSummary {
+function toSummary(record: IndexedPostRecord, readingTime: string): PostSummary {
   return {
     ...record.frontmatter,
     canonicalSlug: record.canonicalSlug,
-    availableLocales,
-    readingTime: formatReadingTime(record.frontmatter.locale, record.body),
+    availableLocales: record.availableLocales,
+    readingTime,
     iconUrl: record.iconUrl,
   };
 }
@@ -141,7 +151,67 @@ export function resolvePostIconFilePath(canonicalSlug: string): string | null {
   return existsSync(iconPath) ? iconPath : null;
 }
 
-async function readPostDirectory(canonicalSlug: string): Promise<ContentRecord[]> {
+function parseMarkdownBody(source: string): string {
+  return matter(source).content.trim();
+}
+
+async function readFrontmatterSource(sourcePath: string): Promise<string> {
+  const file = await fs.open(sourcePath, "r");
+  const chunks: Buffer[] = [];
+
+  try {
+    let offset = 0;
+
+    while (offset < 16_384) {
+      const chunk = Buffer.alloc(2048);
+      const { bytesRead } = await file.read(chunk, 0, chunk.length, offset);
+
+      if (bytesRead === 0) {
+        break;
+      }
+
+      chunks.push(chunk.subarray(0, bytesRead));
+      offset += bytesRead;
+
+      const candidate = Buffer.concat(chunks).toString("utf8");
+
+      if (/^---\s*$[\s\S]*?^---\s*$/m.test(candidate)) {
+        return candidate;
+      }
+    }
+  } finally {
+    await file.close();
+  }
+
+  return fs.readFile(sourcePath, "utf8");
+}
+
+const readingTimePromiseByPath = new Map<string, Promise<string>>();
+
+async function getReadingTime(record: IndexedPostRecord): Promise<string> {
+  const existing = readingTimePromiseByPath.get(record.sourcePath);
+
+  if (existing) {
+    return existing;
+  }
+
+  const next = fs
+    .readFile(record.sourcePath, "utf8")
+    .then((source) => formatReadingTime(record.frontmatter.locale, parseMarkdownBody(source)))
+    .catch((error) => {
+      readingTimePromiseByPath.delete(record.sourcePath);
+      throw error;
+    });
+
+  readingTimePromiseByPath.set(record.sourcePath, next);
+  return next;
+}
+
+async function buildSummary(record: IndexedPostRecord): Promise<PostSummary> {
+  return toSummary(record, await getReadingTime(record));
+}
+
+async function readPostDirectory(canonicalSlug: string): Promise<IndexedPostRecord[]> {
   const slugDirectory = path.join(contentDirectory, canonicalSlug);
   const entries = await fs.readdir(slugDirectory, { withFileTypes: true });
   const markdownFiles = entries.filter((entry) => entry.isFile() && entry.name.endsWith(".md"));
@@ -158,20 +228,28 @@ async function readPostDirectory(canonicalSlug: string): Promise<ContentRecord[]
       }
 
       const absolutePath = path.join(slugDirectory, file.name);
-      const source = await fs.readFile(absolutePath, "utf8");
+      const source = await readFrontmatterSource(absolutePath);
       const parsed = matter(source);
       const frontmatter = parseFrontmatter(parsed.data);
 
       return {
+        availableLocales: [],
         canonicalSlug,
         frontmatter,
-        body: parsed.content.trim(),
         iconUrl,
-      } satisfies ContentRecord;
+        sourcePath: absolutePath,
+      } satisfies IndexedPostRecord;
     }),
   );
 
-  return records.sort((left, right) => left.frontmatter.locale.localeCompare(right.frontmatter.locale));
+  const availableLocales = records.map((record) => record.frontmatter.locale);
+
+  return records
+    .map((record) => ({
+      ...record,
+      availableLocales,
+    }))
+    .sort((left, right) => left.frontmatter.locale.localeCompare(right.frontmatter.locale));
 }
 
 async function listCanonicalSlugs(): Promise<string[]> {
@@ -183,79 +261,168 @@ async function listCanonicalSlugs(): Promise<string[]> {
   }
 }
 
-export async function getAllLocalizedPosts(): Promise<PostSummary[]> {
-  const slugs = await listCanonicalSlugs();
-  const groups = await Promise.all(slugs.map((slug) => readPostDirectory(slug)));
-
-  return groups
-    .flatMap((records) => {
-      const locales = records.map((record) => record.frontmatter.locale);
-      return records.map((record) => toSummary(record, locales));
-    })
-    .sort((left, right) => right.publishedAt.localeCompare(left.publishedAt));
+function buildLocalizedPostKey(locale: AppLocale, slug: string): string {
+  return `${locale}:${slug}`;
 }
 
-export async function getPostsByLocale(locale: AppLocale): Promise<PostSummary[]> {
-  const allPosts = await getAllLocalizedPosts();
+let contentIndexPromise: Promise<ContentIndex> | null = null;
 
-  return allPosts.filter((post) => post.locale === locale && !post.draft);
+async function buildContentIndex(): Promise<ContentIndex> {
+  const slugs = await listCanonicalSlugs();
+  const groups = await Promise.all(slugs.map((slug) => readPostDirectory(slug)));
+  const allPostParams: Array<{ locale: AppLocale; slug: string }> = [];
+  const canonicalByLocalizedSlug = new Map<string, string>();
+  const indexedPostsByLocalizedSlug = new Map<string, IndexedPostRecord>();
+  const localizedPosts: IndexedPostRecord[] = [];
+  const postsByLocale = new Map<AppLocale, IndexedPostRecord[]>(SUPPORTED_LOCALES.map((locale) => [locale, []]));
+  const variantsByCanonicalSlug = new Map<string, IndexedPostRecord[]>();
+
+  groups.forEach((records) => {
+    if (records.length === 0) {
+      return;
+    }
+
+    const variants = records
+      .map((record) => {
+        const localizedPostKey = buildLocalizedPostKey(record.frontmatter.locale, record.frontmatter.slug);
+
+        canonicalByLocalizedSlug.set(localizedPostKey, record.canonicalSlug);
+        indexedPostsByLocalizedSlug.set(localizedPostKey, record);
+        localizedPosts.push(record);
+
+        if (!record.frontmatter.draft) {
+          allPostParams.push({locale: record.frontmatter.locale, slug: record.frontmatter.slug});
+          postsByLocale.get(record.frontmatter.locale)?.push(record);
+        }
+
+        return record;
+      })
+      .sort((left, right) => left.frontmatter.locale.localeCompare(right.frontmatter.locale));
+
+    variantsByCanonicalSlug.set(records[0].canonicalSlug, variants);
+  });
+
+  localizedPosts.sort((left, right) => right.frontmatter.publishedAt.localeCompare(left.frontmatter.publishedAt));
+
+  postsByLocale.forEach((posts, locale) => {
+    postsByLocale.set(
+      locale,
+      posts.sort((left, right) => right.frontmatter.publishedAt.localeCompare(left.frontmatter.publishedAt)),
+    );
+  });
+
+  return {
+    allPostParams,
+    canonicalByLocalizedSlug,
+    indexedPostsByLocalizedSlug,
+    localizedPosts,
+    postsByLocale,
+    variantsByCanonicalSlug,
+  };
+}
+
+async function getContentIndex(): Promise<ContentIndex> {
+  if (!contentIndexPromise) {
+    contentIndexPromise = buildContentIndex().catch((error) => {
+      contentIndexPromise = null;
+      throw error;
+    });
+  }
+
+  return contentIndexPromise;
+}
+
+export async function getAllLocalizedPosts(): Promise<PostSummary[]> {
+  const contentIndex = await getContentIndex();
+  return Promise.all(contentIndex.localizedPosts.map((record) => buildSummary(record)));
+}
+
+export async function getAllLocalizedPostMetadata(): Promise<
+  Array<Pick<PostSummary, "availableLocales" | "canonicalSlug" | "draft" | "locale" | "publishedAt" | "slug" | "updatedAt">>
+> {
+  const contentIndex = await getContentIndex();
+
+  return contentIndex.localizedPosts.map((record) => ({
+    availableLocales: record.availableLocales,
+    canonicalSlug: record.canonicalSlug,
+    draft: record.frontmatter.draft,
+    locale: record.frontmatter.locale,
+    publishedAt: record.frontmatter.publishedAt,
+    slug: record.frontmatter.slug,
+    updatedAt: record.frontmatter.updatedAt,
+  }));
+}
+
+export async function getAllLocalizedPostSitemapEntries(): Promise<
+  Array<{
+    alternates: Record<AppLocale, string>;
+    draft: boolean;
+    locale: AppLocale;
+    publishedAt: string;
+    slug: string;
+    updatedAt?: string;
+  }>
+> {
+  const contentIndex = await getContentIndex();
+
+  return contentIndex.localizedPosts.map((record) => {
+    const variants = contentIndex.variantsByCanonicalSlug.get(record.canonicalSlug) ?? [];
+
+    return {
+      alternates: Object.fromEntries(
+        variants.map((variant) => [variant.frontmatter.locale, variant.frontmatter.slug]),
+      ) as Record<AppLocale, string>,
+      draft: record.frontmatter.draft,
+      locale: record.frontmatter.locale,
+      publishedAt: record.frontmatter.publishedAt,
+      slug: record.frontmatter.slug,
+      updatedAt: record.frontmatter.updatedAt,
+    };
+  });
+}
+
+export async function getPostsByLocale(locale: AppLocale, limit?: number): Promise<PostSummary[]> {
+  const contentIndex = await getContentIndex();
+  const posts = contentIndex.postsByLocale.get(locale) ?? [];
+  const selected = typeof limit === "number" ? posts.slice(0, limit) : posts;
+
+  return Promise.all(selected.map((record) => buildSummary(record)));
 }
 
 export async function getAllPostParams(): Promise<Array<{ locale: AppLocale; slug: string }>> {
-  const posts = await getAllLocalizedPosts();
-
-  return posts.filter((post) => !post.draft).map((post) => ({ locale: post.locale, slug: post.slug }));
+  const contentIndex = await getContentIndex();
+  return [...contentIndex.allPostParams];
 }
 
 export async function getPostBySlug(locale: AppLocale, slug: string): Promise<PostDetail | null> {
-  const slugs = await listCanonicalSlugs();
+  const contentIndex = await getContentIndex();
+  const record = contentIndex.indexedPostsByLocalizedSlug.get(buildLocalizedPostKey(locale, slug));
 
-  for (const canonicalSlug of slugs) {
-    const records = await readPostDirectory(canonicalSlug);
-    const match = records.find(
-      (record) => record.frontmatter.locale === locale && record.frontmatter.slug === slug,
-    );
-
-    if (!match) {
-      continue;
-    }
-
-    const locales = records.map((record) => record.frontmatter.locale);
-
-    return {
-      ...toSummary(match, locales),
-      body: match.body,
-    };
+  if (!record) {
+    return null;
   }
 
-  return null;
+  const variants = contentIndex.variantsByCanonicalSlug.get(record.canonicalSlug) ?? [];
+  const source = await fs.readFile(record.sourcePath, "utf8");
+
+  return {
+    ...toSummary(record, await getReadingTime(record)),
+    body: parseMarkdownBody(source),
+  };
 }
 
 export async function findCanonicalSlugByLocalizedSlug(
   locale: AppLocale,
   slug: string,
 ): Promise<string | null> {
-  const slugs = await listCanonicalSlugs();
-
-  for (const canonicalSlug of slugs) {
-    const records = await readPostDirectory(canonicalSlug);
-    const found = records.some(
-      (record) => record.frontmatter.locale === locale && record.frontmatter.slug === slug,
-    );
-
-    if (found) {
-      return canonicalSlug;
-    }
-  }
-
-  return null;
+  const contentIndex = await getContentIndex();
+  return contentIndex.canonicalByLocalizedSlug.get(buildLocalizedPostKey(locale, slug)) ?? null;
 }
 
 export async function getLocalizedPostVariants(canonicalSlug: string): Promise<PostSummary[]> {
-  const records = await readPostDirectory(canonicalSlug);
-  const locales = records.map((record) => record.frontmatter.locale);
-
-  return records.map((record) => toSummary(record, locales)).sort((left, right) => left.locale.localeCompare(right.locale));
+  const contentIndex = await getContentIndex();
+  const variants = contentIndex.variantsByCanonicalSlug.get(canonicalSlug) ?? [];
+  return Promise.all(variants.map((record) => buildSummary(record)));
 }
 
 export async function findLocalizedSlug(canonicalSlug: string, locale: AppLocale): Promise<string | null> {
