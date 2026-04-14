@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {LocaleSwitcher} from "@/components/locale-switcher";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
@@ -11,22 +12,22 @@ export function SiteHeader({locale}: SiteHeaderProps) {
   return (
     <header className="site-header">
       <div className="site-header__inner">
-        <a className="brand-lockup" href={`/${locale}`}>
+        <Link className="brand-lockup" href={`/${locale}`}>
           <span className="brand-lockup__eyebrow">{dictionary.siteTagline}</span>
           <strong className="brand-lockup__title">{dictionary.siteName}</strong>
-        </a>
+        </Link>
 
         <div className="site-nav">
           <nav className="site-nav__links" aria-label={dictionary.navigation.label}>
-            <a className="site-nav__link" href={`/${locale}/projects`}>
+            <Link className="site-nav__link" href={`/${locale}/projects`}>
               {dictionary.navigation.projects}
-            </a>
-            <a className="site-nav__link" href={`/${locale}/blog`}>
+            </Link>
+            <Link className="site-nav__link" href={`/${locale}/blog`}>
               {dictionary.navigation.blog}
-            </a>
-            <a className="site-nav__link" href={`/${locale}/inspirations`}>
+            </Link>
+            <Link className="site-nav__link" href={`/${locale}/inspirations`}>
               {dictionary.navigation.inspirations}
-            </a>
+            </Link>
           </nav>
           <LocaleSwitcher currentLocale={locale} />
         </div>

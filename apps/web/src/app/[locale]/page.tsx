@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 import {getHomePageData} from "@/lib/server/blog";
 
@@ -47,7 +48,7 @@ export default async function LocaleHomePage({params}: HomePageProps) {
         </article>
 
         {latestPost ? (
-          <a
+          <Link
             className="surface-card surface-card--narrow stack-md home-latest-post-card"
             href={`/${locale}/blog/${latestPost.slug}`}
           >
@@ -61,7 +62,7 @@ export default async function LocaleHomePage({params}: HomePageProps) {
               <span>·</span>
               <span>{latestPost.readingTime}</span>
             </div>
-          </a>
+          </Link>
         ) : null}
       </section>
     </div>

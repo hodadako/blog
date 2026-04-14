@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type {AppLocale} from "@/lib/site";
 import type {PostSummary} from "@/lib/types";
 
@@ -14,7 +15,7 @@ export function PostCard({locale, post}: PostCardProps) {
 
   return (
     <article className={cardClassName}>
-      <a className="post-card__surface" href={`/${locale}/blog/${post.slug}`}>
+      <Link className="post-card__surface" href={`/${locale}/blog/${post.slug}`}>
         <div className={leadClassName}>
           <div className="post-card__content">
             <h2 className="post-card__title">{post.title}</h2>
@@ -52,7 +53,7 @@ export function PostCard({locale, post}: PostCardProps) {
             </div>
           </div>
         ) : null}
-      </a>
+      </Link>
     </article>
   );
 }
