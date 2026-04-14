@@ -180,12 +180,6 @@ function buildCommentTree(rows: CommentRow[]): CommentItem[] {
 }
 
 export async function listPublishedComments(slug: string): Promise<CommentItem[]> {
-  const thread = await getThreadBySlug(slug);
-
-  if (!thread) {
-    return [];
-  }
-
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("comments_with_thread")
