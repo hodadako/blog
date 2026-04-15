@@ -65,6 +65,7 @@ export function PostCommentsPanel({
   const replyTo = searchParams.get("replyTo");
   const commentAction = searchParams.get("commentAction");
   const commentId = searchParams.get("commentId");
+  const commentStatus = searchParams.get("commentStatus");
   const activeEditor: CommentEditorState | null =
     commentAction && commentId && (commentAction === "edit" || commentAction === "delete")
       ? {id: commentId, mode: commentAction}
@@ -102,6 +103,7 @@ export function PostCommentsPanel({
         passwordLabel={commentPasswordLabel}
         contentLabel={commentContentLabel}
       />
+      {commentStatus === "frontend-only" ? <p className="status-text">{quizLabels.unavailable}</p> : null}
     </section>
   );
 }

@@ -2,7 +2,7 @@
 
 import {useEffect, useId, useRef, useState} from "react";
 import type {KeyboardEvent as ReactKeyboardEvent} from "react";
-import {useRouter} from "next/navigation";
+import {usePathname} from "next/navigation";
 import {getDictionary, SUPPORTED_LOCALES, type AppLocale} from "@/lib/site";
 
 interface LocaleSwitcherProps {
@@ -11,7 +11,7 @@ interface LocaleSwitcherProps {
 
 export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
   const dictionary = getDictionary(currentLocale);
-  const router = useRouter();
+  const pathname = usePathname();
   const labelId = useId();
   const triggerLabelId = useId();
   const menuId = useId();
@@ -76,7 +76,14 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
       return;
     }
 
-    router.push(`/${nextLocale}`);
+    const nextPathname = pathname === `/${currentLocale}`
+      ? `/${nextLocale}`
+      : pathname.startsWith(`/${currentLocale}/`)
+        ? pathname.replace(`/${currentLocale}/`, `/${nextLocale}/`)
+        : `/${nextLocale}`;
+    const nextSearch = window.location.search;
+
+    window.location.assign(nextSearch ? `${nextPathname}${nextSearch}` : nextPathname);
   }
 
   function handleTriggerKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>): void {

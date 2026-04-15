@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 import { type AppLocale } from "@/lib/site";
 import type { QuizChallenge, QuizVerificationResult } from "@/lib/types";
 
@@ -35,13 +35,18 @@ export function QuizGate({ locale, slug, onStatusChange, labels }: QuizGateProps
   const [message, setMessage] = useState(labels.loading);
   const [workerAvailable, setWorkerAvailable] = useState(false);
 
+  function setUnavailableState(): void {
+    setWorkerAvailable(false);
+    setChallenge(null);
+    setMessage(labels.unavailable);
+    onStatusChange?.("frontend-only");
+  }
+
   useEffect(() => {
     onStatusChange?.("loading");
 
     if (!workerUrl) {
-      setWorkerAvailable(false);
-      setMessage(labels.frontendOnly);
-      onStatusChange?.("frontend-only");
+      setUnavailableState();
       return;
     }
 
@@ -62,12 +67,9 @@ export function QuizGate({ locale, slug, onStatusChange, labels }: QuizGateProps
         onStatusChange?.("ready");
       })
       .catch(() => {
-        setWorkerAvailable(false);
-        setChallenge(null);
-        setMessage(labels.frontendOnly);
-        onStatusChange?.("frontend-only");
+        setUnavailableState();
       });
-  }, [labels.frontendOnly, locale, onStatusChange, slug, workerUrl]);
+  }, [labels.unavailable, locale, onStatusChange, slug, workerUrl]);
 
   const isDisabled = useMemo(() => !workerAvailable || !challenge || Boolean(verifiedToken), [challenge, verifiedToken, workerAvailable]);
 
@@ -76,32 +78,33 @@ export function QuizGate({ locale, slug, onStatusChange, labels }: QuizGateProps
       return;
     }
 
-    const response = await fetch(`${workerUrl}/verify`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        slug,
-        locale,
-        challengeToken: challenge.challengeToken,
-        answer,
-      }),
-      signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
-    });
+    try {
+      const response = await fetch(`${workerUrl}/verify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          slug,
+          locale,
+          challengeToken: challenge.challengeToken,
+          answer,
+        }),
+        signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
+      });
 
-    if (!response.ok) {
-      setWorkerAvailable(false);
-      setChallenge(null);
-      setMessage(labels.frontendOnly);
-      onStatusChange?.("frontend-only");
-      return;
+      if (!response.ok) {
+        setUnavailableState();
+        return;
+      }
+
+      const payload = (await response.json()) as QuizVerificationResult;
+      setVerifiedToken(payload.verifiedToken);
+      setMessage(labels.verified);
+      onStatusChange?.("ready");
+    } catch {
+      setUnavailableState();
     }
-
-    const payload = (await response.json()) as QuizVerificationResult;
-    setVerifiedToken(payload.verifiedToken);
-    setMessage(labels.verified);
-    onStatusChange?.("ready");
   }
 
   return (
