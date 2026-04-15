@@ -1,8 +1,8 @@
 ---
 title:  "만약 저 개찰구 앞에서 멈춰서지 않고 걷고 있었다면 개발도 모르는 채 행복하게 살고 있었을까?"
 description: "늦게나마 남겨보는 2025년도의 회고"
-publishedAt: "2026-04-29"
-updatedAt: "2026-04-29"
+publishedAt: "2026-03-29"
+updatedAt: "2026-03-29"
 tags: ["회고"]
 draft: false
 locale: "ko"
@@ -15,7 +15,7 @@ slug: "2025-retrospective"
 그리고 그 선택 이후로는 다시 이전으로 돌아가지 못한다.
                                                                           
 <iframe
-src="https://www.youtube.com/embed/2aFgfKtg3V4?si=qlrd6und2MKpw6pc"  
+src="https://www.youtube.com/embed/2aFgfKtg3V4"  
 title="YouTube video player"  
 loading="lazy"
 referrerpolicy="strict-origin-when-cross-origin"                                                      

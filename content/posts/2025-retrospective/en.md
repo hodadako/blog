@@ -1,8 +1,8 @@
 ---
 title: "If I Kept Walking and Never Stopped By That Ticket Gate, Would I Have Lived Happily Ever After Never Knowing Anything About Programming?"
 description: "A belated retrospective on the year 2025"
-publishedAt: "2026-04-29"
-updatedAt: "2026-04-29"
+publishedAt: "2026-03-29"
+updatedAt: "2026-03-29"
 tags: ["retrospective"]
 draft: false
 locale: "en"
@@ -15,7 +15,7 @@ In `Mobile Suit Gundam GQuuuuuuX`, which is the background for the song, the pro
 And after that choice, there is no going back to how things were before.
 
 <iframe
-src="https://www.youtube.com/embed/2aFgfKtg3V4?si=qlrd6und2MKpw6pc"  
+src="https://www.youtube.com/embed/2aFgfKtg3V4"  
 title="YouTube video player"  
 loading="lazy"
 referrerpolicy="strict-origin-when-cross-origin"                                                      
