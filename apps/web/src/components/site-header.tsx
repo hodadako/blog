@@ -1,3 +1,4 @@
+import {Suspense} from "react";
 import Link from "next/link";
 import {LocaleSwitcher} from "@/components/locale-switcher";
 import {getDictionary, type AppLocale} from "@/lib/site";
@@ -29,7 +30,9 @@ export function SiteHeader({locale}: SiteHeaderProps) {
               {dictionary.navigation.inspirations}
             </Link>
           </nav>
-          <LocaleSwitcher currentLocale={locale} />
+          <Suspense>
+            <LocaleSwitcher currentLocale={locale} />
+          </Suspense>
         </div>
       </div>
     </header>
