@@ -94,32 +94,11 @@ export async function isBlockedIpHash(ipHash: string | null): Promise<boolean> {
   return Boolean(data);
 }
 
-async function getThreadBySlug(slug: string): Promise<ThreadRecord | null> {
+export async function getOrCreateCommentThread(slug: string): Promise<ThreadRecord> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("comment_threads")
-    .select("id, canonical_slug")
-    .eq("canonical_slug", slug)
-    .maybeSingle();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
-export async function ensureCommentThread(slug: string): Promise<ThreadRecord> {
-  const existing = await getThreadBySlug(slug);
-
-  if (existing) {
-    return existing;
-  }
-
-  const supabase = getSupabaseAdminClient();
-  const { data, error } = await supabase
-    .from("comment_threads")
-    .insert({ canonical_slug: slug })
+    .upsert({ canonical_slug: slug }, { onConflict: "canonical_slug" })
     .select("id, canonical_slug")
     .single();
 
@@ -231,7 +210,7 @@ export async function createComment(input: {
     throw new Error("Comment blocked by IP blacklist.");
   }
 
-  const thread = await ensureCommentThread(input.slug);
+  const thread = await getOrCreateCommentThread(input.slug);
   const supabase = getSupabaseAdminClient();
   const { error } = await supabase.from("comments").insert({
     thread_id: thread.id,

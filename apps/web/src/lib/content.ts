@@ -123,6 +123,19 @@ interface ContentIndex {
   variantsByCanonicalSlug: Map<string, IndexedPostRecord[]>;
 }
 
+interface ParsedPostContent {
+  body: string;
+  readingTime: string;
+}
+
+interface PostMetadataRecord {
+  canonicalSlug: string;
+  description: string;
+  locale: AppLocale;
+  slug: string;
+  title: string;
+}
+
 function formatReadingTime(locale: AppLocale, body: string): string {
   const minutes = Math.max(1, Math.ceil(body.trim().split(/\s+/).filter(Boolean).length / 220));
   return locale === "ko" ? `${minutes}분` : `${minutes} min`;
@@ -153,6 +166,15 @@ export function resolvePostIconFilePath(canonicalSlug: string): string | null {
 
 function parseMarkdownBody(source: string): string {
   return matter(source).content.trim();
+}
+
+function parsePostContent(source: string, locale: AppLocale): ParsedPostContent {
+  const body = parseMarkdownBody(source);
+
+  return {
+    body,
+    readingTime: formatReadingTime(locale, body),
+  };
 }
 
 async function readFrontmatterSource(sourcePath: string): Promise<string> {
@@ -187,6 +209,26 @@ async function readFrontmatterSource(sourcePath: string): Promise<string> {
 }
 
 const readingTimePromiseByPath = new Map<string, Promise<string>>();
+const parsedPostContentPromiseByPath = new Map<string, Promise<ParsedPostContent>>();
+
+async function getParsedPostContent(record: IndexedPostRecord): Promise<ParsedPostContent> {
+  const existing = parsedPostContentPromiseByPath.get(record.sourcePath);
+
+  if (existing) {
+    return existing;
+  }
+
+  const next = fs
+    .readFile(record.sourcePath, "utf8")
+    .then((source) => parsePostContent(source, record.frontmatter.locale))
+    .catch((error) => {
+      parsedPostContentPromiseByPath.delete(record.sourcePath);
+      throw error;
+    });
+
+  parsedPostContentPromiseByPath.set(record.sourcePath, next);
+  return next;
+}
 
 async function getReadingTime(record: IndexedPostRecord): Promise<string> {
   const existing = readingTimePromiseByPath.get(record.sourcePath);
@@ -195,9 +237,8 @@ async function getReadingTime(record: IndexedPostRecord): Promise<string> {
     return existing;
   }
 
-  const next = fs
-    .readFile(record.sourcePath, "utf8")
-    .then((source) => formatReadingTime(record.frontmatter.locale, parseMarkdownBody(source)))
+  const next = Promise.resolve(getParsedPostContent(record))
+    .then((content: ParsedPostContent) => content.readingTime)
     .catch((error) => {
       readingTimePromiseByPath.delete(record.sourcePath);
       throw error;
@@ -398,16 +439,32 @@ export async function getPostBySlug(locale: AppLocale, slug: string): Promise<Po
   const contentIndex = await getContentIndex();
   const record = contentIndex.indexedPostsByLocalizedSlug.get(buildLocalizedPostKey(locale, slug));
 
-  if (!record) {
+  if (!record || record.frontmatter.draft) {
     return null;
   }
 
-  const variants = contentIndex.variantsByCanonicalSlug.get(record.canonicalSlug) ?? [];
-  const source = await fs.readFile(record.sourcePath, "utf8");
+  const content = await getParsedPostContent(record);
 
   return {
-    ...toSummary(record, await getReadingTime(record)),
-    body: parseMarkdownBody(source),
+    ...toSummary(record, content.readingTime),
+    body: content.body,
+  };
+}
+
+export async function getPostMetadataBySlug(locale: AppLocale, slug: string): Promise<PostMetadataRecord | null> {
+  const contentIndex = await getContentIndex();
+  const record = contentIndex.indexedPostsByLocalizedSlug.get(buildLocalizedPostKey(locale, slug));
+
+  if (!record || record.frontmatter.draft) {
+    return null;
+  }
+
+  return {
+    canonicalSlug: record.canonicalSlug,
+    description: record.frontmatter.description,
+    locale: record.frontmatter.locale,
+    slug: record.frontmatter.slug,
+    title: record.frontmatter.title,
   };
 }
 
@@ -425,8 +482,30 @@ export async function getLocalizedPostVariants(canonicalSlug: string): Promise<P
   return Promise.all(variants.map((record) => buildSummary(record)));
 }
 
+export async function getLocalizedSlugVariants(canonicalSlug: string): Promise<Array<{ locale: AppLocale; slug: string }>> {
+  const contentIndex = await getContentIndex();
+  const variants = contentIndex.variantsByCanonicalSlug.get(canonicalSlug) ?? [];
+
+  return variants.map((record) => ({
+    locale: record.frontmatter.locale,
+    slug: record.frontmatter.slug,
+  }));
+}
+
+export async function getPublishedLocalizedSlugVariants(canonicalSlug: string): Promise<Array<{ locale: AppLocale; slug: string }>> {
+  const contentIndex = await getContentIndex();
+  const variants = contentIndex.variantsByCanonicalSlug.get(canonicalSlug) ?? [];
+
+  return variants
+    .filter((record) => !record.frontmatter.draft)
+    .map((record) => ({
+      locale: record.frontmatter.locale,
+      slug: record.frontmatter.slug,
+    }));
+}
+
 export async function findLocalizedSlug(canonicalSlug: string, locale: AppLocale): Promise<string | null> {
-  const variants = await getLocalizedPostVariants(canonicalSlug);
+  const variants = await getLocalizedSlugVariants(canonicalSlug);
   const exact = variants.find((variant) => variant.locale === locale);
   const fallback = variants.find((variant) => variant.locale === DEFAULT_LOCALE);
 

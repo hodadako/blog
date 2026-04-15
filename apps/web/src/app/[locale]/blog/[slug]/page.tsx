@@ -4,7 +4,7 @@ import {PostCommentsPanel} from "@/components/post-comments-panel";
 import { MarkdownArticle } from "@/lib/markdown";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams, type AppLocale} from "@/lib/site";
 import {getBlogPostPageData} from "@/lib/server/blog";
-import { findCanonicalSlugByLocalizedSlug, findLocalizedSlug, getAllPostParams, getLocalizedPostVariants } from "@/lib/content";
+import { findCanonicalSlugByLocalizedSlug, findLocalizedSlug, getAllPostParams, getPostMetadataBySlug, getPublishedLocalizedSlugVariants } from "@/lib/content";
 import { listPublishedComments } from "@/lib/comments";
 import { redirect } from "next/navigation";
 
@@ -67,7 +67,7 @@ export async function generateStaticParams(): Promise<Array<{locale: string; slu
 export async function generateMetadata({params}: BlogPostProps) {
   const routeParams = await resolveRouteParams(params);
   const locale = resolveLocale(routeParams.locale);
-  const post = await getBlogPostPageData(locale, routeParams.slug);
+  const post = await getPostMetadataBySlug(locale, routeParams.slug);
 
   if (!post) {
     return {
@@ -76,7 +76,7 @@ export async function generateMetadata({params}: BlogPostProps) {
     };
   }
 
-  const variants = await getLocalizedPostVariants(post.canonicalSlug);
+  const variants = await getPublishedLocalizedSlugVariants(post.canonicalSlug);
 
   return {
     title: buildPageTitle(locale, post.title),
