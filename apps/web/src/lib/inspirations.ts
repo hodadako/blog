@@ -6,6 +6,10 @@ export const INSPIRATION_IMAGE_FILENAME = "icon.png";
 
 export const INSPIRATION_TYPES: ReadonlyArray<InspirationType> = ["book", "article", "film", "exhibition", "anime", "album", "conference"];
 
+export function isInspirationType(value: string): value is InspirationType {
+  return INSPIRATION_TYPES.includes(value as InspirationType);
+}
+
 interface InspirationEntry {
   id: string;
   publishedOn: string;
@@ -45,8 +49,8 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     type: "album",
     href: "https://yorushika.com/discography/detail/70/",
     source: {
-      ko: "Yorushika",
-      en: "Yorushika",
+      ko: "요루시카",
+      en: "yorushika",
     },
     title: {
       ko: "Second Person",
@@ -55,6 +59,24 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     summary: {
       ko: "관찰자 시점과 감정의 거리감을 교차시키는 요루시카 특유의 서사 방식이 인상적인 앨범.",
       en: "An album that highlights Yorushika’s narrative style, shifting between observer perspective and emotional distance.",
+    },
+  },
+  {
+    id: "chainsawman-reze",
+    publishedOn: "2025-09-01",
+    type: "film",
+    href: "https://chainsawman.dog/movie_reze/",
+    source: {
+      ko: "후지모토 타츠키",
+      en: "Tatsuki Fujimoto",
+    },
+    title: {
+      ko: "극장판 체인소 맨: 레제편",
+      en: "Chainsaw Man - The Movie: Reze Arc",
+    },
+    summary: {
+      ko: "사랑과 배신, 인간성과 괴물성 사이의 경계를 강렬하게 그려낸 에피소드.",
+      en: "A powerful arc exploring love, betrayal, and the boundary between human and monster.",
     },
   },
   {
@@ -72,7 +94,25 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     },
     summary: {
       ko: "따스한 지중해의 빛, 도쿄의 밤, 끝나지 않은 여행을 엿볼 수 있었다.",
-      en: "",
+      en: "A glimpse into a journey that never ends, through the warm Mediterranean light and the nights of Tokyo.",
+    },
+  },
+  {
+    id: "infcon-2024",
+    publishedOn: "2024-08-15",
+    type: "conference",
+    href: "https://www.inflearn.com/conf/infcon-2024/",
+    source: {
+      ko: "인프런",
+      en: "Inflearn",
+    },
+    title: {
+      ko: "인프콘 2024",
+      en: "INFCON 2024",
+    },
+    summary: {
+      ko: "실무 중심의 다양한 개발 경험과 고민을 나눈 개발 컨퍼런스.",
+      en: "A conference sharing practical engineering experiences and insights.",
     },
   },
   {
@@ -91,6 +131,42 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     summary: {
       ko: "인터넷 밈, 상업 이미지, 제품 문법을 뒤집는 방식이 얼마나 직접적으로 시선을 끄는지 보여준 전시.",
       en: "An exhibition that shows how aggressively MSCHF flips internet, product, and commercial language into attention-grabbing objects.",
+    },
+  },
+  {
+    id: "the-tunnel-to-summer-the-exit-of-goodbyes",
+    publishedOn: "2023-09-14",
+    type: "anime",
+    href: "https://bocchi.rocks",
+    source: {
+      ko: "타구치 토모히사",
+      en: "Tomohisa Taguchi",
+    },
+    title: {
+      ko: "여름을 향한 터널, 이별의 출구",
+      en: "The Tunnel to Summer, the Exit of Goodbyes",
+    },
+    summary: {
+      ko: "그 터널에 들어가면, 갖고 싶은 것을 뭐든지 손에 넣을 수 있다.",
+      en: "If you enter the tunnel, you can have anything you want.",
+    }
+  },
+  {
+    id: "bocchi-the-rock",
+    publishedOn: "2023-05-28",
+    type: "anime",
+    href: "https://bocchi.rocks/",
+    source: {
+      ko: "하마지 아키",
+      en: "Aki Hamazi",
+    },
+    title: {
+      ko: "봇치 더 록!",
+      en: "Bocchi the Rock!",
+    },
+    summary: {
+      ko: "불안과 성장, 그리고 음악을 통해 관계를 만들어가는 과정을 섬세하게 풀어낸 작품.",
+      en: "A story about anxiety, growth, and building connections through music.",
     },
   },
 ];
@@ -135,15 +211,18 @@ function parseDateParts(value: string): {date: Date; year: string; monthKey: str
   };
 }
 
-export function getInspirationsArchive(locale: AppLocale): Array<InspirationArchiveYear> {
+export function getInspirationsArchive(locale: AppLocale, type?: InspirationType): Array<InspirationArchiveYear> {
   const monthFormatter = new Intl.DateTimeFormat(getLocaleCode(locale), {month: "long"});
   const dateFormatter = new Intl.DateTimeFormat(getLocaleCode(locale), {
     month: locale === "ko" ? "long" : "short",
     day: "numeric",
   });
   const archive: Array<InspirationArchiveYear> = [];
+  const entries = type
+    ? INSPIRATION_ENTRIES.filter((entry) => entry.type === type)
+    : INSPIRATION_ENTRIES;
 
-  for (const entry of [...INSPIRATION_ENTRIES].sort((left, right) => right.publishedOn.localeCompare(left.publishedOn))) {
+  for (const entry of [...entries].sort((left, right) => right.publishedOn.localeCompare(left.publishedOn))) {
     const {date, year, monthKey} = parseDateParts(entry.publishedOn);
     const monthLabel = monthFormatter.format(date);
     const item: InspirationArchiveItem = {

@@ -75,6 +75,8 @@ interface SiteDictionary {
     heading: string;
     intro: string;
     note: string;
+    allTypesLabel: string;
+    emptyLabel: string;
     yearLabel: string;
     entriesLabel: string;
     yearsStatLabel: string;
@@ -138,7 +140,7 @@ interface SiteDictionary {
 
 const dictionaries: Record<AppLocale, SiteDictionary> = {
   ko: {
-    siteName: "hodako's blog",
+    siteName: "호다코",
     siteTagline: "사라지지 않게, 기록합니다.",
     navigation: {
       label: "주요 탐색",
@@ -158,12 +160,12 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
     },
     home: {
       eyebrow: "Independent publication",
-      heading: "hodako입니다.",
+      heading: "안녕하세요, 호다코입니다.",
       intro: "배우고 만들고 경험한 것을 기록합니다.",
       aboutLabel: "소개",
       aboutHeading: "현재 관심사",
-      aboutBody: "웹 백엔드 개발 ",
-      aboutFocus: "최근 글을 통해서 더 많은",
+      aboutBody: "기술블로그 비용 최적화, 홈랩 운영하기",
+      aboutFocus: "더 많은 기술과 삶에 대한 내용을 최근 글을 통해 확인해보세요!",
       primaryCta: "Blog 둘러보기",
       secondaryCta: "Inspirations 보기",
       featuredLabel: "최근 글",
@@ -186,6 +188,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
         "생각의 흐름과 영감을 주는 경험들을 연도와 월 단위로 차분히 모아둔 아카이브입니다.",
       note:
         "다시 열어보고 싶은 문장, 화면, 공간을 생각하며 기록합니다.",
+      allTypesLabel: "전체",
+      emptyLabel: "아직 이 분류에 기록된 영감이 없습니다.",
       yearLabel: "연도",
       entriesLabel: "항목",
       yearsStatLabel: "정리한 연도",
@@ -194,7 +198,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       types: {
         book: "책",
         article: "아티클",
-        film: "필름",
+        film: "영화",
         exhibition: "전시",
         anime: "애니메이션",
         album: "앨범",
@@ -216,7 +220,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
         commentsCountLabel: "개의 댓글",
        commentsEmpty: "아직 댓글이 없습니다.",
        commentFormHeading: "댓글 남기기",
-       commentFormCopy: "퀴즈 검증을 통과하면 댓글을 저장할 수 있습니다. 수정/삭제는 댓글 비밀번호로 처리합니다.",
+       commentFormCopy: "퀴즈 검증을 통과하거나 토큰을 사용하면 댓글을 작성하실 수 있습니다.",
        commentSubmitLabel: "댓글 등록",
        commentAuthorLabel: "이름",
        commentPasswordLabel: "비밀번호",
@@ -232,9 +236,9 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        quizAnswer: "정답 입력",
         quizVerify: "퀴즈 검증",
         quizVerified: "검증 완료",
-        quizUnavailable: "퀴즈 서비스가 준비되지 않았습니다.",
-        quizFrontendOnly: "현재 Cloudflare Worker 응답이 없어 프론트 화면만 동작합니다.",
-        commentFrontendOnlyNotice: "현재 댓글 저장은 일시적으로 비활성화되어 있습니다. 페이지 탐색과 읽기는 계속 가능합니다.",
+         quizUnavailable: "현재 댓글을 달 수 없습니다.",
+         quizFrontendOnly: "현재 댓글을 달 수 없습니다.",
+         commentFrontendOnlyNotice: "현재 댓글을 달 수 없습니다.",
         notFoundEyebrow: "Missing post",
        notFoundTitle: "포스트를 찾을 수 없습니다",
        notFoundCopy: "요청한 로케일에 해당 포스트가 없거나 아직 게시되지 않았습니다.",
@@ -266,7 +270,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       },
   },
   en: {
-    siteName: "hodako's blog",
+    siteName: "hodako",
     siteTagline: "write things not to forget",
     navigation: {
       label: "Primary navigation",
@@ -286,12 +290,12 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
     },
     home: {
       eyebrow: "Independent publication",
-      heading: "Hi, I'm hodako, a developer who likes building web experiences that last.",
+      heading: "Hi, I'm hodako",
       intro: "I keep this site as a quiet place to collect what I build, learn, and revisit over time.",
       aboutLabel: "About me",
-      aboutHeading: "What I spend time on",
-      aboutBody: "I like working across frontend implementation, product shaping, and the small operational decisions that make a service feel steady.",
-      aboutFocus: "This homepage is meant to introduce me first, while the latest post stays nearby as a small window into what I have been thinking about recently.",
+      aboutHeading: "My Current Interests",
+      aboutBody: "Optimizing my tech blog costs, running my homelab cluster.",
+      aboutFocus: "Check out my recent posts about more techs and my life!",
       primaryCta: "Browse blog",
       secondaryCta: "View inspirations",
       featuredLabel: "Latest post",
@@ -314,6 +318,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
         "A quiet archive of books, essays, films, and exhibitions that keep nudging how I design, write, and build.",
       note:
         "Instead of aiming for a finished canon, I keep track of the moods, structures, and editorial cues I return to over time. It is a slow, hand-curated reference shelf for ongoing work.",
+      allTypesLabel: "All",
+      emptyLabel: "No inspirations have been logged for this type yet.",
       yearLabel: "Year",
       entriesLabel: "entries",
       yearsStatLabel: "Years tracked",
@@ -344,7 +350,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
         commentsCountLabel: "comments",
        commentsEmpty: "No comments yet.",
        commentFormHeading: "Leave a comment",
-       commentFormCopy: "Pass the quiz first, then submit your comment. The same password is used later for edit and delete actions.",
+       commentFormCopy: "You can leave your comment by either passing the quiz or using password token",
        commentSubmitLabel: "Submit comment",
        commentAuthorLabel: "Name",
        commentPasswordLabel: "Password",
@@ -360,9 +366,9 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        quizAnswer: "Answer",
         quizVerify: "Verify quiz",
         quizVerified: "Verified",
-        quizUnavailable: "Quiz verification is not available right now.",
-        quizFrontendOnly: "Cloudflare Worker is not responding right now, so the frontend stays available without comment submission.",
-        commentFrontendOnlyNotice: "Comment submission is temporarily disabled. Reading and navigation still work normally.",
+         quizUnavailable: "Comments are currently unavailable.",
+         quizFrontendOnly: "Comments are currently unavailable.",
+         commentFrontendOnlyNotice: "Comments are currently unavailable.",
         notFoundEyebrow: "Missing post",
        notFoundTitle: "The requested post could not be found",
        notFoundCopy: "The requested locale is missing or the post is not published.",
