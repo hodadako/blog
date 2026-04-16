@@ -11,7 +11,7 @@ Use this file as the default behavior contract when changing code.
   - `docs/git-rules.md`
 
 ## 1) Repository Topology
-- Monorepo using `pnpm` workspaces and `turbo`.
+- Monorepo using `pnpm` workspaces.
 - Workspace globs:
   - `apps/*`
   - `packages/*`
@@ -27,18 +27,15 @@ Use this file as the default behavior contract when changing code.
 
 ## 2) Toolchain Baseline
 - Package manager: `pnpm@10.17.1`
-- Task runner/orchestration: `turbo`
 - Install all deps from root: `pnpm install`
 
 ## 3) Build/Lint/Test Commands
 Run from root unless command says otherwise.
 
 ### Root scripts
-- Dev all workspaces: `pnpm dev`
-- Build all workspaces: `pnpm build`
-- Lint all workspaces: `pnpm lint`
-- Test all workspaces: `pnpm test`
-- Clean all workspaces: `pnpm clean`
+- Dev web app: `pnpm dev`
+- Build web app: `pnpm build`
+- Typecheck web app: `pnpm typecheck`
 
 ### Web scripts (`--filter web`)
 - Dev: `pnpm --filter web dev`

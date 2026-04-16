@@ -7,7 +7,6 @@
 - `infra/supabase`: comment schema and migrations
 - `infra/cloudflare-worker`: quiz verification flow
 - `infra/pulumi`: infrastructure ownership and deployment wiring
-- `turbo.json`: monorepo orchestration
 
 ## Runtime choices
 

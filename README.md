@@ -20,7 +20,6 @@ packages/                     # 공용 패키지 영역 (현재 비어 있음)
 ## 사용한 스택
 
 - pnpm workspace
-- Turbo
 - Next.js App Router
 - Supabase
 - Cloudflare Worker
