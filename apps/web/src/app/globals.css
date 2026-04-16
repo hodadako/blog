@@ -637,9 +637,42 @@ img {
   grid-template-columns: minmax(0, 1.45fr) minmax(18rem, 0.8fr);
 }
 
+.home-hero__aside,
+.home-intro-card__layout,
+.home-intro-card__media {
+  display: grid;
+}
+
+.home-hero__aside {
+  gap: var(--space-4);
+  width: min(100%, var(--panel-width));
+  justify-self: end;
+}
+
 .home-intro-card .page-title {
-  font-size: clamp(2.15rem, 5.2vw, 3.0rem);
+  font-size: clamp(1.8rem, 4vw, 2.35rem);
   max-width: 20ch;
+}
+
+.home-intro-card__layout {
+  grid-template-columns: minmax(0, 1fr) clamp(12rem, 24vw, 16rem);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.home-intro-card__content,
+.home-intro-card__profile {
+  display: grid;
+}
+
+.home-intro-card__profile {
+  gap: var(--space-4);
+  align-content: start;
+  align-self: center;
+}
+
+.home-intro-card__media {
+  justify-items: center;
 }
 
 .home-intro-card .section-title {
@@ -650,6 +683,32 @@ img {
   max-width: min(100%, 70rem);
   font-size: 0.9375rem;
   line-height: 1.64;
+}
+
+.post-card__icon-frame.home-intro-card__photo-frame {
+  justify-self: center;
+  width: clamp(12rem, 24vw, 16rem);
+  min-width: clamp(12rem, 24vw, 16rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.home-intro-card__photo {
+  border-radius: var(--radius-pill);
+}
+
+.home-intro-card__placeholder {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: var(--space-4);
+  border: var(--border-width) dashed var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
 }
 
 .content-grid {
@@ -821,7 +880,7 @@ img {
 
 .post-card__surface {
   grid-template-rows: minmax(0, 1fr) auto;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-height: 100%;
   padding: var(--space-5);
   border: var(--border-width) solid var(--color-border);
@@ -950,6 +1009,10 @@ img {
 .pill {
   background: var(--color-surface-muted);
   color: var(--color-text-muted);
+}
+
+.tag-list .pill {
+  text-transform: none;
 }
 
 .status-pill--approved,
@@ -1265,6 +1328,15 @@ img {
 
   .inspiration-year__header {
     position: static;
+  }
+
+  .home-hero__aside {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .home-intro-card__layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

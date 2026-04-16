@@ -55,6 +55,8 @@ interface SiteDictionary {
     aboutHeading: string;
     aboutBody: string;
     aboutFocus: string;
+    profilePlaceholder: string;
+    profileImageAlt: string;
     primaryCta: string;
     secondaryCta: string;
     featuredLabel: string;
@@ -146,7 +148,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       label: "주요 탐색",
       home: "홈",
       projects: "Projects",
-      blog: "Blog",
+      blog: "Posts",
       inspirations: "Inspirations",
       admin: "관리",
       languageLabel: "Language",
@@ -166,6 +168,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       aboutHeading: "현재 관심사",
       aboutBody: "기술블로그 비용 최적화, 홈랩 운영하기",
       aboutFocus: "더 많은 기술과 삶에 대한 내용을 최근 글을 통해 확인해보세요!",
+      profilePlaceholder: "profile-photo.jpg 파일을 추가하면 사진이 표시됩니다.",
+      profileImageAlt: "호다코 프로필 사진",
       primaryCta: "Blog 둘러보기",
       secondaryCta: "Inspirations 보기",
       featuredLabel: "최근 글",
@@ -276,7 +280,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       label: "Primary navigation",
       home: "Home",
       projects: "Projects",
-      blog: "Blog",
+      blog: "Posts",
       inspirations: "Inspirations",
       admin: "Admin",
       languageLabel: "Language",
@@ -296,6 +300,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       aboutHeading: "My Current Interests",
       aboutBody: "Optimizing my tech blog costs, running my homelab cluster.",
       aboutFocus: "Check out my recent posts about more techs and my life!",
+      profilePlaceholder: "Add profile-photo.jpg to display your photo here.",
+      profileImageAlt: "Profile photo of hodako",
       primaryCta: "Browse blog",
       secondaryCta: "View inspirations",
       featuredLabel: "Latest post",
