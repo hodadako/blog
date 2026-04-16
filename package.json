@@ -7,17 +7,14 @@
     "infra/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "test": "turbo run test",
-    "clean": "turbo run clean",
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter web build",
+    "typecheck": "pnpm --filter web typecheck",
     "prepare": "husky"
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
-    "turbo": "^2.5.5"
+    "lint-staged": "^15.5.2"
   },
   "packageManager": "pnpm@10.17.1"
 }
