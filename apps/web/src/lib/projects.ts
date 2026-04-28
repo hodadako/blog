@@ -10,16 +10,16 @@ export interface ProjectLink {
 const projectsByLocale: Record<AppLocale, ProjectLink[]> = {
   ko: [
     {
-      title: "Blue Archive Voice Downloader",
-      description: "블루 아카이브 음성 리소스를 내려받기 쉽게 정리한 도구입니다.",
-      href: "https://github.com/hodadako/blue-archive-voice-downloader",
-      period: "2026.02 ~",
-    },
-    {
       title: "원티드 매니저",
       description: "원티드 채용 목록을 관리하기 편하게 정리한 도구입니다.",
       href: "https://github.com/hodadako/wanted-manager",
       period: "2026.03 ~",
+    },
+    {
+      title: "Blue Archive Voice Downloader",
+      description: "블루 아카이브 음성 리소스를 내려받기 쉽게 정리한 도구입니다.",
+      href: "https://github.com/hodadako/blue-archive-voice-downloader",
+      period: "2026.02 ~",
     },
     {
       title: "Mercury",
@@ -30,16 +30,16 @@ const projectsByLocale: Record<AppLocale, ProjectLink[]> = {
   ],
   en: [
     {
-      title: "Blue Archive Voice Downloader",
-      description: "A tool for organizing and downloading Blue Archive voice assets.",
-      href: "https://github.com/hodadako/blue-archive-voice-downloader",
-      period: "2026.02 ~",
-    },
-    {
       title: "Wanted Manager",
       description: "A tool for organizing 원티드 job listings more easily.",
       href: "https://github.com/hodadako/wanted-manager",
       period: "2026.03 ~",
+    },
+    {
+      title: "Blue Archive Voice Downloader",
+      description: "A tool for organizing and downloading Blue Archive voice assets.",
+      href: "https://github.com/hodadako/blue-archive-voice-downloader",
+      period: "2026.02 ~",
     },
     {
       title: "Mercury",
