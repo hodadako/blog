@@ -1,6 +1,7 @@
 import {Suspense} from "react";
 import Link from "next/link";
 import {LocaleSwitcher} from "@/components/locale-switcher";
+import {ThemeToggle} from "@/components/theme-toggle";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
 interface SiteHeaderProps {
@@ -30,9 +31,12 @@ export function SiteHeader({locale}: SiteHeaderProps) {
               {dictionary.navigation.inspirations}
             </Link>
           </nav>
-          <Suspense>
-            <LocaleSwitcher currentLocale={locale} />
-          </Suspense>
+          <div className="site-nav__controls">
+            <ThemeToggle />
+            <Suspense>
+              <LocaleSwitcher currentLocale={locale} />
+            </Suspense>
+          </div>
         </div>
       </div>
     </header>
