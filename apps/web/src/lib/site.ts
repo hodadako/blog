@@ -72,6 +72,7 @@ interface SiteDictionary {
   projectsPage: {
     heading: string;
     intro: string;
+    activityUnavailableLabel: string;
   };
   inspirationsPage: {
     heading: string;
@@ -185,6 +186,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
     projectsPage: {
       heading: "Projects",
       intro: "현재 확인된 프로젝트 링크만 간단히 모아둔 목록입니다.",
+      activityUnavailableLabel: "GitHub 활동 데이터를 지금은 불러오지 못했습니다.",
     },
     inspirationsPage: {
       heading: "Inspirations",
@@ -317,6 +319,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
     projectsPage: {
       heading: "Projects",
       intro: "A minimal list of currently confirmed project links.",
+      activityUnavailableLabel: "GitHub activity data is temporarily unavailable.",
     },
     inspirationsPage: {
       heading: "Inspirations",

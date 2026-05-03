@@ -1069,6 +1069,14 @@ img {
   padding-top: 0;
 }
 
+.post-card--project .post-card__content {
+  align-content: start;
+}
+
+.post-card__aside--project {
+  gap: var(--space-3);
+}
+
 .post-card__icon-frame {
   display: flex;
   align-items: center;
@@ -1162,6 +1170,83 @@ img {
 
 .project-card {
   gap: var(--space-3);
+}
+
+.project-activity,
+.project-activity__grid {
+  display: grid;
+}
+
+.project-activity {
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--color-border);
+}
+
+.project-activity__note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.project-activity__grid {
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  grid-auto-columns: 0.6rem;
+  justify-content: start;
+  width: max-content;
+  max-width: 100%;
+  gap: 0.24rem;
+}
+
+.project-activity__cell {
+  width: 0.6rem;
+  height: 0.6rem;
+  aspect-ratio: 1;
+  border: 1px solid color-mix(in srgb, var(--color-border-strong) 45%, transparent);
+  border-radius: 0.16rem;
+  background: color-mix(in srgb, var(--color-surface-muted) 72%, var(--color-surface-panel-strong));
+}
+
+.project-activity__cell--level-1 {
+  border-color: color-mix(in srgb, #3fb950 70%, transparent);
+  background: color-mix(in srgb, #3fb950 32%, var(--color-surface-panel-strong));
+}
+
+.project-activity__cell--level-2 {
+  border-color: color-mix(in srgb, #3fb950 82%, transparent);
+  background: color-mix(in srgb, #3fb950 52%, var(--color-surface-panel-strong));
+}
+
+.project-activity__cell--level-3 {
+  border-color: color-mix(in srgb, #26a641 88%, transparent);
+  background: color-mix(in srgb, #26a641 68%, var(--color-surface-panel-strong));
+}
+
+.project-activity__cell--level-4 {
+  border-color: color-mix(in srgb, #26a641 95%, transparent);
+  background: #26a641;
+}
+
+@media (min-width: 46rem) {
+  .post-card--project .post-card__surface {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 19rem);
+    grid-template-rows: none;
+    align-items: start;
+    gap: var(--space-5);
+  }
+
+  .post-card--project .post-card__aside {
+    padding-left: var(--space-5);
+    border-left: var(--border-width) solid var(--color-border);
+  }
+
+  .post-card--project .project-activity {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
 }
 
 .detail-content {

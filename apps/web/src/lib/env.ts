@@ -11,6 +11,7 @@ function readRequiredEnv(name: string): string {
 export const env = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL ?? "http://localhost:3000",
   contentRoot: process.env.CONTENT_ROOT,
+  githubToken: process.env.GITHUB_TOKEN,
   adminPassword: process.env.ADMIN_PASSWORD,
   adminSessionSecret: process.env.ADMIN_SESSION_SECRET,
   supabaseUrl: process.env.SUPABASE_URL,
