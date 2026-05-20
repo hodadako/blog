@@ -1,6 +1,30 @@
+@font-face {
+  font-family: "Blog Korean Title";
+  src: url("./fonts/ko/woff/Title_Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Blog Korean Title";
+  src: url("./fonts/ko/woff/Title_Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Blog Korean Title";
+  src: url("./fonts/ko/woff/Title_Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  --font-body: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-ui: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
   --color-page-bg: linear-gradient(180deg, #07101d 0%, #050c1a 52%, #01040b 100%);
   --color-sky-background:
@@ -1322,6 +1346,7 @@ img {
   border-radius: var(--radius-sm);
   background: var(--color-surface-muted);
 }
+
 
 .detail-content table {
   width: 100%;

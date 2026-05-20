@@ -21,7 +21,7 @@ export {metadata};
 
 export default function RootLayout({children}: RootLayoutProps) {
   return (
-    <html suppressHydrationWarning lang="ko">
+    <html data-theme="light" lang="ko" style={{colorScheme: "light"}} suppressHydrationWarning>
       <body>
         <Script id="theme-bootstrap" strategy="beforeInteractive">
           {`(function(){try{var theme=window.localStorage.getItem("site-theme");if(theme!=="light"&&theme!=="dark"){theme="light";}document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;}catch(error){document.documentElement.dataset.theme="light";document.documentElement.style.colorScheme="light";}})();`}
