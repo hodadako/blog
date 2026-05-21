@@ -23,8 +23,12 @@
 }
 
 :root {
-  --font-body: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-ui: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body-default: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui-default: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body-pretendard: "Pretendard Variable", Pretendard, "Pretendard GOV", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui-pretendard: "Pretendard Variable", Pretendard, "Pretendard GOV", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-body-default);
+  --font-ui: var(--font-ui-default);
 
   --color-page-bg: linear-gradient(180deg, #07101d 0%, #050c1a 52%, #01040b 100%);
   --color-sky-background:
@@ -355,6 +359,11 @@ img {
   border-color: var(--color-border-strong);
 }
 
+[data-font="pretendard"] {
+  --font-body: var(--font-body-pretendard);
+  --font-ui: var(--font-ui-pretendard);
+}
+
 .site-nav__controls {
   display: flex;
   gap: var(--space-2);
@@ -363,6 +372,7 @@ img {
   flex-wrap: wrap;
 }
 
+.font-toggle__trigger,
 .theme-toggle__trigger {
   display: inline-flex;
   gap: var(--space-2);
@@ -380,6 +390,8 @@ img {
   text-transform: uppercase;
 }
 
+.font-toggle__trigger:hover,
+.font-toggle__trigger[aria-pressed="true"],
 .theme-toggle__trigger:hover,
 .theme-toggle__trigger[aria-pressed="true"] {
   border-color: var(--color-border);
@@ -387,6 +399,7 @@ img {
   color: var(--color-text);
 }
 
+.font-toggle__icon,
 .theme-toggle__icon {
   color: var(--color-accent);
 }

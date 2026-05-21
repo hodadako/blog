@@ -24,7 +24,7 @@ export default function RootLayout({children}: RootLayoutProps) {
     <html data-theme="light" lang="ko" style={{colorScheme: "light"}} suppressHydrationWarning>
       <body>
         <Script id="theme-bootstrap" strategy="beforeInteractive">
-          {`(function(){try{var theme=window.localStorage.getItem("site-theme");if(theme!=="light"&&theme!=="dark"){theme="light";}document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;}catch(error){document.documentElement.dataset.theme="light";document.documentElement.style.colorScheme="light";}})();`}
+          {`(function(){try{var root=document.documentElement;var theme=window.localStorage.getItem("site-theme");if(theme!=="light"&&theme!=="dark"){theme="light";}root.dataset.theme=theme;root.style.colorScheme=theme;var fontPreference=window.localStorage.getItem("site-font");if(fontPreference==="pretendard"){root.dataset.font=fontPreference;}else{delete root.dataset.font;}}catch(error){document.documentElement.dataset.theme="light";document.documentElement.style.colorScheme="light";delete document.documentElement.dataset.font;}})();`}
         </Script>
         {children}
       </body>

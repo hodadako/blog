@@ -1,5 +1,6 @@
 import {Suspense} from "react";
 import Link from "next/link";
+import {FontToggle} from "@/components/font-toggle";
 import {LocaleSwitcher} from "@/components/locale-switcher";
 import {MobileHeaderShell} from "@/components/mobile-header-shell";
 import {ThemeToggle} from "@/components/theme-toggle";
@@ -34,10 +35,11 @@ export function SiteHeader({locale}: SiteHeaderProps) {
               </Link>
             </nav>
             <div className="site-nav__controls">
-              <ThemeToggle />
               <Suspense>
                 <LocaleSwitcher currentLocale={locale} />
               </Suspense>
+              <FontToggle />
+              <ThemeToggle />
             </div>
           </div>
         </div>
