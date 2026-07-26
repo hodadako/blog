@@ -44,6 +44,24 @@ export interface InspirationArchiveYear {
 
 const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
   {
+    id: "the-book-for",
+    publishedOn: "2026-06-26",
+    type: "album",
+    href: "https://namu.wiki/w/THE%20BOOK%20for%2C",
+    source: {
+      ko: "요아소비",
+      en: "YOASOBI",
+    },
+    title: {
+      ko: "THE BOOK for,",
+      en: "THE BOOK for,",
+    },
+    summary: {
+      ko: "‘읽는 CD’ 콘셉트의 THE BOOK 시리즈를 마무리하며, 지금까지 마주한 이야기와 앞으로 이어질 서사를 12곡에 담은 EP.",
+      en: "A 12-track EP that closes the read-along THE BOOK series while carrying YOASOBI’s stories forward.",
+    },
+  },
+  {
     id: "yorushika-second-person",
     publishedOn: "2026-04-01",
     type: "album",
