@@ -2,6 +2,7 @@ import {existsSync} from "node:fs";
 import path from "node:path";
 import type {Metadata} from "next";
 import Link from "next/link";
+import { PostViewCount } from "@/components/post-view-count";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 import {getHomePageData} from "@/lib/server/blog";
 
@@ -94,6 +95,7 @@ export default async function LocaleHomePage({params}: HomePageProps) {
                 <span>{latestPost.publishedAt}</span>
                 <span>·</span>
                 <span>{latestPost.readingTime}</span>
+                <PostViewCount canonicalSlug={latestPost.canonicalSlug} label={locale === "ko" ? "조회" : "views"} />
               </div>
             </Link>
           ) : null}

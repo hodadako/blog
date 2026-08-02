@@ -3,7 +3,7 @@ import { getSupabaseAdminClient } from "@/lib/supabase";
 import { requireCommentPepper } from "@/lib/env";
 import type { CommentItem, CommentModerationItem, CommentStatus } from "@/lib/types";
 
-interface ThreadRecord {
+interface PostThreadRecord {
   id: string;
   canonical_slug: string;
 }
@@ -94,10 +94,10 @@ export async function isBlockedIpHash(ipHash: string | null): Promise<boolean> {
   return Boolean(data);
 }
 
-export async function getOrCreateCommentThread(slug: string): Promise<ThreadRecord> {
+export async function getOrCreatePostThread(slug: string): Promise<PostThreadRecord> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
-    .from("comment_threads")
+    .from("post_threads")
     .upsert({ canonical_slug: slug }, { onConflict: "canonical_slug" })
     .select("id, canonical_slug")
     .single();
@@ -162,7 +162,7 @@ export async function listPublishedComments(slug: string): Promise<CommentItem[]
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("comments_with_thread")
-    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug")
+    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug, ip_hash")
     .eq("canonical_slug", slug)
     .in("status", ["published", "deleted"])
     .order("created_at", { ascending: true });
@@ -178,7 +178,7 @@ export async function listAdminComments(): Promise<CommentModerationItem[]> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("comments_with_thread")
-    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug")
+    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug, ip_hash")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -210,10 +210,10 @@ export async function createComment(input: {
     throw new Error("Comment blocked by IP blacklist.");
   }
 
-  const thread = await getOrCreateCommentThread(input.slug);
+  const postThread = await getOrCreatePostThread(input.slug);
   const supabase = getSupabaseAdminClient();
   const { error } = await supabase.from("comments").insert({
-    thread_id: thread.id,
+    post_thread_id: postThread.id,
     parent_id: input.parentId ?? null,
     depth: input.parentId ? 1 : 0,
     author_name: input.authorName,
@@ -256,7 +256,7 @@ async function getCommentRow(commentId: string): Promise<CommentRow> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("comments_with_thread")
-    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug")
+    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug, ip_hash")
     .eq("id", commentId)
     .single();
 

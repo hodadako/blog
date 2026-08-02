@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PostViewCount } from "@/components/post-view-count";
 import type {AppLocale} from "@/lib/site";
 import type {PostSummary} from "@/lib/types";
 
@@ -12,6 +13,7 @@ export function PostCard({locale, post}: PostCardProps) {
   const leadClassName = post.iconUrl
     ? "post-card__lead post-card__lead--with-icon"
     : "post-card__lead"
+  const viewsLabel = locale === "ko" ? "조회" : "views"
 
   return (
     <article className={cardClassName}>
@@ -24,6 +26,7 @@ export function PostCard({locale, post}: PostCardProps) {
               <span>{post.publishedAt}</span>
               <span>·</span>
               <span>{post.readingTime}</span>
+              <PostViewCount canonicalSlug={post.canonicalSlug} label={viewsLabel} />
             </div>
           </div>
 

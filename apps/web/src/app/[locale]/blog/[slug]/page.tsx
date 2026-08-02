@@ -1,5 +1,7 @@
 import {Suspense} from "react";
 import Link from "next/link";
+import type { Metadata } from "next";
+import { PostViewCount } from "@/components/post-view-count";
 import {PostCommentsPanel} from "@/components/post-comments-panel";
 import { MarkdownArticle } from "@/lib/markdown";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams, type AppLocale} from "@/lib/site";
@@ -64,7 +66,7 @@ export async function generateStaticParams(): Promise<Array<{locale: string; slu
   return getAllPostParams();
 }
 
-export async function generateMetadata({params}: BlogPostProps) {
+export async function generateMetadata({params}: BlogPostProps): Promise<Metadata> {
   const routeParams = await resolveRouteParams(params);
   const locale = resolveLocale(routeParams.locale);
   const post = await getPostMetadataBySlug(locale, routeParams.slug);
@@ -129,6 +131,7 @@ export default async function BlogPostPage({params}: BlogPostProps) {
               <span>{post.publishedAt}</span>
               <span>·</span>
               <span>{post.readingTime}</span>
+              <PostViewCount canonicalSlug={post.canonicalSlug} incrementOnMount label={locale === "ko" ? "조회" : "views"} />
             </div>
             <div className="tag-list">
               {post.tags.map((tag) => (

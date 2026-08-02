@@ -22,7 +22,7 @@
 - **GitHub**: post source of truth and commit history
 - **Supabase**: comment storage only
 - **Cloudflare Worker**: quiz challenge and token issuance
-- **Pulumi**: DNS, Worker, Vercel project/domain, selected secret wiring
+- **Pulumi**: DNS, Worker, selected GitHub secret wiring
 
 ## Routing
 
