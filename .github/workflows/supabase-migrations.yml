@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - "infra/supabase/migrations/**"
+      - "infra/supabase/tests/**"
       - ".github/workflows/supabase-migrations.yml"
   push:
     branches:
       - main
     paths:
       - "infra/supabase/migrations/**"
+      - "infra/supabase/tests/**"
       - ".github/workflows/supabase-migrations.yml"
   workflow_dispatch:
 
@@ -39,6 +41,16 @@ jobs:
         uses: supabase/setup-cli@v1
         with:
           version: latest
+
+      - name: Start local Supabase
+        run: supabase start
+
+      - name: Test database migrations
+        run: supabase test db
+
+      - name: Stop local Supabase
+        if: always()
+        run: supabase stop --no-backup
 
       - name: Link Supabase project
         run: supabase link --project-ref "$SUPABASE_PROJECT_ID" --password "$SUPABASE_DB_PASSWORD"

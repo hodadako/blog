@@ -1,69 +1,120 @@
-import { createComment, hashCommentIp } from "@/lib/comments";
-import { verifyQuizPassToken } from "@/lib/quiz-token";
-
-const ANON_COOKIE_NAME = "blog_anon_id";
+import { consumeCommentRateLimit, createComment, hashCommentRequest } from "@/lib/comments";
+import { isPublishedCanonicalSlug } from "@/lib/content";
+import { verifyCommentAuthorizationToken } from "@/lib/quiz-token";
+import {
+  getRequestSubjectHash,
+  isCanonicalSlug,
+  isUuid,
+  safeRedirectPath,
+} from "@/lib/request-security";
 
 function readString(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
 }
 
-function buildRedirectUrl(request: Request, redirectTo: string, status: "frontend-only"): string {
-  const url = new URL(redirectTo || "/ko/blog", request.url);
+function redirectWithStatus(request: Request, redirectTo: string, status: string): Response {
+  const url = new URL(safeRedirectPath(redirectTo, "/ko/blog"), request.url);
   url.searchParams.set("commentStatus", status);
-  return url.toString();
+  return Response.redirect(url, 303);
 }
 
-function getClientIp(request: Request): string | null {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-
-  if (forwardedFor) {
-    const firstIp = forwardedFor.split(",")[0]?.trim();
-    if (firstIp) {
-      return firstIp;
-    }
-  }
-
-  return request.headers.get("cf-connecting-ip") ?? request.headers.get("x-real-ip");
+function isValidCommentInput(input: {
+  slug: string;
+  parentId: string;
+  author: string;
+  password: string;
+  content: string;
+  authorizationToken: string;
+  idempotencyKey: string;
+}): boolean {
+  return isCanonicalSlug(input.slug)
+    && (!input.parentId || isUuid(input.parentId))
+    && input.author.trim().length >= 1
+    && input.author.trim().length <= 80
+    && input.password.length >= 8
+    && input.password.length <= 72
+    && input.content.trim().length >= 1
+    && input.content.trim().length <= 5000
+    && input.authorizationToken.length >= 64
+    && input.authorizationToken.length <= 4096
+    && isUuid(input.idempotencyKey);
 }
 
 export async function POST(request: Request): Promise<Response> {
   const formData = await request.formData();
-  const canonicalSlug = readString(formData, "canonicalSlug");
-  const author = readString(formData, "author");
-  const password = readString(formData, "password");
-  const content = readString(formData, "content");
+  const input = {
+    slug: readString(formData, "canonicalSlug").trim(),
+    parentId: readString(formData, "parentId"),
+    author: readString(formData, "author"),
+    password: readString(formData, "password"),
+    content: readString(formData, "content"),
+    authorizationToken: readString(formData, "authorizationToken"),
+    idempotencyKey: readString(formData, "idempotencyKey"),
+  };
   const redirectTo = readString(formData, "redirectTo");
-  const parentId = readString(formData, "parentId");
-  const quizToken = readString(formData, "quizToken");
-  const quizStatus = readString(formData, "quizStatus");
-  const ipHash = getClientIp(request) ? hashCommentIp(getClientIp(request) as string) : null;
 
-  if (quizStatus === "frontend-only" || !quizToken) {
-    return Response.redirect(buildRedirectUrl(request, redirectTo, "frontend-only"), 303);
+  if (!isValidCommentInput(input)) {
+    return redirectWithStatus(request, redirectTo, "invalid-input");
   }
+
+  if (!(await isPublishedCanonicalSlug(input.slug))) {
+    return redirectWithStatus(request, redirectTo, "post-not-found");
+  }
+
+  const attemptAllowed = await consumeCommentRateLimit({
+    action: "comment:create-attempt",
+    subjectHash: getRequestSubjectHash(request),
+    limit: 20,
+    windowSeconds: 300,
+  });
+
+  if (!attemptAllowed) {
+    return redirectWithStatus(request, redirectTo, "rate-limited");
+  }
+
+  let authorizationId: string;
 
   try {
-    verifyQuizPassToken(quizToken, canonicalSlug);
+    authorizationId = verifyCommentAuthorizationToken(input.authorizationToken, input.slug).jti;
   } catch {
-    return Response.redirect(buildRedirectUrl(request, redirectTo, "frontend-only"), 303);
+    return redirectWithStatus(request, redirectTo, "invalid-authorization");
   }
 
-  await createComment({
-    slug: canonicalSlug,
-    parentId: parentId || null,
-    authorName: author,
-    content,
-    password,
-    ipHash,
+  const parentId = input.parentId || null;
+  const requestHash = hashCommentRequest({
+    slug: input.slug,
+    parentId,
+    authorName: input.author.trim(),
+    content: input.content.trim(),
+    password: input.password,
   });
 
-  const secure = process.env.NODE_ENV === "production" ? "; Secure" : "";
-  return new Response(null, {
-    status: 303,
-    headers: {
-      Location: new URL(redirectTo || "/ko/blog", request.url).toString(),
-      "Set-Cookie": `${ANON_COOKIE_NAME}=${crypto.randomUUID()}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${60 * 60 * 24 * 365}${secure}`,
-    },
-  });
+  try {
+    await createComment({
+      authorizationId,
+      idempotencyKey: input.idempotencyKey,
+      requestHash,
+      slug: input.slug,
+      parentId,
+      authorName: input.author,
+      content: input.content,
+      password: input.password,
+      ipHash: getRequestSubjectHash(request),
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const status = message.includes("rate-limited")
+      ? "rate-limited"
+      : message.includes("invalid-parent-comment")
+        ? "invalid-parent"
+        : message.includes("duplicate-comment")
+          ? "duplicate-comment"
+        : message.includes("idempotency-conflict")
+            ? "idempotency-conflict"
+            : "invalid-authorization";
+    return redirectWithStatus(request, redirectTo, status);
+  }
+
+  return Response.redirect(new URL(safeRedirectPath(redirectTo, "/ko/blog"), request.url), 303);
 }

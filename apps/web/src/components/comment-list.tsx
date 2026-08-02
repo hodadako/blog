@@ -57,9 +57,11 @@ function CommentNode({
       </div>
       <p className="comment-item__body">{comment.content}</p>
       <div className="button-row">
-        <a className="text-link" href={`/${locale}/blog/${postSlug}?replyTo=${comment.id}#comment-form`}>
-          {replyLabel}
-        </a>
+        {!comment.parentId && comment.status === "published" ? (
+          <a className="text-link" href={`/${locale}/blog/${postSlug}?replyTo=${comment.id}#comment-form`}>
+            {replyLabel}
+          </a>
+        ) : null}
         <a className="text-link" href={`/${locale}/blog/${postSlug}?commentAction=edit&commentId=${comment.id}#comment-${comment.id}`}>
           {editLabel}
         </a>

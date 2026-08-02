@@ -3,8 +3,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "types": "wrangler types --env-file .dev.vars.example --include-runtime=false"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250321.0",

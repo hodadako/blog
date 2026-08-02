@@ -1,8 +1,15 @@
-import { deleteComment, updateComment } from "@/lib/comments";
+import { consumeCommentRateLimit, deleteComment, updateComment } from "@/lib/comments";
+import { getRequestSubjectHash, isUuid, safeRedirectPath } from "@/lib/request-security";
 
 function readString(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
+}
+
+function redirectWithStatus(request: Request, redirectTo: string, status: string): Response {
+  const url = new URL(safeRedirectPath(redirectTo, "/ko/blog"), request.url);
+  url.searchParams.set("commentStatus", status);
+  return Response.redirect(url, 303);
 }
 
 export async function POST(
@@ -16,13 +23,30 @@ export async function POST(
   const content = readString(formData, "content");
   const redirectTo = readString(formData, "redirectTo");
 
-  if (intent === "edit") {
-    await updateComment({ commentId: params.id, password, content });
-  } else if (intent === "delete") {
-    await deleteComment({ commentId: params.id, password });
-  } else {
-    throw new Error("Unsupported comment action.");
+  if (!isUuid(params.id) || (intent !== "edit" && intent !== "delete")) {
+    return redirectWithStatus(request, redirectTo, "invalid-input");
   }
 
-  return Response.redirect(new URL(redirectTo || "/ko/blog", request.url), 303);
+  const allowed = await consumeCommentRateLimit({
+    action: `comment:${intent}`,
+    subjectHash: getRequestSubjectHash(request),
+    limit: 10,
+    windowSeconds: 300,
+  });
+
+  if (!allowed) {
+    return redirectWithStatus(request, redirectTo, "rate-limited");
+  }
+
+  try {
+    if (intent === "edit") {
+      await updateComment({ commentId: params.id, password, content });
+    } else {
+      await deleteComment({ commentId: params.id, password });
+    }
+  } catch {
+    return redirectWithStatus(request, redirectTo, "comment-auth-failed");
+  }
+
+  return Response.redirect(new URL(safeRedirectPath(redirectTo, "/ko/blog"), request.url), 303);
 }

@@ -504,6 +504,11 @@ export async function getPublishedLocalizedSlugVariants(canonicalSlug: string): 
     }));
 }
 
+export async function isPublishedCanonicalSlug(canonicalSlug: string): Promise<boolean> {
+  const variants = await getPublishedLocalizedSlugVariants(canonicalSlug);
+  return variants.length > 0;
+}
+
 export async function findLocalizedSlug(canonicalSlug: string, locale: AppLocale): Promise<string | null> {
   const variants = await getLocalizedSlugVariants(canonicalSlug);
   const exact = variants.find((variant) => variant.locale === locale);

@@ -1,7 +1,7 @@
-import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 import { getSupabaseAdminClient } from "@/lib/supabase";
-import { requireCommentPepper } from "@/lib/env";
-import type { CommentItem, CommentModerationItem, CommentStatus } from "@/lib/types";
+import { requireCommentIpHashSecret, requireCommentPepper, requireQuizSecret } from "@/lib/env";
+import type { CommentItem, CommentModerationItem, CommentQuizItem, CommentStatus, InviteTokenItem } from "@/lib/types";
 
 interface PostThreadRecord {
   id: string;
@@ -20,6 +20,27 @@ interface CommentRow {
   password_hash: string;
   canonical_slug: string;
   ip_hash: string | null;
+}
+
+interface CommentAuthorizationRow {
+  id: string;
+  expires_at: string;
+}
+
+interface InviteTokenRow {
+  id: string;
+  label: string;
+  is_active: boolean;
+  created_at: string;
+  revoked_at: string | null;
+}
+
+interface CommentQuizRow {
+  canonical_slug: string;
+  prompt: string;
+  answer_hashes: string[];
+  is_active: boolean;
+  updated_at: string;
 }
 
 interface BlacklistRow {
@@ -60,7 +81,31 @@ function getSupabaseErrorCode(error: { code?: string } | null): string | undefin
 }
 
 export function hashCommentIp(ipAddress: string): string {
-  return createHash("sha256").update(`${requireCommentPepper()}:${ipAddress.trim()}`).digest("hex");
+  return createHmac("sha256", requireCommentIpHashSecret()).update(ipAddress.trim()).digest("hex");
+}
+
+export function hashCommentRequest(input: {
+  slug: string;
+  parentId: string | null;
+  authorName: string;
+  content: string;
+  password: string;
+}): string {
+  return createHmac("sha256", requireCommentPepper()).update(JSON.stringify(input)).digest("hex");
+}
+
+function hashInviteToken(token: string): string {
+  return createHmac("sha256", requireQuizSecret()).update(`invite-token:${token}`).digest("hex");
+}
+
+export function normalizeQuizAnswer(answer: string): string {
+  return answer.normalize("NFKC").trim().replace(/\s+/g, " ").toLocaleLowerCase("ko-KR");
+}
+
+function hashQuizAnswer(answer: string): string {
+  return createHmac("sha256", requireQuizSecret())
+    .update(`quiz-answer-v1:${normalizeQuizAnswer(answer)}`)
+    .digest("hex");
 }
 
 export function formatIpHashPreview(ipHash: string | null): string | null {
@@ -162,7 +207,7 @@ export async function listPublishedComments(slug: string): Promise<CommentItem[]
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
     .from("comments_with_thread")
-    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug, ip_hash")
+    .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, canonical_slug")
     .eq("canonical_slug", slug)
     .in("status", ["published", "deleted"])
     .order("created_at", { ascending: true });
@@ -177,7 +222,7 @@ export async function listPublishedComments(slug: string): Promise<CommentItem[]
 export async function listAdminComments(): Promise<CommentModerationItem[]> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
-    .from("comments_with_thread")
+    .from("comments_admin_with_thread")
     .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug, ip_hash")
     .order("created_at", { ascending: false });
 
@@ -198,36 +243,281 @@ export async function listAdminComments(): Promise<CommentModerationItem[]> {
   }));
 }
 
+export async function consumeCommentRateLimit(input: {
+  action: string;
+  subjectHash: string | null;
+  limit: number;
+  windowSeconds: number;
+}): Promise<boolean> {
+  if (!input.subjectHash) {
+    return false;
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase.rpc("consume_comment_rate_limit", {
+    input_action: input.action,
+    input_subject_hash: input.subjectHash,
+    input_limit: input.limit,
+    input_window_seconds: input.windowSeconds,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data === true;
+}
+
+export async function createCommentAuthorization(input: {
+  slug: string;
+  source: "quiz" | "invite";
+  ttlSeconds?: number;
+}): Promise<CommentAuthorizationRow> {
+  const issuedAt = new Date();
+  const expiresAt = new Date(issuedAt.getTime() + Math.min(900, Math.max(300, input.ttlSeconds ?? 300)) * 1000);
+  const row = {
+    id: randomUUID(),
+    purpose: "COMMENT_WRITE",
+    canonical_slug: input.slug,
+    source: input.source,
+    issued_at: issuedAt.toISOString(),
+    expires_at: expiresAt.toISOString(),
+  };
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("comment_authorizations")
+    .insert(row)
+    .select("id, expires_at")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Failed to create comment authorization.");
+  }
+
+  return data as CommentAuthorizationRow;
+}
+
+export async function verifyInviteToken(token: string): Promise<boolean> {
+  if (token.length < 32 || token.length > 256) {
+    return false;
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("invite_tokens")
+    .select("id")
+    .eq("token_hash", hashInviteToken(token))
+    .eq("is_active", true)
+    .is("revoked_at", null)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return Boolean(data);
+}
+
+function mapInviteToken(row: InviteTokenRow): InviteTokenItem {
+  return {
+    id: row.id,
+    label: row.label,
+    isActive: row.is_active,
+    createdAt: row.created_at,
+    revokedAt: row.revoked_at,
+  };
+}
+
+export async function listInviteTokens(): Promise<InviteTokenItem[]> {
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("invite_tokens")
+    .select("id, label, is_active, created_at, revoked_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return ((data ?? []) as InviteTokenRow[]).map(mapInviteToken);
+}
+
+export async function createInviteToken(label: string): Promise<{ item: InviteTokenItem; token: string }> {
+  const normalizedLabel = label.trim();
+
+  if (normalizedLabel.length < 1 || normalizedLabel.length > 80) {
+    throw new Error("Invite token label must be between 1 and 80 characters.");
+  }
+
+  const token = randomBytes(32).toString("base64url");
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("invite_tokens")
+    .insert({ label: normalizedLabel, token_hash: hashInviteToken(token) })
+    .select("id, label, is_active, created_at, revoked_at")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Failed to create invite token.");
+  }
+
+  return { item: mapInviteToken(data as InviteTokenRow), token };
+}
+
+export async function revokeInviteToken(id: string): Promise<void> {
+  const supabase = getSupabaseAdminClient();
+  const { error } = await supabase
+    .from("invite_tokens")
+    .update({ is_active: false, revoked_at: new Date().toISOString() })
+    .eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+function mapCommentQuiz(row: CommentQuizRow): CommentQuizItem {
+  return {
+    canonicalSlug: row.canonical_slug,
+    prompt: row.prompt,
+    isActive: row.is_active,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function listCommentQuizzes(): Promise<CommentQuizItem[]> {
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("comment_quizzes")
+    .select("canonical_slug, prompt, answer_hashes, is_active, updated_at")
+    .order("canonical_slug", { ascending: true });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return ((data ?? []) as CommentQuizRow[]).map(mapCommentQuiz);
+}
+
+export async function getActiveCommentQuiz(slug: string): Promise<CommentQuizItem | null> {
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("comment_quizzes")
+    .select("canonical_slug, prompt, answer_hashes, is_active, updated_at")
+    .eq("canonical_slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ? mapCommentQuiz(data as CommentQuizRow) : null;
+}
+
+export async function verifyConfiguredQuizAnswer(slug: string, answer: string): Promise<boolean | null> {
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("comment_quizzes")
+    .select("answer_hashes")
+    .eq("canonical_slug", slug)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data) {
+    return null;
+  }
+
+  const expectedHashes = Array.isArray(data.answer_hashes) ? data.answer_hashes : [];
+  const candidate = hashQuizAnswer(answer);
+  return expectedHashes.some((expected) => {
+    const left = Buffer.from(candidate, "hex");
+    const right = Buffer.from(String(expected), "hex");
+    return left.length === right.length && timingSafeEqual(left, right);
+  });
+}
+
+export async function upsertCommentQuiz(input: {
+  slug: string;
+  prompt: string;
+  answers: string[];
+}): Promise<CommentQuizItem> {
+  const prompt = input.prompt.trim();
+  const answers = [...new Set(input.answers.map(normalizeQuizAnswer).filter(Boolean))];
+
+  if (prompt.length < 1 || prompt.length > 500 || answers.length < 1 || answers.length > 20) {
+    throw new Error("Invalid quiz input.");
+  }
+
+  const supabase = getSupabaseAdminClient();
+  const { data, error } = await supabase
+    .from("comment_quizzes")
+    .upsert({
+      canonical_slug: input.slug,
+      prompt,
+      answer_hashes: answers.map(hashQuizAnswer),
+      normalization_version: 1,
+      is_active: true,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "canonical_slug" })
+    .select("canonical_slug, prompt, answer_hashes, is_active, updated_at")
+    .single();
+
+  if (error || !data) {
+    throw new Error(error?.message ?? "Failed to save quiz.");
+  }
+
+  return mapCommentQuiz(data as CommentQuizRow);
+}
+
+export async function disableCommentQuiz(slug: string): Promise<void> {
+  const supabase = getSupabaseAdminClient();
+  const { error } = await supabase
+    .from("comment_quizzes")
+    .update({ is_active: false, updated_at: new Date().toISOString() })
+    .eq("canonical_slug", slug);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
 export async function createComment(input: {
+  authorizationId: string;
+  idempotencyKey: string;
+  requestHash: string;
   slug: string;
   parentId?: string | null;
   authorName: string;
   content: string;
   password: string;
   ipHash: string | null;
-}): Promise<void> {
-  if (await isBlockedIpHash(input.ipHash)) {
-    throw new Error("Comment blocked by IP blacklist.");
-  }
-
-  const postThread = await getOrCreatePostThread(input.slug);
+}): Promise<{ commentId: string; replayed: boolean }> {
   const supabase = getSupabaseAdminClient();
-  const { error } = await supabase.from("comments").insert({
-    post_thread_id: postThread.id,
-    parent_id: input.parentId ?? null,
-    depth: input.parentId ? 1 : 0,
-    author_name: input.authorName,
-    body_markdown: input.content,
-    body_html: input.content,
-    status: "published",
-    password_hash: hashCommentPassword(input.password),
-    quiz_verified_at: new Date().toISOString(),
-    ip_hash: input.ipHash,
+  const { data, error } = await supabase.rpc("create_authorized_comment", {
+    input_authorization_id: input.authorizationId,
+    input_canonical_slug: input.slug,
+    input_idempotency_key: input.idempotencyKey,
+    input_request_hash: input.requestHash,
+    input_parent_id: input.parentId ?? null,
+    input_author_name: input.authorName,
+    input_body_markdown: input.content,
+    input_password_hash: hashCommentPassword(input.password),
+    input_ip_hash: input.ipHash,
   });
 
-  if (error) {
-    throw new Error(error.message);
+  if (error || !Array.isArray(data) || !data[0]) {
+    throw new Error(error?.message ?? "Failed to create comment.");
   }
+
+  return {
+    commentId: String(data[0].comment_id),
+    replayed: data[0].replayed === true,
+  };
 }
 
 export async function blacklistCommentIp(commentId: string): Promise<void> {
@@ -255,7 +545,7 @@ export async function blacklistCommentIp(commentId: string): Promise<void> {
 async function getCommentRow(commentId: string): Promise<CommentRow> {
   const supabase = getSupabaseAdminClient();
   const { data, error } = await supabase
-    .from("comments_with_thread")
+    .from("comments_admin_with_thread")
     .select("id, parent_id, author_name, body_markdown, status, deleted_at, created_at, updated_at, password_hash, canonical_slug, ip_hash")
     .eq("id", commentId)
     .single();
@@ -272,7 +562,15 @@ export async function updateComment(input: {
   password: string;
   content: string;
 }): Promise<string> {
+  if (input.password.length < 8 || input.password.length > 72 || input.content.trim().length < 1 || input.content.trim().length > 5000) {
+    throw new Error("Invalid comment update input.");
+  }
+
   const row = await getCommentRow(input.commentId);
+
+  if (row.status !== "published") {
+    throw new Error("Only published comments can be edited.");
+  }
 
   if (!verifyCommentPassword(input.password, row.password_hash)) {
     throw new Error("Comment password mismatch.");
@@ -281,7 +579,7 @@ export async function updateComment(input: {
   const supabase = getSupabaseAdminClient();
   const { error } = await supabase
     .from("comments")
-    .update({ body_markdown: input.content, body_html: input.content, updated_at: new Date().toISOString() })
+    .update({ body_markdown: input.content.trim(), body_html: input.content.trim(), updated_at: new Date().toISOString() })
     .eq("id", input.commentId);
 
   if (error) {
@@ -292,7 +590,15 @@ export async function updateComment(input: {
 }
 
 export async function deleteComment(input: { commentId: string; password: string }): Promise<string> {
+  if (input.password.length < 8 || input.password.length > 72) {
+    throw new Error("Invalid comment password.");
+  }
+
   const row = await getCommentRow(input.commentId);
+
+  if (row.status !== "published") {
+    throw new Error("Only published comments can be deleted.");
+  }
 
   if (!verifyCommentPassword(input.password, row.password_hash)) {
     throw new Error("Comment password mismatch.");

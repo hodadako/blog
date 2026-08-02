@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import type {AppLocale} from "@/lib/site";
 import { QuizGate } from "@/components/quiz-gate";
 
@@ -42,7 +42,12 @@ export function CommentForm({
   quizLabels,
 }: CommentFormProps) {
   const [quizStatus, setQuizStatus] = useState<"loading" | "ready" | "frontend-only">("loading");
+  const [idempotencyKey, setIdempotencyKey] = useState("");
   const shouldShowFields = quizStatus === "ready";
+
+  useEffect(() => {
+    setIdempotencyKey(crypto.randomUUID());
+  }, []);
 
   return (
     <section className="surface-card stack-md">
@@ -56,6 +61,7 @@ export function CommentForm({
         <input name="locale" type="hidden" value={locale} />
         <input name="redirectTo" type="hidden" value={redirectTo} />
         <input name="parentId" type="hidden" value={parentId ?? ""} />
+        <input name="idempotencyKey" type="hidden" value={idempotencyKey} />
 
         <QuizGate labels={quizLabels} locale={locale} onStatusChange={setQuizStatus} slug={canonicalSlug} />
 
@@ -70,12 +76,12 @@ export function CommentForm({
 
             <label className="field">
               <span className="field__label">{passwordLabel}</span>
-              <input className="field__input" maxLength={40} name="password" required type="password" />
+              <input className="field__input" maxLength={72} minLength={8} name="password" required type="password" />
             </label>
 
             <label className="field">
               <span className="field__label">{contentLabel}</span>
-              <textarea className="field__textarea" name="content" required />
+              <textarea className="field__textarea" maxLength={5000} name="content" required />
             </label>
 
             <div className="button-row">

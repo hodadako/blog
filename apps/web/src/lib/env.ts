@@ -17,6 +17,7 @@ export const env = {
   supabaseUrl: process.env.SUPABASE_URL,
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
   commentPepper: process.env.COMMENT_PASSWORD_PEPPER,
+  commentIpHashSecret: process.env.COMMENT_IP_HASH_SECRET,
   quizSecret: process.env.QUIZ_TOKEN_SECRET,
   quizWorkerUrl: process.env.NEXT_PUBLIC_QUIZ_WORKER_URL,
 };
@@ -37,6 +38,10 @@ export function requireSupabaseConfig(): { url: string; serviceRoleKey: string }
 
 export function requireCommentPepper(): string {
   return readRequiredEnv("COMMENT_PASSWORD_PEPPER");
+}
+
+export function requireCommentIpHashSecret(): string {
+  return process.env.COMMENT_IP_HASH_SECRET ?? readRequiredEnv("COMMENT_PASSWORD_PEPPER");
 }
 
 export function requireQuizSecret(): string {

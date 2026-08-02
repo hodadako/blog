@@ -70,6 +70,28 @@ export function PostCommentsPanel({
     commentAction && commentId && (commentAction === "edit" || commentAction === "delete")
       ? {id: commentId, mode: commentAction}
       : null;
+  const statusMessages: Record<string, string> = locale === "ko"
+    ? {
+        "invalid-input": "댓글 입력값을 확인해 주세요.",
+        "post-not-found": "게시된 글을 찾을 수 없습니다.",
+        "rate-limited": "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.",
+        "invalid-authorization": "댓글 작성 권한이 만료되었거나 이미 사용되었습니다. 다시 인증해 주세요.",
+        "invalid-parent": "답글을 작성할 수 없는 댓글입니다.",
+        "duplicate-comment": "같은 내용을 연속으로 등록할 수 없습니다.",
+        "idempotency-conflict": "같은 요청 키에 다른 내용이 사용되었습니다.",
+        "comment-auth-failed": "댓글 비밀번호가 일치하지 않거나 변경할 수 없는 댓글입니다.",
+      }
+    : {
+        "invalid-input": "Please check the comment fields.",
+        "post-not-found": "The published post could not be found.",
+        "rate-limited": "Too many requests. Please try again later.",
+        "invalid-authorization": "The comment authorization expired or was already used. Please verify again.",
+        "invalid-parent": "This comment cannot receive a reply.",
+        "duplicate-comment": "The same content cannot be posted repeatedly.",
+        "idempotency-conflict": "The same request key was used with different content.",
+        "comment-auth-failed": "The password did not match or the comment cannot be changed.",
+      };
+  const statusMessage = commentStatus ? statusMessages[commentStatus] ?? quizLabels.unavailable : null;
 
   return (
     <section className="page-section comment-grid">
@@ -103,7 +125,7 @@ export function PostCommentsPanel({
         passwordLabel={commentPasswordLabel}
         contentLabel={commentContentLabel}
       />
-      {commentStatus === "frontend-only" ? <p className="status-text">{quizLabels.unavailable}</p> : null}
+      {statusMessage ? <p className="status-text">{statusMessage}</p> : null}
     </section>
   );
 }

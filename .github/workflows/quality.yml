@@ -1,0 +1,53 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.17.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test application security helpers
+        run: pnpm test
+
+      - name: Typecheck web application
+        run: pnpm typecheck
+
+      - name: Build web application
+        run: pnpm build
+
+      - name: Check Worker binding types
+        run: |
+          pnpm --dir infra/cloudflare-worker types
+          git diff --exit-code -- infra/cloudflare-worker/worker-configuration.d.ts
+
+      - name: Typecheck Worker
+        run: pnpm --dir infra/cloudflare-worker typecheck
+
+      - name: Validate Worker bundle
+        env:
+          WRANGLER_LOG_PATH: /tmp/wrangler-quality.log
+        run: pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run

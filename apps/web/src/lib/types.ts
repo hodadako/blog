@@ -63,23 +63,49 @@ export interface PaginationResult<T> {
 
 export interface QuizChallenge {
   prompt: string;
-  challengeToken: string;
+  challengeToken?: string;
   expiresAt: string;
 }
 
 export interface QuizVerificationResult {
-  verifiedToken: string;
+  authorizationToken: string;
   expiresAt: string;
 }
 
-export interface QuizTokenClaims {
-  v: number;
-  typ: "comment_quiz_pass";
+export interface QuizChallengeClaims {
+  v: 1;
+  typ: "comment_quiz_challenge";
   slug: string;
-  anonId: string;
+  locale: AppLocale;
+  left: number;
+  right: number;
+  iat: number;
+  exp: number;
+}
+
+export interface CommentAuthorizationClaims {
+  v: 1;
+  typ: "comment_write_authorization";
+  purpose: "COMMENT_WRITE";
+  canonicalSlug: string;
   iat: number;
   exp: number;
   jti: string;
+}
+
+export interface InviteTokenItem {
+  id: string;
+  label: string;
+  isActive: boolean;
+  createdAt: string;
+  revokedAt: string | null;
+}
+
+export interface CommentQuizItem {
+  canonicalSlug: string;
+  prompt: string;
+  isActive: boolean;
+  updatedAt: string;
 }
 
 export interface SessionClaims {
