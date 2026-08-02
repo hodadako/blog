@@ -2,7 +2,7 @@
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "blog-quiz-worker",
   "main": "src/index.ts",
-  "compatibility_date": "2026-08-03",
+  "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "routes": [
