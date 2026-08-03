@@ -1,6 +1,7 @@
 # 문제은행형 댓글 퀴즈 구현 보고서
 
 작성일: 2026-08-03
+마지막 진행 기록: 2026-08-04
 
 ## 1. 기존 구조 분석
 
@@ -130,11 +131,45 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 | `apps/web/src/components/admin-quiz-bank.tsx` | 문제은행 관리자 조회 UI |
 | `docs/architecture/target-architecture.md` | Worker 신뢰 경계 설계 문서 |
 
-## 10. 남은 작업
+## 10. 2026-08-04 진행 중단 시점
 
-- Cloudflare Worker에 `SUPABASE_SERVICE_ROLE_KEY`, `COMMENT_AUTHORIZATION_SECRET`, `IP_HASH_SECRET`, `INVITE_TOKEN_PEPPER`, `COMMENT_PASSWORD_PEPPER`, `ADMIN_API_SECRET` Secret 주입
-- 운영 Supabase에 0003/0004 마이그레이션 적용 확인
-- 기존 scrypt 댓글의 Worker 수정·삭제 호환 처리
-- 실제 라이선스를 확인한 MUSIC 이미지 파일을 GitHub에 추가하고 비활성 문제를 활성화
-- 관리자 문제 생성·수정 UI와 문제 통계/신고 관리
-- 운영 도메인을 `api.hodako.dev`로 바꿀 경우 DNS Custom Domain과 `NEXT_PUBLIC_QUIZ_WORKER_URL` 동시 변경
+내일 이어서 작업할 수 있도록, 현재까지의 적용 상태와 확인되지 않은 부분을 기록한다. 이 기록 이후에는 코드·마이그레이션·배포를 추가로 진행하지 않았다.
+
+### 완료·확인된 상태
+
+- 커밋 `b380946` (`feat(quiz): 문제은행형 댓글 인증 흐름 구현`)을 `origin/main`에 Push했다.
+- GitHub Quality 실행 `30828594629`가 성공했다. 웹 테스트 9개, Worker 테스트 3개, 타입 검사, 웹 빌드, Worker 타입 검사와 배포 dry-run을 포함한다.
+- GitHub Supabase Migrations 실행 `30828594365`가 성공했고, 원격 Supabase에 `0001`부터 `0007`까지 적용됐다.
+- 로컬 Supabase pgTAP은 2개 파일, 30개 테스트가 통과했다.
+- Worker를 `quiz.hodako.dev`에 배포했다. 현재 배포 버전은 `a59f3f3a-e7b6-458a-a983-8f30b442855a`다.
+- Worker Secret은 값 자체를 기록하지 않고 다음 이름으로 등록했다: `SUPABASE_SERVICE_ROLE_KEY`, `COMMENT_PASSWORD_PEPPER`, `COMMENT_AUTHORIZATION_SECRET`, `IP_HASH_SECRET`, `INVITE_TOKEN_PEPPER`, `ADMIN_API_SECRET`, 기존 `QUIZ_TOKEN_SECRET`.
+- Vercel Production/Preview에 `WORKER_ADMIN_SECRET`을 등록했다. Development 환경은 Vercel CLI의 sensitive 환경 변수 제약으로 등록하지 않았다.
+
+### 현재 확인된 차단 사항
+
+- 운영 Smoke Test에서 `POST https://quiz.hodako.dev/quiz/challenges` (본문 `{"canonicalSlug":"2025-retrospective"}`)가 HTTP 500 `{"error":"internal-error"}`을 반환했다.
+- 이 500의 원인은 아직 확정하지 않았다. Worker 로그를 장시간 추적하거나 원격 RPC·Secret·게시물 카테고리 매핑을 추가로 확인하는 작업은 내일 재개한다.
+- 따라서 “배포 완료”는 확인됐지만, 운영 환경에서 Challenge 발급부터 댓글 작성까지의 E2E 성공은 아직 확인되지 않았다.
+
+## 11. 내일 재개할 작업
+
+우선순위 순서로 정리한다.
+
+### P0 — 운영 500 원인 확인
+
+- `quiz.hodako.dev` Worker 로그와 Supabase RPC 응답을 확인한다.
+- `2025-retrospective`의 `post_threads.quiz_category_id`, 활성 카테고리·문제·선택지 Seed 상태를 확인한다.
+- Worker의 `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` Secret과 원격 RPC 권한·시그니처를 확인한다.
+- 원인 확인 전에는 무작정 코드나 Migration을 추가로 변경하지 않는다.
+
+### P1 — 운영 E2E 및 보안 정리
+
+- Challenge 발급 → 정답 검증 → 단기 권한 발급 → 댓글 작성까지 운영 E2E를 테스트한다.
+- 실제 런타임에서 더 이상 사용하지 않는 것이 확인되면 Vercel에 남아 있는 `SUPABASE_SERVICE_ROLE_KEY`를 제거한다.
+- 기존 `scrypt$...` 댓글의 Worker 수정·삭제 호환 처리(마이그레이션 또는 읽기 시점 재해싱)를 결정한다.
+
+### P2/P3 — 데이터·운영 개선
+
+- 라이선스를 확인한 MUSIC 이미지와 실제 문제를 GitHub에 추가하고, 파일명으로 정답을 추측할 수 없는지 검토한다.
+- 관리자 문제 생성·수정 UI를 운영 환경에서 검증하고, 문제 통계·신고 관리 기능을 추가한다.
+- 운영 API 도메인을 `api.hodako.dev`로 사용할지 현재의 `quiz.hodako.dev`를 유지할지 결정한다. 변경 시 DNS Custom Domain과 `NEXT_PUBLIC_QUIZ_WORKER_URL`을 함께 갱신한다.
