@@ -1,87 +1,76 @@
-# Target Architecture
+# 댓글 문제은행 아키텍처
 
-## Core structure
+## 핵심 구조
 
-- `apps/web`: public pages, admin routes, comment authorization, and comment API handlers
-- `content/posts/{slug}/{locale}.md`: file-backed post source of truth
-- `infra/supabase`: comments, quizzes, invite tokens, one-time authorizations, idempotency, and rate limits
-- `infra/cloudflare-worker`: fallback arithmetic challenge issuance
-- `infra/pulumi`: infrastructure ownership and deployment wiring
+```text
+Browser / Next.js UI
+        ↓ HTTPS
+Cloudflare Workers API (quiz.hodako.dev)
+        ↓ Supabase REST/RPC + PostgreSQL transaction
+Supabase
 
-## Runtime choices
+이미지 선택지: Browser → GitHub 공개 이미지 URL
+```
 
-- Public runtime: Next.js App Router in `apps/web`
-- Post storage: markdown files in `content/posts/{slug}/{locale}.md`
-- Comment persistence and atomic authorization consumption: Supabase/Postgres
-- Comment authentication: configured post quiz or reusable invite token exchanged for a five-minute, one-use authorization
-- Fallback challenge: Worker-issued signed arithmetic challenge when a post has no configured quiz
-- Admin access: single password + signed cookie session
+- `apps/web`: Markdown 게시물 렌더링, 문제·선택지 UI, 댓글 UI, 관리자 세션과 Worker 관리자 API 프록시
+- `content/posts/{slug}/{locale}.md`: 게시물과 `commentQuizCategory` 메타데이터의 원본
+- `infra/cloudflare-worker`: 댓글/퀴즈의 신뢰 경계. Service Role Secret은 이 Worker에서만 사용
+- `infra/supabase`: 문제은행, 게시물-카테고리 매핑, Challenge, 권한, 댓글, Idempotency, Rate Limit과 Blacklist
+- `infra/pulumi`: 기존 DNS·배포 인프라 코드. 별도 D1/KV/DO/R2는 사용하지 않음
 
-## Service roles
+## 2단계 인증 흐름
 
-- **Vercel**: validates published posts, verifies quiz/invite credentials, issues signed comment authorizations, and handles comment CRUD
-- **GitHub**: post source of truth and commit history
-- **Supabase**: comment threads, comments, quiz answer HMACs, invite token HMACs, authorization state, idempotency, persistent rate limits, and blacklist
-- **Cloudflare Worker**: issues short-lived fallback quiz challenges without embedding an `answer` claim
-- **Pulumi**: DNS and selected GitHub secret wiring
+1. Next.js `QuizGate`가 `POST /quiz/challenges`를 호출한다.
+2. Worker가 `canonicalSlug`로 `post_threads.quiz_category_id`를 확인하고, 활성 카테고리·문제 하나와 다섯 선택지를 Supabase RPC에서 받는다.
+3. RPC는 선택지 순서를 섞고 정답과 허용 Option ID를 `quiz_challenges`에 저장한다. 응답에는 정답·해설·`is_correct`가 없다.
+4. 브라우저가 `POST /quiz/challenges/{challengeId}/verify`로 `selectedOptionId`만 제출한다.
+5. Worker는 Supabase `verify_quiz_challenge_and_issue_authorization` RPC를 호출한다. RPC가 행 잠금, 만료·1회 제출·정답 확인과 `comment_authorizations` 발급을 하나의 트랜잭션에서 처리한다.
+6. Worker는 DB 권한 ID를 포함한 짧은 HMAC 토큰을 반환한다. DB 행이 권한의 최종 상태이며 JWT/HMAC만으로 1회성을 주장하지 않는다.
+7. 댓글 Form은 `POST /comments`에 단기 권한, 글, 내용, 비밀번호, `idempotencyKey`를 전달한다.
+8. Worker는 토큰 목적·서명·만료·글을 확인하고 PBKDF2 비밀번호 해시를 만든 뒤 `create_comment_with_authorization` RPC를 호출한다. RPC가 권한 잠금, 부모 댓글 검사, Rate Limit, 댓글 Insert, 권한 소비, Idempotency 기록을 하나의 트랜잭션에서 처리한다.
 
-The Supabase service-role key remains only in the Next.js server runtime. The browser and Worker do not receive it. RLS and explicit grants deny direct `anon`/`authenticated` writes.
+초대 토큰은 `POST /comment-authorizations`에서만 검증하고 같은 형식의 글 귀속 단기 권한으로 교환한다. 댓글 API에는 원본 초대 토큰이나 퀴즈 정답을 보내지 않는다.
 
-## Routing
+## API
 
-- Public: `/{locale}`
-- Archive: `/{locale}/blog`
-- Detail: `/{locale}/blog/{slug}`
-- Comment authorization: `GET|POST /api/comment-authorizations`
-- Comment create: `POST /api/comments`
-- Comment edit/delete: `POST /api/comments/{id}`
-- Admin login: `/{locale}/admin/login`
-- Admin editor: `/{locale}/admin`
-- Admin comments, quizzes, and invite tokens: `/{locale}/admin/comments`
+### 공개
 
-## Comment authorization flow
+- `POST /quiz/challenges`
+- `POST /quiz/challenges/{id}/verify`
+- `POST /comment-authorizations`
+- `GET /comments?canonicalSlug=...`
+- `POST /comments`
+- `PATCH|DELETE /comments/{id}`
+- `GET|POST /post-views/{canonicalSlug}`
 
-1. The form calls `GET /api/comment-authorizations?canonicalSlug=...`.
-2. Next.js verifies the canonical slug maps to at least one published Markdown post.
-3. If an active DB-backed quiz exists, the API returns only its prompt. Otherwise the form fetches a signed arithmetic challenge from the Worker.
-4. The reader submits exactly one credential to `POST /api/comment-authorizations`:
-   - quiz answer and, for fallback quizzes, the signed challenge token; or
-   - a reusable global invite token.
-5. The API applies a persistent IP-subject rate limit and validates the credential. Configured quiz answers and invite tokens are stored only as HMACs.
-6. The API inserts a `comment_authorizations` row and returns a signed five-minute token containing `purpose`, `canonicalSlug`, `jti`, `iat`, and `exp`.
-7. The form submits the comment, authorization token, and client-generated UUID `idempotencyKey` to `POST /api/comments`.
-8. Next.js validates the token signature, purpose, slug, shape, and expiry.
-9. The `create_authorized_comment` Postgres function locks the authorization row and atomically:
-   - returns the prior comment for a matching idempotent retry;
-   - rejects a reused, expired, revoked, or mismatched authorization;
-   - enforces blacklist, rate limit, open thread, same-thread parent, and depth-zero parent rules;
-   - inserts the comment, consumes the authorization, and records the idempotency result.
-10. Any transaction failure rolls back the comment, authorization consumption, and idempotency record together.
+### 관리자
 
-## Credential policies
+`x-admin-api-key` Worker Secret으로 보호한다. Next.js 관리자 페이지는 HttpOnly 관리자 세션을 먼저 확인한 뒤 이 API를 서버에서 호출한다.
 
-- Comment authorizations are purpose-limited, canonical-slug-bound, signed, five minutes long, and one-use.
-- Invite tokens are 256-bit random values, global, reusable, and revocable. Only their HMACs are stored; plaintext is shown once at issuance.
-- Configured quiz answers use normalization version 1: Unicode NFKC, trim, repeated-whitespace collapse, and locale-aware lowercase. Punctuation is preserved. Up to 20 accepted answers are supported.
-- Posts without an active configured quiz use the Worker arithmetic fallback.
-- Comment passwords use random salt + server pepper + scrypt and are never returned by public views.
-- IP identifiers use a separate HMAC secret when configured; `COMMENT_PASSWORD_PEPPER` is a compatibility fallback.
+- `GET|PATCH /admin/comments[/{id}]`
+- `GET|POST|DELETE /admin/invite-tokens`
+- `GET /admin/quiz/questions`
 
-## Data access and abuse controls
+## 데이터 보호
 
-- The browser has no Supabase client and all dynamic writes go through Next.js.
-- Comment tables have RLS enabled and no `anon`/`authenticated` table privileges.
-- Public comment projections exclude password and IP hashes.
-- Authorization, challenge, create, edit, and delete attempts use persistent database rate-limit counters.
-- Vercel's trusted forwarded-IP header is preferred; arbitrary `X-Forwarded-For` is not trusted in production.
-- Replies are restricted to a published depth-zero parent in the same canonical thread.
-- Deletes are soft deletes so replies remain visible below a `[deleted]` placeholder.
+- Supabase Service Role Key는 `SUPABASE_SERVICE_ROLE_KEY` Worker Secret으로만 관리한다.
+- `quiz_options.is_correct`, Challenge의 `correct_option_id`, `allowed_option_ids`, 비밀번호 해시는 공개 View/API 응답에서 제외한다.
+- 익명 역할은 문제은행·Challenge·권한·댓글 쓰기 테이블에 직접 권한이 없다. 공개 댓글 조회도 Worker View를 통해서만 수행한다.
+- Client IP는 Cloudflare가 설정한 `CF-Connecting-IP`만 사용하고 `X-Forwarded-For`는 신뢰하지 않는다. `IP_HASH_SECRET` HMAC 결과만 저장한다.
+- 초대 토큰은 `INVITE_TOKEN_PEPPER` HMAC 결과만 저장하고 원문은 발급 응답에서 한 번만 보여준다.
+- 댓글 비밀번호는 Worker Web Crypto PBKDF2(`pbkdf2-sha256`, 120,000회) 형식으로 저장한다. 기존 `scrypt$` 행은 Worker 수정/삭제 경로에서 호환되지 않으므로 별도 마이그레이션 대상이다.
 
-## Deliberate simplifications
+## 게시물 연결 정책
 
-- Same canonical slug across locales
-- One-level replies only
-- No reader accounts
-- No separate CMS
-- No always-on server or database-backed post entities
-- Next.js remains the database enforcement point so the Supabase service-role secret is not duplicated into the Worker
+게시물 Front Matter는 `commentQuizCategory: "DEVOPS"`처럼 명시할 수 있다. Worker는 브라우저가 보낸 카테고리를 신뢰하지 않고 `post_threads.quiz_category_id`를 사용한다. 0003/0004 마이그레이션은 현재 게시물과 GENERAL·BACKEND·DEVOPS·DATABASE 문제를 동기화한다. 카테고리가 없으면 GENERAL을 사용하며 GENERAL 문제도 없으면 Challenge 발급을 거부한다. 기존 사칙연산 `/challenge`는 410으로 비활성화했다.
+
+## 이미지 문제 정책
+
+`quiz_options.image_path`에 `quiz/.../opaque-id.webp` 상대 경로만 저장하고 Worker가 `QUIZ_IMAGE_BASE_URL`과 결합해 URL을 반환한다. Worker는 이미지를 다운로드하거나 프록시하지 않는다. 현재 MUSIC Seed는 저작권 없는 Placeholder 경로와 비활성 문제로만 존재한다. 실제 앨범 이미지 등록은 권리 확인 후 별도 데이터 작업으로 진행한다.
+
+## 운영 제한
+
+- Worker 전역 변수·인메모리 Map·로컬 파일·D1/KV/DO/R2를 상태 저장에 사용하지 않는다.
+- Rate Limit은 Supabase의 원자적 `consume_comment_rate_limit` RPC를 사용한다.
+- `wrangler.jsonc`는 `nodejs_compat`, Observability와 `quiz.hodako.dev` Custom Domain을 선언한다. Secret 값은 `wrangler secret put`으로 주입한다.
+- `apps/web/.env.example`에는 Service Role Key를 두지 않는다. Next.js의 기존 `lib/comments.ts`/`lib/supabase.ts`는 레거시 호환 코드이며 공개 댓글·조회·관리 운영 경로에서는 사용하지 않는다.

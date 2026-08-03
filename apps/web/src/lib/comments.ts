@@ -1,6 +1,6 @@
 import { createHmac, randomBytes, randomUUID, scryptSync, timingSafeEqual } from "node:crypto";
 import { getSupabaseAdminClient } from "@/lib/supabase";
-import { requireCommentIpHashSecret, requireCommentPepper, requireQuizSecret } from "@/lib/env";
+import { requireCommentPepper, requireQuizSecret } from "@/lib/env";
 import type { CommentItem, CommentModerationItem, CommentQuizItem, CommentStatus, InviteTokenItem } from "@/lib/types";
 
 interface PostThreadRecord {
@@ -80,9 +80,7 @@ function getSupabaseErrorCode(error: { code?: string } | null): string | undefin
   return error?.code;
 }
 
-export function hashCommentIp(ipAddress: string): string {
-  return createHmac("sha256", requireCommentIpHashSecret()).update(ipAddress.trim()).digest("hex");
-}
+export { hashCommentIp } from "@/lib/comments-crypto";
 
 export function hashCommentRequest(input: {
   slug: string;

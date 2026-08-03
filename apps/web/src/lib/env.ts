@@ -20,6 +20,7 @@ export const env = {
   commentIpHashSecret: process.env.COMMENT_IP_HASH_SECRET,
   quizSecret: process.env.QUIZ_TOKEN_SECRET,
   quizWorkerUrl: process.env.NEXT_PUBLIC_QUIZ_WORKER_URL,
+  workerAdminSecret: process.env.WORKER_ADMIN_SECRET,
 };
 
 export function requireAdminSecrets(): { password: string; sessionSecret: string } {

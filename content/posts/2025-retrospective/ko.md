@@ -7,6 +7,7 @@ tags: ["회고"]
 draft: false
 locale: "ko"
 slug: "2025-retrospective"
+commentQuizCategory: "GENERAL"
 ---
 
 ## 0. 제목의 출처

@@ -1,5 +1,5 @@
-import { consumeCommentRateLimit, deleteComment, updateComment } from "@/lib/comments";
-import { getRequestSubjectHash, isUuid, safeRedirectPath } from "@/lib/request-security";
+import { WorkerApiError, workerRequest } from "@/lib/worker-client";
+import { isUuid, safeRedirectPath } from "@/lib/request-security";
 
 function readString(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -23,29 +23,18 @@ export async function POST(
   const content = readString(formData, "content");
   const redirectTo = readString(formData, "redirectTo");
 
-  if (!isUuid(params.id) || (intent !== "edit" && intent !== "delete")) {
+  if (!isUuid(params.id) || (intent !== "edit" && intent !== "delete") || password.length < 8 || password.length > 72 || (intent === "edit" && (!content.trim() || content.trim().length > 5000))) {
     return redirectWithStatus(request, redirectTo, "invalid-input");
   }
 
-  const allowed = await consumeCommentRateLimit({
-    action: `comment:${intent}`,
-    subjectHash: getRequestSubjectHash(request),
-    limit: 10,
-    windowSeconds: 300,
-  });
-
-  if (!allowed) {
-    return redirectWithStatus(request, redirectTo, "rate-limited");
-  }
-
   try {
-    if (intent === "edit") {
-      await updateComment({ commentId: params.id, password, content });
-    } else {
-      await deleteComment({ commentId: params.id, password });
-    }
-  } catch {
-    return redirectWithStatus(request, redirectTo, "comment-auth-failed");
+    await workerRequest<{ ok: true }>(`/comments/${params.id}`, {
+      method: intent === "edit" ? "PATCH" : "DELETE",
+      body: JSON.stringify({ password, ...(intent === "edit" ? { content } : {}) }),
+    });
+  } catch (error) {
+    const code = error instanceof WorkerApiError ? error.code : "worker-unavailable";
+    return redirectWithStatus(request, redirectTo, code === "rate-limited" ? "rate-limited" : "comment-auth-failed");
   }
 
   return Response.redirect(new URL(safeRedirectPath(redirectTo, "/ko/blog"), request.url), 303);

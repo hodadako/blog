@@ -1,6 +1,6 @@
 import { issueAdminSession, serializeAdminSessionCookie, verifyAdminPassword } from "@/lib/auth";
-import { consumeCommentRateLimit } from "@/lib/comments";
-import { getRequestSubjectHash, safeRedirectPath } from "@/lib/request-security";
+import { WorkerApiError, workerRequest } from "@/lib/worker-client";
+import { safeRedirectPath } from "@/lib/request-security";
 import { resolveLocale } from "@/lib/site";
 
 function readString(formData: FormData, key: string): string {
@@ -14,12 +14,12 @@ export async function POST(request: Request): Promise<Response> {
   const locale = resolveLocale(readString(formData, "locale") || "ko");
   const fallback = `/${locale}/admin`;
   const redirectTo = safeRedirectPath(readString(formData, "redirectTo"), fallback);
-  const allowed = await consumeCommentRateLimit({
-    action: "admin:login",
-    subjectHash: getRequestSubjectHash(request),
-    limit: 5,
-    windowSeconds: 900,
-  });
+  let allowed = true;
+  try {
+    await workerRequest<void>("/admin/login-attempt", { method: "POST" });
+  } catch (error) {
+    allowed = !(error instanceof WorkerApiError && error.code === "rate-limited");
+  }
 
   if (!allowed) {
     return Response.redirect(new URL(`/${locale}/admin/login?error=rate-limited`, request.url), 303);

@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { type AppLocale } from "@/lib/site";
 import type { QuizChallenge, QuizVerificationResult } from "@/lib/types";
+import { WorkerApiError, requestInviteAuthorization, requestQuizChallenge, verifyQuizChallenge } from "@/lib/worker-client";
 
 interface QuizGateProps {
   locale: AppLocale;
   slug: string;
   onStatusChange?: (status: "loading" | "ready" | "frontend-only") => void;
+  onAuthorizationTokenChange?: (token: string) => void;
+  onAuthorizationExpired?: () => void;
   labels: {
     loading: string;
     question: string;
@@ -19,91 +22,98 @@ interface QuizGateProps {
   };
 }
 
-const QUIZ_REQUEST_TIMEOUT_MS = 5000;
+const QUIZ_REQUEST_TIMEOUT_MS = 8000;
 
 function createTimedSignal(timeoutMs: number): AbortSignal {
   return AbortSignal.timeout(timeoutMs);
 }
 
-export function QuizGate({ locale, slug, onStatusChange, labels }: QuizGateProps) {
-  const workerUrl = process.env.NEXT_PUBLIC_QUIZ_WORKER_URL;
+function statusMessage(error: unknown, labels: QuizGateProps["labels"]): string {
+  if (error instanceof WorkerApiError && error.code === "quiz-answer-incorrect") {
+    return labels.unavailable;
+  }
+  if (error instanceof WorkerApiError && error.code === "rate-limited") {
+    return labels.unavailable;
+  }
+  return labels.frontendOnly;
+}
+
+export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenChange, onAuthorizationExpired, labels }: QuizGateProps) {
   const [challenge, setChallenge] = useState<QuizChallenge | null>(null);
-  const [answer, setAnswer] = useState("");
+  const [selectedOptionId, setSelectedOptionId] = useState("");
   const [inviteToken, setInviteToken] = useState("");
   const [authorizationToken, setAuthorizationToken] = useState("");
   const [message, setMessage] = useState(labels.loading);
   const [submitting, setSubmitting] = useState(false);
+  const [imageFailures, setImageFailures] = useState<Set<string>>(new Set());
 
   useEffect(() => {
+    let cancelled = false;
     onStatusChange?.("loading");
-    void fetch(`/api/comment-authorizations?canonicalSlug=${encodeURIComponent(slug)}`, {
-      signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          throw new Error("Failed to load challenge configuration.");
-        }
-        return await response.json() as { type: "configured" | "generated"; prompt?: string };
-      })
-      .then(async (configuration) => {
-        if (configuration.type === "configured" && configuration.prompt) {
-          return { prompt: configuration.prompt, expiresAt: "" } satisfies QuizChallenge;
-        }
-
-        if (!workerUrl) {
-          throw new Error("Quiz worker is unavailable.");
-        }
-
-        const response = await fetch(`${workerUrl}/challenge?slug=${encodeURIComponent(slug)}&locale=${encodeURIComponent(locale)}`, {
-          signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to load generated challenge.");
-        }
-
-        return await response.json() as QuizChallenge;
-      })
-      .then((nextChallenge) => {
+    setMessage(labels.loading);
+    void (async () => {
+      try {
+        const nextChallenge = await Promise.race([
+          requestQuizChallenge(slug),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), QUIZ_REQUEST_TIMEOUT_MS)),
+        ]);
+        if (cancelled) return;
         setChallenge(nextChallenge);
         setMessage("");
-      })
-      .catch(() => {
+      } catch {
+        if (cancelled) return;
         setChallenge(null);
         setMessage(labels.unavailable);
-      });
-  }, [labels.loading, labels.unavailable, locale, onStatusChange, slug, workerUrl]);
+        onStatusChange?.("frontend-only");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [labels.loading, labels.unavailable, onStatusChange, slug]);
 
   const isAuthorized = Boolean(authorizationToken);
-  const isQuizDisabled = useMemo(
-    () => submitting || isAuthorized || !challenge || answer.trim().length === 0,
-    [answer, challenge, isAuthorized, submitting],
+  const canVerify = useMemo(
+    () => Boolean(challenge && selectedOptionId && !submitting && !isAuthorized),
+    [challenge, isAuthorized, selectedOptionId, submitting],
   );
-  const isInviteDisabled = submitting || isAuthorized || inviteToken.trim().length === 0;
+  const canUseInvite = !submitting && !isAuthorized && inviteToken.trim().length >= 32;
 
-  async function requestAuthorization(body: Record<string, string>): Promise<void> {
+  async function completeAuthorization(result: QuizVerificationResult): Promise<void> {
+    setAuthorizationToken(result.authorizationToken);
+    onAuthorizationTokenChange?.(result.authorizationToken);
+    setSelectedOptionId("");
+    setInviteToken("");
+    setMessage(labels.verified);
+    onStatusChange?.("ready");
+  }
+
+  async function verifySelectedOption(): Promise<void> {
+    if (!challenge || !selectedOptionId || submitting) return;
     setSubmitting(true);
-
     try {
-      const response = await fetch("/api/comment-authorizations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ canonicalSlug: slug, ...body }),
-        signal: createTimedSignal(QUIZ_REQUEST_TIMEOUT_MS),
-      });
-
-      if (!response.ok) {
-        throw new Error("Authorization failed.");
+      const result = await verifyQuizChallenge(challenge.challengeId, selectedOptionId);
+      await completeAuthorization(result);
+    } catch (error) {
+      setMessage(statusMessage(error, labels));
+      onStatusChange?.("frontend-only");
+      if (error instanceof WorkerApiError && (error.code === "invalid-authorization" || error.code === "challenge-expired-or-used")) {
+        setChallenge(null);
+        onAuthorizationExpired?.();
       }
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
-      const payload = await response.json() as QuizVerificationResult;
-      setAuthorizationToken(payload.authorizationToken);
-      setAnswer("");
-      setInviteToken("");
-      setMessage(labels.verified);
-      onStatusChange?.("ready");
-    } catch {
-      setMessage(labels.unavailable);
+  async function useInviteToken(): Promise<void> {
+    if (!inviteToken.trim() || submitting) return;
+    setSubmitting(true);
+    try {
+      const result = await requestInviteAuthorization(slug, inviteToken.trim());
+      await completeAuthorization(result);
+    } catch (error) {
+      setMessage(statusMessage(error, labels));
       onStatusChange?.("frontend-only");
     } finally {
       setSubmitting(false);
@@ -111,52 +121,60 @@ export function QuizGate({ locale, slug, onStatusChange, labels }: QuizGateProps
   }
 
   return (
-    <div className="stack-sm">
+    <div className="stack-sm" aria-live="polite">
       <input name="authorizationToken" type="hidden" value={authorizationToken} />
-      <p className="card-copy">{message}</p>
+      {message ? <p className="card-copy">{message}</p> : null}
       {challenge ? (
-        <>
-          <label className="field">
-            <span className="field__label">{labels.question}</span>
-            <input className="field__input" readOnly type="text" value={challenge.prompt} />
-          </label>
-          <label className="field">
-            <span className="field__label">{labels.answer}</span>
-            <input className="field__input" disabled={isAuthorized} onChange={(event) => setAnswer(event.target.value)} type="text" value={answer} />
-          </label>
+        <fieldset className="stack-sm" disabled={submitting || isAuthorized}>
+          <legend className="field__label">{labels.question}</legend>
+          <p className="pill" aria-label={challenge.category.name}>{challenge.category.name}</p>
+          <p className="card-copy">{challenge.question.prompt}</p>
+          <div className={challenge.question.type === "IMAGE_MULTIPLE_CHOICE" ? "quiz-options quiz-options--image" : "quiz-options"} role="radiogroup" aria-label={labels.answer}>
+            {challenge.options.map((option, index) => {
+              const failed = imageFailures.has(option.id);
+              return (
+                <button
+                  aria-checked={selectedOptionId === option.id}
+                  className={selectedOptionId === option.id ? "quiz-option quiz-option--selected" : "quiz-option"}
+                  key={option.id}
+                  onClick={() => setSelectedOptionId(option.id)}
+                  role="radio"
+                  type="button"
+                >
+                  {option.imageUrl && !failed ? (
+                    <img
+                      alt={option.altText ?? option.label ?? `${labels.answer} ${index + 1}`}
+                      className="quiz-option__image"
+                      loading="lazy"
+                      onError={() => setImageFailures((current) => new Set(current).add(option.id))}
+                      src={option.imageUrl}
+                    />
+                  ) : null}
+                  <span>{option.label ?? option.text ?? `${labels.answer} ${index + 1}`}</span>
+                </button>
+              );
+            })}
+          </div>
           <div className="button-row">
-            <button
-              className="button button--secondary"
-              disabled={isQuizDisabled}
-              onClick={() => void requestAuthorization({
-                ...(challenge.challengeToken ? { challengeToken: challenge.challengeToken } : {}),
-                quizAnswer: answer,
-              })}
-              type="button"
-            >
+            <button className="button button--secondary" disabled={!canVerify} onClick={() => void verifySelectedOption()} type="button">
               {isAuthorized ? labels.verified : labels.verify}
             </button>
           </div>
-        </>
+        </fieldset>
       ) : null}
       <label className="field">
         <span className="field__label">{locale === "ko" ? "초대 토큰" : "Invite token"}</span>
         <input
           autoComplete="off"
           className="field__input"
-          disabled={isAuthorized}
+          disabled={submitting || isAuthorized}
           onChange={(event) => setInviteToken(event.target.value)}
           type="password"
           value={inviteToken}
         />
       </label>
       <div className="button-row">
-        <button
-          className="button button--secondary"
-          disabled={isInviteDisabled}
-          onClick={() => void requestAuthorization({ inviteToken })}
-          type="button"
-        >
+        <button className="button button--secondary" disabled={!canUseInvite} onClick={() => void useInviteToken()} type="button">
           {locale === "ko" ? "초대 토큰 사용" : "Use invite token"}
         </button>
       </div>

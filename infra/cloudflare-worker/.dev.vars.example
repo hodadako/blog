@@ -1,1 +1,7 @@
 QUIZ_TOKEN_SECRET=replace-with-a-long-random-secret
+COMMENT_AUTHORIZATION_SECRET=replace-with-a-long-random-comment-authorization-secret
+SUPABASE_SERVICE_ROLE_KEY=replace-with-the-worker-only-supabase-service-role-key
+IP_HASH_SECRET=replace-with-a-separate-ip-hmac-secret
+INVITE_TOKEN_PEPPER=replace-with-an-invite-token-pepper
+COMMENT_PASSWORD_PEPPER=replace-with-a-comment-password-pepper
+ADMIN_API_SECRET=replace-with-a-worker-admin-api-secret

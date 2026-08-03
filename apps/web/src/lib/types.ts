@@ -11,6 +11,7 @@ export interface PostFrontmatter {
   draft: boolean;
   locale: AppLocale;
   slug: string;
+  commentQuizCategory?: string;
 }
 
 export interface PostSummary extends PostFrontmatter {
@@ -62,9 +63,25 @@ export interface PaginationResult<T> {
 }
 
 export interface QuizChallenge {
-  prompt: string;
-  challengeToken?: string;
+  challengeId: string;
+  category: {
+    code: string;
+    name: string;
+  };
+  question: {
+    type: "TEXT_MULTIPLE_CHOICE" | "IMAGE_MULTIPLE_CHOICE";
+    prompt: string;
+  };
+  options: QuizOption[];
   expiresAt: string;
+}
+
+export interface QuizOption {
+  id: string;
+  text: string | null;
+  imageUrl: string | null;
+  altText: string | null;
+  label: string | null;
 }
 
 export interface QuizVerificationResult {

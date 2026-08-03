@@ -12,7 +12,9 @@
     }
   ],
   "vars": {
-    "QUIZ_TTL_SECONDS": "300"
+    "QUIZ_TTL_SECONDS": "300",
+    "SUPABASE_URL": "https://hezknmxwxsiqhyjerhpl.supabase.co",
+    "QUIZ_IMAGE_BASE_URL": "https://raw.githubusercontent.com/hodadako/blog/main"
   },
   "observability": {
     "enabled": true,

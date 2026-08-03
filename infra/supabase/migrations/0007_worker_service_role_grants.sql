@@ -1,0 +1,10 @@
+grant select, insert, update, delete on table quiz_categories to service_role;
+grant select, insert, update, delete on table quiz_questions to service_role;
+grant select, insert, update, delete on table quiz_options to service_role;
+grant select, insert, update, delete on table quiz_challenges to service_role;
+grant select, insert, update, delete on table comment_idempotencies_v2 to service_role;
+grant select, insert, update, delete on table post_threads to service_role;
+grant select, insert, update, delete on table comments to service_role;
+grant select, insert, update, delete on table comment_ip_blacklist to service_role;
+grant select, insert, update, delete on table invite_tokens to service_role;
+grant select, insert, update, delete on table comment_authorizations to service_role;

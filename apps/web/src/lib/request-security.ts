@@ -1,4 +1,4 @@
-import { hashCommentIp } from "@/lib/comments";
+import { hashCommentIp } from "@/lib/comments-crypto";
 
 export function getTrustedClientIp(request: Request): string | null {
   const vercelForwardedFor = request.headers.get("x-vercel-forwarded-for");

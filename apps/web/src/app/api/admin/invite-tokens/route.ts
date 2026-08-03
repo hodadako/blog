@@ -1,6 +1,6 @@
 import { readAdminSessionFromCookieHeader } from "@/lib/auth";
-import { createInviteToken, revokeInviteToken } from "@/lib/comments";
 import { isUuid } from "@/lib/request-security";
+import { createWorkerInviteToken, revokeWorkerInviteToken } from "@/lib/worker-admin";
 
 function unauthorized(): Response {
   return Response.json({ error: "unauthorized" }, { status: 401 });
@@ -15,7 +15,7 @@ export async function POST(request: Request): Promise<Response> {
   const label = typeof body.label === "string" ? body.label : "";
 
   try {
-    const result = await createInviteToken(label);
+    const result = await createWorkerInviteToken(label);
     return Response.json(result, { status: 201, headers: { "cache-control": "no-store" } });
   } catch (error) {
     return Response.json(
@@ -37,6 +37,6 @@ export async function DELETE(request: Request): Promise<Response> {
     return Response.json({ error: "invalid-id" }, { status: 400 });
   }
 
-  await revokeInviteToken(id);
+  await revokeWorkerInviteToken(id);
   return new Response(null, { status: 204 });
 }

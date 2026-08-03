@@ -7,6 +7,7 @@ tags: ["Spring", "Bean Validation"]
 draft: false
 locale: "ko"
 slug: "gave-up-bean-validation"
+commentQuizCategory: "BACKEND"
 ---
 
 ## 0. 제목의 출처

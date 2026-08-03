@@ -7,6 +7,7 @@ tags: ["retrospective"]
 draft: false
 locale: "en"
 slug: "2025-retrospective"
+commentQuizCategory: "GENERAL"
 ---
 
 ## 0. Where the Title Came From

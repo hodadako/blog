@@ -34,7 +34,9 @@ pnpm --dir infra/cloudflare-worker dev
 pnpm --filter web dev
 ```
 
-`apps/web/.env.example`과 `infra/cloudflare-worker/.dev.vars.example`을 기준으로 로컬 환경 변수를 설정한다. `QUIZ_TOKEN_SECRET`은 Web과 Worker에서 같은 값을 사용하며 실제 값은 저장소에 커밋하지 않는다.
+`apps/web/.env.example`과 `infra/cloudflare-worker/.dev.vars.example`을 기준으로 로컬 환경 변수를 설정한다. 댓글·퀴즈의 Supabase Service Role Key와 권한 서명/토큰 Pepper는 Worker Secret으로만 주입하며 실제 값은 저장소에 커밋하지 않는다. 브라우저가 사용하는 값은 `NEXT_PUBLIC_QUIZ_WORKER_URL`뿐이다.
+
+문제은행과 댓글 흐름은 [문제은행 구현 보고서](docs/quiz-bank-implementation.md)와 [아키텍처 문서](docs/architecture/target-architecture.md)에 정리되어 있다. 이미지 문제는 `quiz_options.image_path`에 GitHub 상대 경로를 저장하고, 실제 저작권 확인 전에는 비활성 상태로 유지한다.
 
 Supabase migration과 DB 테스트는 다음 위치에 있다.
 
@@ -55,4 +57,7 @@ pnpm exec supabase test db --workdir infra
 pnpm typecheck
 pnpm test
 pnpm --dir infra/cloudflare-worker typecheck
+
+# Worker 배포 전 검증
+pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run
 ```

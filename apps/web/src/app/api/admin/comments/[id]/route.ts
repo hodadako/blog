@@ -1,7 +1,7 @@
 import { readAdminSessionFromCookieHeader } from "@/lib/auth";
-import { blacklistCommentIp, moderateComment } from "@/lib/comments";
 import { resolveLocale } from "@/lib/site";
 import type { CommentStatus } from "@/lib/types";
+import { blacklistWorkerCommentIp, moderateWorkerComment } from "@/lib/worker-admin";
 
 function readString(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -22,9 +22,9 @@ export async function POST(
   }
 
   if (decision === "blacklist_ip") {
-    await blacklistCommentIp(params.id);
+    await blacklistWorkerCommentIp(params.id);
   } else {
-    await moderateComment({ commentId: params.id, status: decision as CommentStatus });
+    await moderateWorkerComment(params.id, decision as CommentStatus);
   }
 
   return Response.redirect(new URL(`/${locale}/admin/comments`, request.url), 303);

@@ -7,7 +7,7 @@ import { MarkdownArticle } from "@/lib/markdown";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams, type AppLocale} from "@/lib/site";
 import {getBlogPostPageData} from "@/lib/server/blog";
 import { findCanonicalSlugByLocalizedSlug, findLocalizedSlug, getAllPostParams, getPostMetadataBySlug, getPublishedLocalizedSlugVariants } from "@/lib/content";
-import { listPublishedComments } from "@/lib/comments";
+import { listWorkerComments } from "@/lib/worker-client";
 import { redirect } from "next/navigation";
 
 interface BlogPostParams {
@@ -50,7 +50,7 @@ interface BlogCommentsSectionProps {
 }
 
 async function BlogCommentsSection({canonicalSlug, ...props}: BlogCommentsSectionProps) {
-  const comments = await listPublishedComments(canonicalSlug).catch(() => []);
+  const comments = await listWorkerComments(canonicalSlug).catch(() => []);
 
   return (
     <PostCommentsPanel

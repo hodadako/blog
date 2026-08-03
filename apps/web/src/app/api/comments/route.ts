@@ -1,12 +1,5 @@
-import { consumeCommentRateLimit, createComment, hashCommentRequest } from "@/lib/comments";
-import { isPublishedCanonicalSlug } from "@/lib/content";
-import { verifyCommentAuthorizationToken } from "@/lib/quiz-token";
-import {
-  getRequestSubjectHash,
-  isCanonicalSlug,
-  isUuid,
-  safeRedirectPath,
-} from "@/lib/request-security";
+import { WorkerApiError, workerRequest } from "@/lib/worker-client";
+import { isCanonicalSlug, isUuid, safeRedirectPath } from "@/lib/request-security";
 
 function readString(formData: FormData, key: string): string {
   const value = formData.get(key);
@@ -19,33 +12,11 @@ function redirectWithStatus(request: Request, redirectTo: string, status: string
   return Response.redirect(url, 303);
 }
 
-function isValidCommentInput(input: {
-  slug: string;
-  parentId: string;
-  author: string;
-  password: string;
-  content: string;
-  authorizationToken: string;
-  idempotencyKey: string;
-}): boolean {
-  return isCanonicalSlug(input.slug)
-    && (!input.parentId || isUuid(input.parentId))
-    && input.author.trim().length >= 1
-    && input.author.trim().length <= 80
-    && input.password.length >= 8
-    && input.password.length <= 72
-    && input.content.trim().length >= 1
-    && input.content.trim().length <= 5000
-    && input.authorizationToken.length >= 64
-    && input.authorizationToken.length <= 4096
-    && isUuid(input.idempotencyKey);
-}
-
 export async function POST(request: Request): Promise<Response> {
   const formData = await request.formData();
   const input = {
-    slug: readString(formData, "canonicalSlug").trim(),
-    parentId: readString(formData, "parentId"),
+    canonicalSlug: readString(formData, "canonicalSlug").trim(),
+    parentId: readString(formData, "parentId") || null,
     author: readString(formData, "author"),
     password: readString(formData, "password"),
     content: readString(formData, "content"),
@@ -54,65 +25,36 @@ export async function POST(request: Request): Promise<Response> {
   };
   const redirectTo = readString(formData, "redirectTo");
 
-  if (!isValidCommentInput(input)) {
+  if (!isCanonicalSlug(input.canonicalSlug)
+    || (input.parentId !== null && !isUuid(input.parentId))
+    || input.author.trim().length < 1 || input.author.trim().length > 80
+    || input.password.length < 8 || input.password.length > 72
+    || input.content.trim().length < 1 || input.content.trim().length > 5000
+    || input.authorizationToken.length < 64 || input.authorizationToken.length > 4096
+    || !isUuid(input.idempotencyKey)) {
     return redirectWithStatus(request, redirectTo, "invalid-input");
   }
 
-  if (!(await isPublishedCanonicalSlug(input.slug))) {
-    return redirectWithStatus(request, redirectTo, "post-not-found");
-  }
-
-  const attemptAllowed = await consumeCommentRateLimit({
-    action: "comment:create-attempt",
-    subjectHash: getRequestSubjectHash(request),
-    limit: 20,
-    windowSeconds: 300,
-  });
-
-  if (!attemptAllowed) {
-    return redirectWithStatus(request, redirectTo, "rate-limited");
-  }
-
-  let authorizationId: string;
-
   try {
-    authorizationId = verifyCommentAuthorizationToken(input.authorizationToken, input.slug).jti;
-  } catch {
-    return redirectWithStatus(request, redirectTo, "invalid-authorization");
-  }
-
-  const parentId = input.parentId || null;
-  const requestHash = hashCommentRequest({
-    slug: input.slug,
-    parentId,
-    authorName: input.author.trim(),
-    content: input.content.trim(),
-    password: input.password,
-  });
-
-  try {
-    await createComment({
-      authorizationId,
-      idempotencyKey: input.idempotencyKey,
-      requestHash,
-      slug: input.slug,
-      parentId,
-      authorName: input.author,
-      content: input.content,
-      password: input.password,
-      ipHash: getRequestSubjectHash(request),
+    await workerRequest<{ commentId: string; replayed: boolean }>("/comments", {
+      method: "POST",
+      body: JSON.stringify(input),
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "";
-    const status = message.includes("rate-limited")
+    const code = error instanceof WorkerApiError ? error.code : "worker-unavailable";
+    const status = code === "rate-limited"
       ? "rate-limited"
-      : message.includes("invalid-parent-comment")
+      : code === "invalid-parent-comment"
         ? "invalid-parent"
-        : message.includes("duplicate-comment")
+        : code === "duplicate-comment"
           ? "duplicate-comment"
-        : message.includes("idempotency-conflict")
+          : code === "idempotency-conflict"
             ? "idempotency-conflict"
-            : "invalid-authorization";
+            : code === "post-not-found"
+              ? "post-not-found"
+              : code === "invalid-authorization"
+                ? "invalid-authorization"
+                : "worker-unavailable";
     return redirectWithStatus(request, redirectTo, status);
   }
 

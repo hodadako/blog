@@ -1,8 +1,8 @@
 import {AdminCommentsTable} from "@/components/admin-comments-table";
 import {AdminInviteTokens} from "@/components/admin-invite-tokens";
-import {AdminCommentQuizzes} from "@/components/admin-comment-quizzes";
+import {AdminQuizBank} from "@/components/admin-quiz-bank";
 import { requireAdmin } from "@/lib/auth";
-import { listAdminComments, listCommentQuizzes, listInviteTokens } from "@/lib/comments";
+import { getWorkerQuizBank, listWorkerAdminComments, listWorkerInviteTokens } from "@/lib/worker-admin";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 
 interface AdminCommentsParams {
@@ -33,10 +33,10 @@ export default async function AdminCommentsPage({params}: AdminCommentsProps) {
   const locale = resolveLocale(routeParams.locale);
   await requireAdmin(locale);
   const dictionary = getDictionary(locale);
-  const [data, inviteTokens, quizzes] = await Promise.all([
-    listAdminComments().catch(() => []),
-    listInviteTokens().catch(() => []),
-    listCommentQuizzes().catch(() => []),
+  const [data, inviteTokens, quizBank] = await Promise.all([
+    listWorkerAdminComments().catch(() => []),
+    listWorkerInviteTokens().catch(() => []),
+    getWorkerQuizBank().catch(() => ({ categories: [], questions: [], options: [] })),
   ]);
 
   return (
@@ -48,7 +48,7 @@ export default async function AdminCommentsPage({params}: AdminCommentsProps) {
           <p className="page-copy">{dictionary.adminComments.intro}</p>
         </header>
         <AdminCommentsTable copy={dictionary.adminComments} items={data} locale={locale} />
-        <AdminCommentQuizzes initialItems={quizzes} locale={locale} />
+        <AdminQuizBank initialBank={quizBank} locale={locale} />
         <AdminInviteTokens initialItems={inviteTokens} locale={locale} />
       </section>
     </div>

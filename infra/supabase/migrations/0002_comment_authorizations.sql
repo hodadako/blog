@@ -209,7 +209,8 @@ begin
   if char_length(btrim(input_author_name)) not between 1 and 80
     or char_length(btrim(input_body_markdown)) not between 1 and 5000
     or char_length(input_password_hash) < 32
-    or input_canonical_slug !~ '^[a-zA-Z0-9][a-zA-Z0-9_-]{0,199}$' then
+    or char_length(input_canonical_slug) > 200
+    or input_canonical_slug !~ '^[a-zA-Z0-9][a-zA-Z0-9_-]*$' then
     raise exception 'invalid-comment-input' using errcode = '22023';
   end if;
 

@@ -87,6 +87,7 @@ function parseFrontmatter(input: unknown): PostFrontmatter {
     draft: readBoolean(input, "draft"),
     locale: readLocale(input),
     slug: readRequiredString(input, "slug"),
+    commentQuizCategory: readOptionalString(input, "commentQuizCategory"),
   };
 }
 
