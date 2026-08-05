@@ -1,7 +1,7 @@
 # 문제은행형 댓글 퀴즈 구현 보고서
 
 작성일: 2026-08-03
-마지막 진행 기록: 2026-08-04
+마지막 진행 기록: 2026-08-06
 
 ## 1. 기존 구조 분석
 
@@ -96,7 +96,7 @@ Next.js UI
 
 ### 남은 호환 주의점
 
-기존 댓글의 `scrypt$...` 비밀번호 해시는 Worker Web Crypto에서 검증하지 않는다. 새 Worker 댓글은 `pbkdf2-sha256$120000$...` 형식으로 저장된다. 기존 댓글 수정·삭제를 계속 지원하려면 별도 Worker 호환 scrypt 마이그레이션 또는 읽기 시점 재해싱이 필요하다.
+기존 댓글의 `scrypt$...` 비밀번호 해시는 Worker Web Crypto에서 검증하지 않는다. 새 Worker 댓글은 `pbkdf2-sha256$100000$...` 형식으로 저장된다. Cloudflare Workers Web Crypto가 100,000회를 초과하는 PBKDF2 반복 횟수를 거부하므로 이 값으로 고정했다. 기존 댓글 수정·삭제를 계속 지원하려면 별도 Worker 호환 scrypt 마이그레이션 또는 읽기 시점 재해싱이 필요하다.
 
 ## 8. 테스트 현황
 
@@ -105,13 +105,14 @@ Next.js UI
 ```text
 pnpm --filter web test                         3 files / 9 tests PASS
 pnpm --filter web typecheck                    PASS
-pnpm --dir infra/cloudflare-worker typecheck   PASS
-pnpm --dir infra/cloudflare-worker test        3 tests PASS
+volta run --node 24.18.0 pnpm --dir infra/cloudflare-worker typecheck   PASS
+volta run --node 24.18.0 pnpm --dir infra/cloudflare-worker test        4 tests PASS
 pnpm exec supabase test db --local --workdir infra  2 files / 30 tests PASS
 pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
+운영 E2E (quiz.hodako.dev)                     발급·검증·댓글·삭제 PASS
 ```
 
-검증 범위에는 RLS 직접 쓰기 차단, 문제당 5개·정답 1개, Challenge 응답 정답 비노출, 허용되지 않은 Option 거부, Challenge 재사용 거부, 기존 댓글 인증 회귀 테스트가 포함된다. Worker 실제 배포 환경의 Supabase Secret과 운영 RPC를 호출하는 E2E는 Secret 노출을 피하기 위해 별도 배포 검증으로 남아 있다.
+검증 범위에는 RLS 직접 쓰기 차단, 문제당 5개·정답 1개, Challenge 응답 정답 비노출, 허용되지 않은 Option 거부, Challenge 재사용 거부, 기존 댓글 인증 회귀 테스트, Workers 호환 PBKDF2 댓글 저장 테스트가 포함된다. 운영 E2E는 임시 댓글을 생성한 뒤 비밀번호 Soft Delete하고 최종 `deleted` 상태를 확인했다.
 
 ## 9. 변경 파일
 
@@ -122,7 +123,8 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 | `infra/supabase/migrations/0005_quiz_admin_question_rpc.sql` | 문제 관리 원자 RPC |
 | `infra/supabase/migrations/0006_persist_quiz_failures.sql` | 오답/만료 Challenge 상태 영속화 |
 | `infra/supabase/tests/quiz_bank.sql` | 16개 문제은행/RLS/RPC 테스트 |
-| `infra/cloudflare-worker/src/index.ts` | Worker API 전체 구현 |
+| `infra/cloudflare-worker/src/index.ts` | Worker API 전체 구현, Workers 호환 PBKDF2 비밀번호 해싱 |
+| `infra/cloudflare-worker/src/index.spec.ts` | 댓글 저장·PBKDF2 회귀 테스트 |
 | `infra/cloudflare-worker/wrangler.jsonc` | Supabase/GitHub 공개 변수와 Custom Domain |
 | `apps/web/src/lib/worker-client.ts` | 공개 Worker API 클라이언트 |
 | `apps/web/src/lib/worker-admin.ts` | 관리자 Worker 프록시 |
@@ -131,9 +133,9 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 | `apps/web/src/components/admin-quiz-bank.tsx` | 문제은행 관리자 조회 UI |
 | `docs/architecture/target-architecture.md` | Worker 신뢰 경계 설계 문서 |
 
-## 10. 2026-08-04 진행 중단 시점
+## 10. 2026-08-06 진행 기록
 
-내일 이어서 작업할 수 있도록, 현재까지의 적용 상태와 확인되지 않은 부분을 기록한다. 이 기록 이후에는 코드·마이그레이션·배포를 추가로 진행하지 않았다.
+지난 중단 지점 이후 운영 오류를 확인하고 Worker Secret과 댓글 비밀번호 해시 구현을 보완했다. Secret 값 자체는 문서와 로그에 기록하지 않는다.
 
 ### 완료·확인된 상태
 
@@ -144,27 +146,30 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 - Worker를 `quiz.hodako.dev`에 배포했다. 현재 배포 버전은 `a59f3f3a-e7b6-458a-a983-8f30b442855a`다.
 - Worker Secret은 값 자체를 기록하지 않고 다음 이름으로 등록했다: `SUPABASE_SERVICE_ROLE_KEY`, `COMMENT_PASSWORD_PEPPER`, `COMMENT_AUTHORIZATION_SECRET`, `IP_HASH_SECRET`, `INVITE_TOKEN_PEPPER`, `ADMIN_API_SECRET`, 기존 `QUIZ_TOKEN_SECRET`.
 - Vercel Production/Preview에 `WORKER_ADMIN_SECRET`을 등록했다. Development 환경은 Vercel CLI의 sensitive 환경 변수 제약으로 등록하지 않았다.
+- 위 배포의 Challenge Smoke Test가 `Invalid API key`로 500을 반환하는 것을 Worker 로그에서 확인했다. Supabase 프로젝트 API에서 유효한 `service_role` 키를 확인해 Worker의 `SUPABASE_SERVICE_ROLE_KEY` Secret을 교체했다.
+- Secret 교체 후 Challenge 발급은 HTTP 200으로 복구됐다. 운영 응답에는 `GENERAL` 카테고리와 5개 선택지만 포함되고 정답 필드는 포함되지 않았다.
+- 운영 E2E 중 댓글 저장이 PBKDF2 반복 횟수 `120000` 때문에 Cloudflare Workers Web Crypto에서 실패하는 것을 확인했다. `infra/cloudflare-worker/src/index.ts`의 새 댓글 해시 반복 횟수를 `100000`으로 고정하고, 검증도 같은 형식만 허용하도록 수정했다.
+- 수정 Worker를 `quiz.hodako.dev`에 다시 배포했다. 현재 코드 수정 배포 버전은 `ac09da68-4cfc-42bf-896f-5fcc6a13c3ea`다.
+- 운영 E2E가 성공했다: Challenge 발급 `200` → 정답 검증·권한 발급 `201` → 댓글 저장 `201` → 비밀번호 삭제 `200`. 테스트 댓글은 최종 조회에서 `deleted` 상태임을 확인했다.
 
-### 현재 확인된 차단 사항
+### 현재 상태와 남은 확인 사항
 
-- 운영 Smoke Test에서 `POST https://quiz.hodako.dev/quiz/challenges` (본문 `{"canonicalSlug":"2025-retrospective"}`)가 HTTP 500 `{"error":"internal-error"}`을 반환했다.
-- 이 500의 원인은 아직 확정하지 않았다. Worker 로그를 장시간 추적하거나 원격 RPC·Secret·게시물 카테고리 매핑을 추가로 확인하는 작업은 내일 재개한다.
-- 따라서 “배포 완료”는 확인됐지만, 운영 환경에서 Challenge 발급부터 댓글 작성까지의 E2E 성공은 아직 확인되지 않았다.
+- 문제은행 Challenge와 2단계 댓글 인증의 운영 경로는 현재 E2E 기준으로 동작한다.
+- 이번 작업에서 Worker 코드·회귀 테스트·진행 문서 변경을 함께 커밋·Push한다.
+- 기존 댓글의 `scrypt$...` 비밀번호 해시를 Worker 수정·삭제 API에서 검증하지 못하는 호환성 문제는 남아 있다.
+- Vercel에 남아 있는 `SUPABASE_SERVICE_ROLE_KEY`는 Next.js 런타임에서 더 이상 사용하지 않는지 확인한 뒤 제거 여부를 결정해야 한다.
 
 ## 11. 내일 재개할 작업
 
 우선순위 순서로 정리한다.
 
-### P0 — 운영 500 원인 확인
+### P0 — 커밋·배포 이력 정리
 
-- `quiz.hodako.dev` Worker 로그와 Supabase RPC 응답을 확인한다.
-- `2025-retrospective`의 `post_threads.quiz_category_id`, 활성 카테고리·문제·선택지 Seed 상태를 확인한다.
-- Worker의 `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` Secret과 원격 RPC 권한·시그니처를 확인한다.
-- 원인 확인 전에는 무작정 코드나 Migration을 추가로 변경하지 않는다.
+- PBKDF2 `100000` 반복 횟수 수정과 문서 변경을 커밋·Push한다.
+- CI에서 Worker 테스트와 배포 dry-run이 Node 24로 실행되는지 확인한다.
 
-### P1 — 운영 E2E 및 보안 정리
+### P1 — 운영 보안 정리
 
-- Challenge 발급 → 정답 검증 → 단기 권한 발급 → 댓글 작성까지 운영 E2E를 테스트한다.
 - 실제 런타임에서 더 이상 사용하지 않는 것이 확인되면 Vercel에 남아 있는 `SUPABASE_SERVICE_ROLE_KEY`를 제거한다.
 - 기존 `scrypt$...` 댓글의 Worker 수정·삭제 호환 처리(마이그레이션 또는 읽기 시점 재해싱)를 결정한다.
 

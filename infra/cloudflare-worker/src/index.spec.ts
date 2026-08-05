@@ -44,6 +44,12 @@ function mockSupabase(overrides: Record<string, unknown> = {}): void {
         expires_at: "2026-08-03T15:00:00.000Z",
       }]);
     }
+    if (url.endsWith("/rpc/create_comment_with_authorization")) {
+      return Response.json(overrides.comment ?? [{
+        comment_id: "123e4567-e89b-42d3-a456-426614174098",
+        replayed: false,
+      }]);
+    }
     return Response.json([]);
   });
 }
@@ -85,6 +91,37 @@ describe("quiz worker", () => {
     const payload = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(result.authorizationToken!.split(".")[0].replace(/-/g, "+").replace(/_/g, "/")), (char) => char.charCodeAt(0)))) as Record<string, unknown>;
     expect(payload).toMatchObject({ typ: "comment_write_authorization", purpose: "COMMENT_WRITE", canonicalSlug: "2025-retrospective" });
     expect(payload).not.toHaveProperty("answer");
+  });
+
+  it("hashes a comment password with the Workers-compatible PBKDF2 format", async () => {
+    mockSupabase({ authorization: [{
+      authorization_id: "123e4567-e89b-42d3-a456-426614174099",
+      canonical_slug: "2025-retrospective",
+      expires_at: "2099-08-03T15:00:00.000Z",
+    }] });
+    const authorizationResponse = await worker.fetch(new Request("https://quiz.hodako.dev/quiz/challenges/123e4567-e89b-42d3-a456-426614174000/verify", {
+      method: "POST",
+      headers: { "content-type": "application/json", "cf-connecting-ip": "203.0.113.10" },
+      body: JSON.stringify({ selectedOptionId: question.options[0].id }),
+    }), env);
+    const authorization = await authorizationResponse.json() as { authorizationToken?: string };
+
+    const response = await worker.fetch(new Request("https://quiz.hodako.dev/comments", {
+      method: "POST",
+      headers: { "content-type": "application/json", "cf-connecting-ip": "203.0.113.10" },
+      body: JSON.stringify({
+        canonicalSlug: "2025-retrospective",
+        content: "댓글 비밀번호 해시 테스트",
+        password: "test-password-123",
+        parentId: null,
+        author: "테스트",
+        authorizationToken: authorization.authorizationToken,
+        idempotencyKey: "123e4567-e89b-42d3-a456-426614174097",
+      }),
+    }), env);
+
+    expect(response.status).toBe(201);
+    expect(await response.json()).toMatchObject({ commentId: "123e4567-e89b-42d3-a456-426614174098" });
   });
 
   it("returns a bodyless preflight and disables arithmetic challenges", async () => {

@@ -3,6 +3,9 @@ const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3
 const HEX_PATTERN = /^[a-f0-9]{64}$/;
 const MAX_JSON_BYTES = 64 * 1024;
 const DEFAULT_TTL_SECONDS = 300;
+// Cloudflare Workers Web Crypto rejects PBKDF2 iteration counts above 100,000.
+// Keep the format explicit so newly written hashes remain verifiable at the edge.
+const COMMENT_PASSWORD_ITERATIONS = 100_000;
 
 type QuizOption = {
   id: string;
@@ -395,7 +398,7 @@ async function hashCommentPassword(password: string, pepper: string): Promise<st
     false,
     ["deriveBits"],
   );
-  const iterations = 120_000;
+  const iterations = COMMENT_PASSWORD_ITERATIONS;
   const bits = await crypto.subtle.deriveBits(
     { name: "PBKDF2", salt, iterations, hash: "SHA-256" },
     key,
@@ -407,7 +410,7 @@ async function hashCommentPassword(password: string, pepper: string): Promise<st
 async function verifyCommentPassword(password: string, storedHash: string, pepper: string): Promise<boolean> {
   const [algorithm, iterationText, saltText, expectedText] = storedHash.split("$");
   const iterations = Number(iterationText);
-  if (algorithm !== "pbkdf2-sha256" || !Number.isInteger(iterations) || iterations < 100_000 || iterations > 500_000 || !saltText || !expectedText) {
+  if (algorithm !== "pbkdf2-sha256" || iterations !== COMMENT_PASSWORD_ITERATIONS || !saltText || !expectedText) {
     return false;
   }
   try {

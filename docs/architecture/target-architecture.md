@@ -58,7 +58,7 @@ Supabase
 - 익명 역할은 문제은행·Challenge·권한·댓글 쓰기 테이블에 직접 권한이 없다. 공개 댓글 조회도 Worker View를 통해서만 수행한다.
 - Client IP는 Cloudflare가 설정한 `CF-Connecting-IP`만 사용하고 `X-Forwarded-For`는 신뢰하지 않는다. `IP_HASH_SECRET` HMAC 결과만 저장한다.
 - 초대 토큰은 `INVITE_TOKEN_PEPPER` HMAC 결과만 저장하고 원문은 발급 응답에서 한 번만 보여준다.
-- 댓글 비밀번호는 Worker Web Crypto PBKDF2(`pbkdf2-sha256`, 120,000회) 형식으로 저장한다. 기존 `scrypt$` 행은 Worker 수정/삭제 경로에서 호환되지 않으므로 별도 마이그레이션 대상이다.
+- 댓글 비밀번호는 Worker Web Crypto PBKDF2(`pbkdf2-sha256`, 100,000회) 형식으로 저장한다. Cloudflare Workers Web Crypto가 100,000회를 초과하는 반복 횟수를 거부하므로 이 값을 고정한다. 기존 `scrypt$` 행은 Worker 수정/삭제 경로에서 호환되지 않으므로 별도 마이그레이션 대상이다.
 
 ## 게시물 연결 정책
 
