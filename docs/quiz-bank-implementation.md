@@ -163,12 +163,12 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 
 우선순위 순서로 정리한다.
 
-### P0 — 커밋·배포 이력 정리
+### P0 — 완료
 
-- PBKDF2 `100000` 반복 횟수 수정과 문서 변경을 커밋·Push한다.
-- CI에서 Worker 테스트와 배포 dry-run이 Node 24로 실행되는지 확인한다.
+- PBKDF2 `100000` 반복 횟수 수정과 문서 변경을 커밋·Push했다(`a74dd91`, `2711466`).
+- Node 24에서 Worker 테스트 4개·타입 검사를 실행했고, Wrangler 배포 dry-run도 통과했다. 최신 Push 이후 GitHub Actions 결과는 별도로 확인하지 않았다.
 
-### P1 — 운영 보안 정리
+### P1 — 다음 재개 작업
 
 - 실제 런타임에서 더 이상 사용하지 않는 것이 확인되면 Vercel에 남아 있는 `SUPABASE_SERVICE_ROLE_KEY`를 제거한다.
 - 기존 `scrypt$...` 댓글의 Worker 수정·삭제 호환 처리(마이그레이션 또는 읽기 시점 재해싱)를 결정한다.
