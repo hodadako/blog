@@ -155,7 +155,7 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 ### 현재 상태와 남은 확인 사항
 
 - 문제은행 Challenge와 2단계 댓글 인증의 운영 경로는 현재 E2E 기준으로 동작한다.
-- 이번 작업에서 Worker 코드·회귀 테스트·진행 문서 변경을 함께 커밋·Push한다.
+- 이번 작업에서 Worker 코드·회귀 테스트·진행 문서 변경을 커밋·Push했다. 커밋은 `a74dd91` (`fix(worker): Workers 댓글 비밀번호 해싱 호환성 수정`)이다.
 - 기존 댓글의 `scrypt$...` 비밀번호 해시를 Worker 수정·삭제 API에서 검증하지 못하는 호환성 문제는 남아 있다.
 - Vercel에 남아 있는 `SUPABASE_SERVICE_ROLE_KEY`는 Next.js 런타임에서 더 이상 사용하지 않는지 확인한 뒤 제거 여부를 결정해야 한다.
 
