@@ -38,6 +38,8 @@ interface BlogCommentsSectionProps {
   quizLabels: {
     answer: string;
     frontendOnly: string;
+    inviteFailed: string;
+    quizIncorrect: string;
     loading: string;
     question: string;
     unavailable: string;
@@ -177,6 +179,8 @@ export default async function BlogPostPage({params}: BlogPostProps) {
             verified: dictionary.post.quizVerified,
             unavailable: dictionary.post.quizUnavailable,
             frontendOnly: dictionary.post.quizFrontendOnly,
+            quizIncorrect: dictionary.post.quizIncorrect,
+            inviteFailed: dictionary.post.inviteFailed,
           }}
           replyLabel={dictionary.post.replyLabel}
           submitDeleteLabel={dictionary.post.submitDeleteLabel}

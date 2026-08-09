@@ -118,6 +118,8 @@ interface SiteDictionary {
     quizAnswer: string;
     quizVerify: string;
     quizVerified: string;
+    quizIncorrect: string;
+    inviteFailed: string;
     quizUnavailable: string;
     quizFrontendOnly: string;
     commentFrontendOnlyNotice: string;
@@ -242,6 +244,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        quizAnswer: "정답 입력",
         quizVerify: "퀴즈 검증",
         quizVerified: "검증 완료",
+        quizIncorrect: "정답이 아닙니다.",
+        inviteFailed: "토큰 검증에 실패했습니다.",
          quizUnavailable: "현재 댓글을 달 수 없습니다.",
          quizFrontendOnly: "현재 댓글을 달 수 없습니다.",
          commentFrontendOnlyNotice: "현재 댓글을 달 수 없습니다.",
@@ -375,6 +379,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
        quizAnswer: "Answer",
         quizVerify: "Verify quiz",
         quizVerified: "Verified",
+        quizIncorrect: "That answer is incorrect.",
+        inviteFailed: "Token verification failed.",
          quizUnavailable: "Comments are currently unavailable.",
          quizFrontendOnly: "Comments are currently unavailable.",
          commentFrontendOnlyNotice: "Comments are currently unavailable.",

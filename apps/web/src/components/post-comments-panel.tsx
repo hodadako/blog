@@ -27,8 +27,10 @@ interface PostCommentsPanelProps {
   quizLabels: {
     answer: string;
     frontendOnly: string;
+    inviteFailed: string;
     loading: string;
     question: string;
+    quizIncorrect: string;
     unavailable: string;
     verified: string;
     verify: string;

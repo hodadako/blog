@@ -17,6 +17,8 @@ interface QuizGateProps {
     answer: string;
     verify: string;
     verified: string;
+    quizIncorrect: string;
+    inviteFailed: string;
     unavailable: string;
     frontendOnly: string;
   };
@@ -28,9 +30,12 @@ function createTimedSignal(timeoutMs: number): AbortSignal {
   return AbortSignal.timeout(timeoutMs);
 }
 
-function statusMessage(error: unknown, labels: QuizGateProps["labels"]): string {
-  if (error instanceof WorkerApiError && error.code === "quiz-answer-incorrect") {
-    return labels.unavailable;
+function statusMessage(error: unknown, labels: QuizGateProps["labels"], method: "quiz" | "invite"): string {
+  if (error instanceof WorkerApiError && method === "quiz" && error.code === "quiz-answer-incorrect") {
+    return labels.quizIncorrect;
+  }
+  if (error instanceof WorkerApiError && method === "invite" && error.code === "invalid-invite-token") {
+    return labels.inviteFailed;
   }
   if (error instanceof WorkerApiError && error.code === "rate-limited") {
     return labels.unavailable;
@@ -95,7 +100,7 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
       const result = await verifyQuizChallenge(challenge.challengeId, selectedOptionId);
       await completeAuthorization(result);
     } catch (error) {
-      setMessage(statusMessage(error, labels));
+      setMessage(statusMessage(error, labels, "quiz"));
       onStatusChange?.("frontend-only");
       if (error instanceof WorkerApiError && (error.code === "invalid-authorization" || error.code === "challenge-expired-or-used")) {
         setChallenge(null);
@@ -113,7 +118,7 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
       const result = await requestInviteAuthorization(slug, inviteToken.trim());
       await completeAuthorization(result);
     } catch (error) {
-      setMessage(statusMessage(error, labels));
+      setMessage(statusMessage(error, labels, "invite"));
       onStatusChange?.("frontend-only");
     } finally {
       setSubmitting(false);

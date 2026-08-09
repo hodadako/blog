@@ -24,6 +24,8 @@ interface CommentFormProps {
     answer: string;
     verify: string;
     verified: string;
+    quizIncorrect: string;
+    inviteFailed: string;
     unavailable: string;
     frontendOnly: string;
   };
@@ -65,11 +67,41 @@ export function CommentForm({
     setQuizKey((current) => current + 1);
   }
 
+  function submitErrorMessage(error: unknown): string {
+    if (!(error instanceof WorkerApiError)) {
+      return locale === "ko" ? "댓글을 등록하지 못했습니다." : "The comment could not be posted.";
+    }
+
+    const messages: Record<string, string> = locale === "ko"
+      ? {
+          "invalid-comment-input": "댓글 입력값을 확인해 주세요.",
+          "post-not-found": "게시된 글을 찾을 수 없습니다.",
+          "invalid-parent-comment": "답글을 작성할 수 없는 댓글입니다.",
+          "duplicate-comment": "같은 내용을 연속으로 등록할 수 없습니다.",
+          "idempotency-conflict": "같은 요청이 이미 처리되었거나 요청 키가 충돌했습니다.",
+          "comments-closed": "이 글의 댓글 작성이 닫혀 있습니다.",
+          "internal-error": "댓글 서버에서 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+        }
+      : {
+          "invalid-comment-input": "Please check the comment fields.",
+          "post-not-found": "The published post could not be found.",
+          "invalid-parent-comment": "This comment cannot receive a reply.",
+          "duplicate-comment": "The same content cannot be posted repeatedly.",
+          "idempotency-conflict": "The request was already processed or its key conflicted.",
+          "comments-closed": "Comments are closed for this post.",
+          "internal-error": "The comment service encountered an error. Please try again later.",
+        };
+
+    return messages[error.code] ?? (locale === "ko" ? "댓글을 등록하지 못했습니다." : "The comment could not be posted.");
+  }
+
   async function submitComment(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     if (!authorizationToken || submitting) return;
     setSubmitting(true);
     setSubmitMessage("");
+    const requestIdempotencyKey = idempotencyKey || crypto.randomUUID();
+    if (!idempotencyKey) setIdempotencyKey(requestIdempotencyKey);
     try {
       await workerRequest<{ commentId: string }>("/comments", {
         method: "POST",
@@ -80,7 +112,7 @@ export function CommentForm({
           parentId: parentId ?? null,
           author,
           authorizationToken,
-          idempotencyKey,
+          idempotencyKey: requestIdempotencyKey,
         }),
       });
       setContent("");
@@ -95,7 +127,7 @@ export function CommentForm({
       } else if (error instanceof WorkerApiError && error.code === "rate-limited") {
         setSubmitMessage(locale === "ko" ? "요청이 너무 많습니다. 잠시 후 다시 시도해 주세요." : "Too many requests. Please try again later.");
       } else {
-        setSubmitMessage(locale === "ko" ? "댓글을 등록하지 못했습니다." : "The comment could not be posted.");
+        setSubmitMessage(submitErrorMessage(error));
       }
     } finally {
       setSubmitting(false);
