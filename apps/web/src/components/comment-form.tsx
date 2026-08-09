@@ -124,19 +124,21 @@ export function CommentForm({
           <>
             {parentId ? <p className="status-text">{parentLabel}</p> : null}
 
-            <label className="field">
-              <span className="field__label">{authorLabel}</span>
-              <input className="field__input" maxLength={80} name="author" onChange={(event) => setAuthor(event.target.value)} required type="text" value={author} />
-            </label>
+            <div className="comment-form__identity">
+              <label className="field">
+                <span className="field__label">{authorLabel}</span>
+                <input className="field__input" maxLength={80} name="author" onChange={(event) => setAuthor(event.target.value)} required type="text" value={author} />
+              </label>
 
-            <label className="field">
-              <span className="field__label">{passwordLabel}</span>
-              <input className="field__input" maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
-            </label>
+              <label className="field">
+                <span className="field__label">{passwordLabel}</span>
+                <input className="field__input" maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
+              </label>
+            </div>
 
             <label className="field">
               <span className="field__label">{contentLabel}</span>
-              <textarea className="field__textarea" maxLength={5000} name="content" onChange={(event) => setContent(event.target.value)} required value={content} />
+              <textarea className="field__textarea comment-form__textarea" maxLength={5000} name="content" onChange={(event) => setContent(event.target.value)} required value={content} />
             </label>
 
             <div className="button-row">

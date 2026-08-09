@@ -121,20 +121,24 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
   }
 
   return (
-    <div className="stack-sm" aria-live="polite">
+    <div className="quiz-gate stack-sm" aria-live="polite">
       <input name="authorizationToken" type="hidden" value={authorizationToken} />
-      {message ? <p className="card-copy">{message}</p> : null}
-      {challenge ? (
-        <fieldset className="stack-sm" disabled={submitting || isAuthorized}>
+      {message ? <p className={isAuthorized ? "quiz-gate__status quiz-gate__status--verified" : "quiz-gate__status"}>{message}</p> : null}
+      {challenge && !isAuthorized ? (
+        <fieldset className="quiz-challenge stack-sm" disabled={submitting}>
           <legend className="field__label">{labels.question}</legend>
-          <p className="pill" aria-label={challenge.category.name}>{challenge.category.name}</p>
-          <p className="card-copy">{challenge.question.prompt}</p>
+          <div className="quiz-challenge__header">
+            <span className="pill" aria-label={challenge.category.name}>{challenge.category.name}</span>
+            <p className="quiz-challenge__prompt">{challenge.question.prompt}</p>
+          </div>
           <div className={challenge.question.type === "IMAGE_MULTIPLE_CHOICE" ? "quiz-options quiz-options--image" : "quiz-options"} role="radiogroup" aria-label={labels.answer}>
             {challenge.options.map((option, index) => {
               const failed = imageFailures.has(option.id);
+              const optionText = option.label ?? option.text;
               return (
                 <button
                   aria-checked={selectedOptionId === option.id}
+                  aria-label={optionText ?? option.altText ?? `${labels.answer} ${index + 1}`}
                   className={selectedOptionId === option.id ? "quiz-option quiz-option--selected" : "quiz-option"}
                   key={option.id}
                   onClick={() => setSelectedOptionId(option.id)}
@@ -150,7 +154,10 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
                       src={option.imageUrl}
                     />
                   ) : null}
-                  <span>{option.label ?? option.text ?? `${labels.answer} ${index + 1}`}</span>
+                  <span className="quiz-option__caption">
+                    <span aria-hidden="true" className="quiz-option__number">{index + 1}</span>
+                    {optionText ? <span className="quiz-option__label">{optionText}</span> : null}
+                  </span>
                 </button>
               );
             })}
@@ -162,22 +169,26 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
           </div>
         </fieldset>
       ) : null}
-      <label className="field">
-        <span className="field__label">{locale === "ko" ? "초대 토큰" : "Invite token"}</span>
-        <input
-          autoComplete="off"
-          className="field__input"
-          disabled={submitting || isAuthorized}
-          onChange={(event) => setInviteToken(event.target.value)}
-          type="password"
-          value={inviteToken}
-        />
-      </label>
-      <div className="button-row">
-        <button className="button button--secondary" disabled={!canUseInvite} onClick={() => void useInviteToken()} type="button">
-          {locale === "ko" ? "초대 토큰 사용" : "Use invite token"}
-        </button>
-      </div>
+      {!isAuthorized ? (
+        <div className="quiz-invite">
+          <label className="field">
+            <span className="field__label">{locale === "ko" ? "초대 토큰" : "Invite token"}</span>
+            <input
+              autoComplete="off"
+              className="field__input"
+              disabled={submitting}
+              onChange={(event) => setInviteToken(event.target.value)}
+              type="password"
+              value={inviteToken}
+            />
+          </label>
+          <div className="button-row">
+            <button className="button button--secondary" disabled={!canUseInvite} onClick={() => void useInviteToken()} type="button">
+              {locale === "ko" ? "초대 토큰 사용" : "Use invite token"}
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

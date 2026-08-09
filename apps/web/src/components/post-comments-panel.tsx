@@ -94,7 +94,7 @@ export function PostCommentsPanel({
   const statusMessage = commentStatus ? statusMessages[commentStatus] ?? quizLabels.unavailable : null;
 
   return (
-    <section className="page-section comment-grid">
+    <section className="page-section comment-grid anchor-section" id="comments">
       <CommentList
         activeEditor={activeEditor}
         comments={comments}

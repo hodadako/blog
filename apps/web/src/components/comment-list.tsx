@@ -18,6 +18,17 @@ interface CommentListProps {
   activeEditor?: CommentEditorState | null;
 }
 
+function formatCommentDate(value: string, locale: AppLocale): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Seoul",
+  }).format(date);
+}
+
 function CommentNode({
   comment,
   locale,
@@ -45,18 +56,21 @@ function CommentNode({
 }) {
   const isEditing = activeEditor?.id === comment.id && activeEditor.mode === "edit";
   const isDeleting = activeEditor?.id === comment.id && activeEditor.mode === "delete";
+  const authorInitial = comment.authorName.trim().charAt(0).toUpperCase() || "?";
 
   return (
     <article className="comment-item">
       <div className="comment-item__header">
-        <div className="stack-sm">
-          <strong>{comment.authorName}</strong>
-          <span className="meta-row">{comment.createdAt}</span>
+        <div className="comment-item__author">
+          <span aria-hidden="true" className="comment-item__avatar">{authorInitial}</span>
+          <div className="comment-item__byline">
+            <strong>{comment.authorName}</strong>
+            <time className="meta-row" dateTime={comment.createdAt}>{formatCommentDate(comment.createdAt, locale)}</time>
+          </div>
         </div>
-        <span className={`status-pill status-pill--${comment.status}`}>{comment.status}</span>
       </div>
       <p className="comment-item__body">{comment.content}</p>
-      <div className="button-row">
+      <div className="comment-item__actions">
         {!comment.parentId && comment.status === "published" ? (
           <a className="text-link" href={`/${locale}/blog/${postSlug}?replyTo=${comment.id}#comment-form`}>
             {replyLabel}
