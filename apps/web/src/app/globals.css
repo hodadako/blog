@@ -372,12 +372,6 @@ img {
   flex-wrap: wrap;
 }
 
-.theme-toggle__group {
-  display: inline-flex;
-  gap: var(--space-1);
-  align-items: center;
-}
-
 .font-toggle__trigger,
 .theme-toggle__trigger {
   display: inline-flex;
@@ -399,7 +393,7 @@ img {
 .font-toggle__trigger:hover,
 .font-toggle__trigger[aria-pressed="true"],
 .theme-toggle__trigger:hover,
-.theme-toggle__trigger[aria-pressed="true"] {
+.theme-toggle__trigger--current {
   border-color: var(--color-border);
   background: var(--color-accent-soft);
   color: var(--color-text);
