@@ -281,7 +281,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
   },
   en: {
     siteName: "hodako",
-    siteTagline: "Always in development.",
+    siteTagline: "Work in progress.",
     navigation: {
       label: "Primary navigation",
       home: "Home",
