@@ -6,6 +6,8 @@ import {MobileHeaderShell} from "@/components/mobile-header-shell";
 import {ThemeToggle} from "@/components/theme-toggle";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
+const SHOW_PROJECTS_NAV = false;
+
 interface SiteHeaderProps {
   locale: AppLocale;
 }
@@ -24,9 +26,11 @@ export function SiteHeader({locale}: SiteHeaderProps) {
 
           <div className="site-nav">
             <nav className="site-nav__links" aria-label={dictionary.navigation.label}>
-              <Link className="site-nav__link" href={`/${locale}/projects`}>
-                {dictionary.navigation.projects}
-              </Link>
+              {SHOW_PROJECTS_NAV ? (
+                <Link className="site-nav__link" href={`/${locale}/projects`}>
+                  {dictionary.navigation.projects}
+                </Link>
+              ) : null}
               <Link className="site-nav__link" href={`/${locale}/blog`}>
                 {dictionary.navigation.blog}
               </Link>
