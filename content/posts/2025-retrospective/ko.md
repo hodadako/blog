@@ -4,7 +4,7 @@ description: "늦게나마 남겨보는 2025년도의 회고"
 publishedAt: "2026-03-29"
 updatedAt: "2026-03-29"
 tags: ["회고"]
-draft: false
+draft: true
 locale: "ko"
 slug: "2025-retrospective"
 commentQuizCategory: "GENERAL"

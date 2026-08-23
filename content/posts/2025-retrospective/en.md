@@ -4,7 +4,7 @@ description: "A belated retrospective on the year 2025"
 publishedAt: "2026-03-29"
 updatedAt: "2026-03-29"
 tags: ["retrospective"]
-draft: false
+draft: true
 locale: "en"
 slug: "2025-retrospective"
 commentQuizCategory: "GENERAL"
