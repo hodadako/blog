@@ -146,7 +146,7 @@ interface SiteDictionary {
 const dictionaries: Record<AppLocale, SiteDictionary> = {
   ko: {
     siteName: "호다코",
-    siteTagline: "사라지지 않게, 기록합니다.",
+    siteTagline: "언제나 개발 중.",
     navigation: {
       label: "주요 탐색",
       home: "홈",
@@ -281,7 +281,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
   },
   en: {
     siteName: "hodako",
-    siteTagline: "write things not to forget",
+    siteTagline: "Always in development.",
     navigation: {
       label: "Primary navigation",
       home: "Home",
