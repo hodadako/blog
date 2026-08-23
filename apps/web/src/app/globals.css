@@ -372,6 +372,12 @@ img {
   flex-wrap: wrap;
 }
 
+.theme-toggle__group {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+}
+
 .font-toggle__trigger,
 .theme-toggle__trigger {
   display: inline-flex;
