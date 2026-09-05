@@ -50,11 +50,11 @@ export default async function AdminPage({params}: AdminPageProps) {
       <section className="page-section">
         <div className="surface-card stack-md surface-card--narrow">
           <p className="section-eyebrow">Comment moderation</p>
-          <h2 className="card-title">{locale === "ko" ? "포스트 작성은 로컬 markdown로 관리합니다." : "Post authoring now happens in local markdown files."}</h2>
+          <h2 className="card-title">{locale === "ko" ? "포스트 작성은 로컬 markdown로 관리합니다." : "Post authoring happens in local markdown files."}</h2>
           <p className="card-copy">
             {locale === "ko"
-              ? "content/posts/{slug}/{locale}.md 파일을 로컬에서 수정하고 Git으로 배포하세요. 어드민에서는 댓글 검수만 수행합니다."
-              : "Edit content/posts/{slug}/{locale}.md locally and deploy through Git. The admin area now focuses on comment moderation only."}
+              ? "content/posts/{slug}/{locale}.md 파일은 로컬에서 수정하고 Git으로 배포하세요. 댓글 검수 화면에서는 댓글 퀴즈 카테고리 매핑도 관리할 수 있습니다."
+              : "Edit content/posts/{slug}/{locale}.md locally and deploy through Git. The comment moderation screen also manages post comment quiz mappings."}
           </p>
           <div className="button-row">
             <a className="button" href={`/${locale}/admin/comments`}>

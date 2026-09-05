@@ -101,8 +101,25 @@ export interface WorkerQuizBank {
   options: Array<{ id: string; question_id: string; text: string | null; image_path: string | null; alt_text: string | null; label: string | null; is_correct: boolean; display_order: number }>;
 }
 
+export interface WorkerPostQuizMapping {
+  canonical_slug: string;
+  quiz_category_id: string | null;
+}
+
 export async function getWorkerQuizBank(): Promise<WorkerQuizBank> {
   return workerAdminRequest<WorkerQuizBank>("/admin/quiz/questions");
+}
+
+export async function getWorkerPostQuizMappings(): Promise<WorkerPostQuizMapping[]> {
+  return workerAdminRequest<WorkerPostQuizMapping[]>("/admin/quiz/post-mappings");
+}
+
+export async function updateWorkerPostQuizMapping(canonicalSlug: string, categoryId: string | null): Promise<WorkerPostQuizMapping> {
+  const result = await workerAdminRequest<{ item: WorkerPostQuizMapping }>("/admin/quiz/post-mappings", {
+    method: "PATCH",
+    body: JSON.stringify({ canonicalSlug, categoryId }),
+  });
+  return result.item;
 }
 
 export interface WorkerQuizQuestionInput {

@@ -259,12 +259,12 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
          intro: "단일 비밀번호와 서명 쿠키 세션으로 댓글 관리 기능에 접근합니다.",
          passwordLabel: "관리자 비밀번호",
          submitLabel: "로그인",
-         helperText: "로그인 후에는 댓글 검수와 차단 관리 기능에 접근합니다.",
+         helperText: "로그인 후에는 댓글 검수, 차단, 게시물별 퀴즈 매핑 기능에 접근합니다.",
        },
      admin: {
        eyebrow: "Admin moderation",
          heading: "댓글 관리",
-         intro: "포스트 작성은 로컬 markdown와 Git으로 처리하고, 어드민은 댓글 검수에만 사용합니다.",
+         intro: "포스트 작성은 로컬 markdown와 Git으로 처리하고, 어드민에서는 댓글 검수와 게시물별 퀴즈 매핑을 관리합니다.",
        commentsLink: "댓글 검수 화면으로 이동",
      },
     adminComments: {
@@ -394,12 +394,12 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
          intro: "Sign in with a single password to moderate comments.",
          passwordLabel: "Admin password",
          submitLabel: "Sign in",
-         helperText: "After login, the admin area focuses on comment moderation and blocking tools.",
+         helperText: "After login, the admin area provides comment moderation, blocking, and post quiz mapping tools.",
        },
      admin: {
        eyebrow: "Admin moderation",
          heading: "Comment moderation",
-         intro: "Post authoring happens in local markdown files and Git, while admin stays focused on comment moderation.",
+         intro: "Post authoring happens in local markdown files and Git, while admin also manages post comment quiz mappings.",
        commentsLink: "Open comment moderation",
      },
     adminComments: {
