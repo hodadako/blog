@@ -58,7 +58,7 @@ Next.js UI
 - `POST /comment-authorizations`: 초대 토큰을 HMAC 비교하고 글 귀속 권한 발급
 - `POST /comments`: `COMMENT_WRITE`/`canonicalSlug`/만료를 HMAC 검증하고 PBKDF2 비밀번호를 만든 뒤 원자 RPC 호출
 - `PATCH|DELETE /comments/{id}`: Worker에서 PBKDF2 비밀번호 검증 후 Soft Delete/수정
-- `/admin/*`: `ADMIN_API_SECRET`로 보호된 댓글·초대 토큰·문제은행 조회/관리 경로
+- `/admin/*`: `ADMIN_API_SECRET`로 보호된 댓글·초대 토큰·문제은행·게시물-카테고리 매핑 조회/관리 경로
 - `/post-views/*`: 조회수도 Worker → Supabase 경로로 전환
 - `CF-Connecting-IP`만 신뢰하고 HMAC된 IP만 Supabase에 저장
 - 기존 사칙연산 `/challenge`는 `legacy-challenge-disabled` 410
@@ -71,7 +71,7 @@ Next.js UI
 - `apps/web/src/components/comment-form.tsx`: Worker에 직접 댓글을 제출하고 `idempotencyKey`를 유지한다. 권한 만료 시 입력 중인 작성자·비밀번호·본문을 지운 뒤 다시 받지 않고 QuizGate만 재시작한다.
 - `apps/web/src/lib/worker-client.ts`: 브라우저/서버의 Worker API 호출과 오류 코드를 표준화한다.
 - 게시물 페이지와 조회수 컴포넌트는 Worker의 댓글 조회/조회수 API를 사용한다.
-- `commentQuizCategory`를 Front Matter 타입과 파서에 추가했다. Worker는 Front Matter를 직접 신뢰하지 않고 Supabase `post_threads` 매핑을 최종 신뢰한다.
+- `commentQuizCategory`를 Front Matter 타입과 파서에 추가했다. Worker는 Front Matter를 직접 신뢰하지 않고 Supabase `post_threads` 매핑을 최종 신뢰한다. 관리자 화면에서 게시물별 활성 카테고리를 저장하거나 기본값(GENERAL fallback)으로 해제할 수 있다.
 
 ## 6. 원자성·동시성
 
@@ -123,14 +123,16 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 | `infra/supabase/migrations/0005_quiz_admin_question_rpc.sql` | 문제 관리 원자 RPC |
 | `infra/supabase/migrations/0006_persist_quiz_failures.sql` | 오답/만료 Challenge 상태 영속화 |
 | `infra/supabase/tests/quiz_bank.sql` | 16개 문제은행/RLS/RPC 테스트 |
-| `infra/cloudflare-worker/src/index.ts` | Worker API 전체 구현, Workers 호환 PBKDF2 비밀번호 해싱 |
-| `infra/cloudflare-worker/src/index.spec.ts` | 댓글 저장·PBKDF2 회귀 테스트 |
+| `infra/cloudflare-worker/src/index.ts` | Worker API 전체 구현, 게시물-카테고리 매핑, Workers 호환 PBKDF2 비밀번호 해싱 |
+| `infra/cloudflare-worker/src/index.spec.ts` | 댓글 저장·PBKDF2·게시물 매핑 회귀 테스트 |
 | `infra/cloudflare-worker/wrangler.jsonc` | Supabase/GitHub 공개 변수와 Custom Domain |
 | `apps/web/src/lib/worker-client.ts` | 공개 Worker API 클라이언트 |
 | `apps/web/src/lib/worker-admin.ts` | 관리자 Worker 프록시 |
 | `apps/web/src/components/quiz-gate.tsx` | 텍스트·이미지 오지선다 UI |
 | `apps/web/src/components/comment-form.tsx` | Worker 댓글 작성과 초안 보존 |
 | `apps/web/src/components/admin-quiz-bank.tsx` | 문제은행 관리자 조회 UI |
+| `apps/web/src/components/admin-post-quiz-mappings.tsx` | 게시물별 퀴즈 카테고리 매핑 UI |
+| `apps/web/src/app/api/admin/quiz/post-mappings/route.ts` | 관리자 세션 기반 매핑 프록시 |
 | `docs/architecture/target-architecture.md` | Worker 신뢰 경계 설계 문서 |
 
 ## 10. 2026-08-06 진행 기록

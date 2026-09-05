@@ -606,6 +606,33 @@ async function handleAdmin(request: Request, env: Env, pathname: string): Promis
     await supabaseRequest(env, `invite_tokens?id=eq.${id}`, { method: "PATCH", headers: { prefer: "return=minimal" }, body: JSON.stringify({ is_active: false, revoked_at: new Date().toISOString() }) });
     return empty(request, 204);
   }
+  if (pathname === "/admin/quiz/post-mappings" && request.method === "GET") {
+    const result = await supabaseRequest(env, "post_threads?select=canonical_slug,quiz_category_id&order=canonical_slug.asc&limit=500");
+    return json(request, Array.isArray(result) ? result : []);
+  }
+  if (pathname === "/admin/quiz/post-mappings" && request.method === "PATCH") {
+    const body = await readJson(request);
+    const canonicalSlug = isRecord(body) ? readRequiredString(body.canonicalSlug).trim() : "";
+    const categoryId = isRecord(body) && body.categoryId === null ? null : isRecord(body) ? readRequiredString(body.categoryId) : "";
+    if (!isCanonicalSlug(canonicalSlug) || (categoryId !== null && !isUuid(categoryId))) {
+      return json(request, { error: "invalid-post-quiz-mapping-input" }, 400);
+    }
+    if (categoryId !== null) {
+      const query = new URLSearchParams({ id: `eq.${categoryId}`, active: "eq.true", select: "id", limit: "1" });
+      const categories = await supabaseRequest(env, `quiz_categories?${query.toString()}`);
+      if (!Array.isArray(categories) || categories.length === 0) {
+        return json(request, { error: "invalid-quiz-category" }, 400);
+      }
+    }
+    const result = await supabaseRequest(env, "post_threads?on_conflict=canonical_slug&select=canonical_slug,quiz_category_id", {
+      method: "POST",
+      headers: { prefer: "resolution=merge-duplicates,return=representation" },
+      body: JSON.stringify({ canonical_slug: canonicalSlug, quiz_category_id: categoryId }),
+    });
+    const item = Array.isArray(result) && isRecord(result[0]) ? result[0] : null;
+    if (!item) return json(request, { error: "post-quiz-mapping-save-failed" }, 500);
+    return json(request, { item });
+  }
   if (pathname === "/admin/quiz/questions" && request.method === "GET") {
     const [categories, questions, options] = await Promise.all([
       supabaseRequest(env, "quiz_categories?select=id,code,name,description,active&order=code.asc&limit=200"),

@@ -50,6 +50,7 @@ Supabase
 - `GET|PATCH /admin/comments[/{id}]`
 - `GET|POST|DELETE /admin/invite-tokens`
 - `GET /admin/quiz/questions`
+- `GET|PATCH /admin/quiz/post-mappings`
 
 ## 데이터 보호
 
@@ -62,7 +63,7 @@ Supabase
 
 ## 게시물 연결 정책
 
-게시물 Front Matter는 `commentQuizCategory: "DEVOPS"`처럼 명시할 수 있다. Worker는 브라우저가 보낸 카테고리를 신뢰하지 않고 `post_threads.quiz_category_id`를 사용한다. 0003/0004 마이그레이션은 현재 게시물과 GENERAL·BACKEND·DEVOPS·DATABASE 문제를 동기화한다. 카테고리가 없으면 GENERAL을 사용하며 GENERAL 문제도 없으면 Challenge 발급을 거부한다. 기존 사칙연산 `/challenge`는 410으로 비활성화했다.
+게시물 Front Matter는 `commentQuizCategory: "DEVOPS"`처럼 명시할 수 있다. Worker는 브라우저가 보낸 카테고리를 신뢰하지 않고 `post_threads.quiz_category_id`를 사용한다. 관리자는 Next.js 관리자 화면의 게시물별 매핑에서 활성 카테고리를 선택할 수 있으며, 저장은 Worker의 `GET|PATCH /admin/quiz/post-mappings`를 통해 `post_threads`에 업서트된다. 매핑을 기본값으로 저장하면 `quiz_category_id`가 `null`이 되어 GENERAL fallback을 사용한다. 0003/0004 마이그레이션은 현재 게시물과 GENERAL·BACKEND·DEVOPS·DATABASE 문제를 동기화한다. 카테고리가 없으면 GENERAL을 사용하며 GENERAL 문제도 없으면 Challenge 발급을 거부한다. 기존 사칙연산 `/challenge`는 410으로 비활성화했다.
 
 ## 이미지 문제 정책
 

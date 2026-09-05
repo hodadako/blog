@@ -395,6 +395,34 @@ export async function getAllLocalizedPostMetadata(): Promise<
   }));
 }
 
+export interface AdminPostMetadata {
+  canonicalSlug: string;
+  draft: boolean;
+  locales: Array<{
+    commentQuizCategory?: string;
+    locale: AppLocale;
+    slug: string;
+    title: string;
+  }>;
+}
+
+export async function getAdminPostMetadata(): Promise<AdminPostMetadata[]> {
+  const contentIndex = await getContentIndex();
+
+  return [...contentIndex.variantsByCanonicalSlug.entries()]
+    .map(([canonicalSlug, records]) => ({
+      canonicalSlug,
+      draft: records.every((record) => record.frontmatter.draft),
+      locales: records.map((record) => ({
+        commentQuizCategory: record.frontmatter.commentQuizCategory,
+        locale: record.frontmatter.locale,
+        slug: record.frontmatter.slug,
+        title: record.frontmatter.title,
+      })),
+    }))
+    .sort((left, right) => left.canonicalSlug.localeCompare(right.canonicalSlug));
+}
+
 export async function getAllLocalizedPostSitemapEntries(): Promise<
   Array<{
     alternates: Record<AppLocale, string>;

@@ -1,8 +1,10 @@
 import {AdminCommentsTable} from "@/components/admin-comments-table";
 import {AdminInviteTokens} from "@/components/admin-invite-tokens";
+import {AdminPostQuizMappings} from "@/components/admin-post-quiz-mappings";
 import {AdminQuizBank} from "@/components/admin-quiz-bank";
 import { requireAdmin } from "@/lib/auth";
-import { getWorkerQuizBank, listWorkerAdminComments, listWorkerInviteTokens } from "@/lib/worker-admin";
+import {getAdminPostMetadata} from "@/lib/content";
+import { getWorkerPostQuizMappings, getWorkerQuizBank, listWorkerAdminComments, listWorkerInviteTokens } from "@/lib/worker-admin";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 
 interface AdminCommentsParams {
@@ -33,10 +35,12 @@ export default async function AdminCommentsPage({params}: AdminCommentsProps) {
   const locale = resolveLocale(routeParams.locale);
   await requireAdmin(locale);
   const dictionary = getDictionary(locale);
-  const [data, inviteTokens, quizBank] = await Promise.all([
+  const [data, inviteTokens, quizBank, mappings, posts] = await Promise.all([
     listWorkerAdminComments().catch(() => []),
     listWorkerInviteTokens().catch(() => []),
     getWorkerQuizBank().catch(() => ({ categories: [], questions: [], options: [] })),
+    getWorkerPostQuizMappings().catch(() => []),
+    getAdminPostMetadata().catch(() => []),
   ]);
 
   return (
@@ -48,6 +52,7 @@ export default async function AdminCommentsPage({params}: AdminCommentsProps) {
           <p className="page-copy">{dictionary.adminComments.intro}</p>
         </header>
         <AdminCommentsTable copy={dictionary.adminComments} items={data} locale={locale} />
+        <AdminPostQuizMappings categories={quizBank.categories} initialMappings={mappings} initialPosts={posts} locale={locale} />
         <AdminQuizBank initialBank={quizBank} locale={locale} />
         <AdminInviteTokens initialItems={inviteTokens} locale={locale} />
       </section>

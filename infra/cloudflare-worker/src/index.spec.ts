@@ -124,6 +124,78 @@ describe("quiz worker", () => {
     expect(await response.json()).toMatchObject({ commentId: "123e4567-e89b-42d3-a456-426614174098" });
   });
 
+  it("lists, assigns, and clears post quiz category mappings through the admin API", async () => {
+    const categoryId = "123e4567-e89b-42d3-a456-426614174010";
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/post_threads?")) {
+        if (init?.method === "POST") {
+          const body = JSON.parse(String(init.body)) as Record<string, unknown>;
+          return Response.json([{ canonical_slug: "legal-alien", quiz_category_id: body.quiz_category_id }]);
+        }
+        return Response.json([{ canonical_slug: "2025-retrospective", quiz_category_id: null }]);
+      }
+      if (url.includes("/rest/v1/quiz_categories?")) {
+        return Response.json([{ id: categoryId }]);
+      }
+      return Response.json([]);
+    });
+
+    const listResponse = await worker.fetch(new Request("https://quiz.hodako.dev/admin/quiz/post-mappings", {
+      headers: { "x-admin-api-key": env.ADMIN_API_SECRET },
+    }), env);
+    expect(listResponse.status).toBe(200);
+    expect(await listResponse.json()).toEqual([{ canonical_slug: "2025-retrospective", quiz_category_id: null }]);
+
+    const assignResponse = await worker.fetch(new Request("https://quiz.hodako.dev/admin/quiz/post-mappings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "x-admin-api-key": env.ADMIN_API_SECRET },
+      body: JSON.stringify({ canonicalSlug: "legal-alien", categoryId }),
+    }), env);
+    expect(assignResponse.status).toBe(200);
+    expect(await assignResponse.json()).toEqual({ item: { canonical_slug: "legal-alien", quiz_category_id: categoryId } });
+
+    const clearResponse = await worker.fetch(new Request("https://quiz.hodako.dev/admin/quiz/post-mappings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "x-admin-api-key": env.ADMIN_API_SECRET },
+      body: JSON.stringify({ canonicalSlug: "legal-alien", categoryId: null }),
+    }), env);
+    expect(clearResponse.status).toBe(200);
+    expect(await clearResponse.json()).toEqual({ item: { canonical_slug: "legal-alien", quiz_category_id: null } });
+    expect(fetchMock).toHaveBeenCalled();
+  });
+
+  it("rejects malformed post quiz mappings before touching Supabase", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json([]));
+    const response = await worker.fetch(new Request("https://quiz.hodako.dev/admin/quiz/post-mappings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "x-admin-api-key": env.ADMIN_API_SECRET },
+      body: JSON.stringify({ canonicalSlug: "../private", categoryId: null }),
+    }), env);
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: "invalid-post-quiz-mapping-input" });
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("rejects inactive or unknown quiz categories", async () => {
+    const categoryId = "123e4567-e89b-42d3-a456-426614174010";
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockImplementation(async (input) => {
+      const url = String(input);
+      if (url.includes("/rest/v1/quiz_categories?")) return Response.json([]);
+      return Response.json([]);
+    });
+    const response = await worker.fetch(new Request("https://quiz.hodako.dev/admin/quiz/post-mappings", {
+      method: "PATCH",
+      headers: { "content-type": "application/json", "x-admin-api-key": env.ADMIN_API_SECRET },
+      body: JSON.stringify({ canonicalSlug: "legal-alien", categoryId }),
+    }), env);
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: "invalid-quiz-category" });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
   it("returns a bodyless preflight and disables arithmetic challenges", async () => {
     const preflight = await worker.fetch(new Request("https://quiz.hodako.dev/quiz/challenges", {
       method: "OPTIONS",
