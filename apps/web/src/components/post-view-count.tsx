@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getPostViewCount, recordPostView } from "@/lib/post-views";
 
 interface PostViewCountProps {
   canonicalSlug: string;
@@ -16,20 +17,12 @@ export function PostViewCount({ canonicalSlug, label, incrementOnMount = false }
 
     async function load(): Promise<void> {
       try {
-        const encodedSlug = encodeURIComponent(canonicalSlug);
-        const response = await fetch(`/api/post-views/${encodedSlug}`, {
-          method: incrementOnMount ? "POST" : "GET",
-          cache: "no-store",
-        });
+        const nextCount = incrementOnMount
+          ? await recordPostView(canonicalSlug)
+          : await getPostViewCount(canonicalSlug);
 
-        if (!response.ok) {
-          return;
-        }
-
-        const payload = (await response.json()) as { viewCount?: number };
-
-        if (!cancelled && typeof payload.viewCount === "number") {
-          setViewCount(payload.viewCount);
+        if (!cancelled) {
+          setViewCount(nextCount);
         }
       } catch {
         return;

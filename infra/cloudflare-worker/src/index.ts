@@ -46,6 +46,12 @@ type CommentInput = {
 
 type JsonRecord = Record<string, unknown>;
 
+type PostViewLocation = {
+  countryCode: string | null;
+  region: string | null;
+  city: string | null;
+};
+
 class SupabaseApiError extends Error {
   readonly status: number;
   readonly code: string | undefined;
@@ -286,6 +292,25 @@ async function consumeRateLimit(env: Env, action: string, subjectHash: string, l
 
 async function hashClientIp(request: Request, env: Env): Promise<string> {
   return hmacHex(env.IP_HASH_SECRET, getTrustedClientIp(request));
+}
+
+function readLocationString(value: unknown, maxLength: number): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 && trimmed.length <= maxLength ? trimmed : null;
+}
+
+function getPostViewLocation(request: Request): PostViewLocation {
+  const cf = isRecord(request.cf) ? request.cf : null;
+  const country = readLocationString(cf?.country, 3)?.toUpperCase() ?? null;
+  const countryCode = country && (/^[A-Z]{2}$/.test(country) || country === "T1") ? country : null;
+  return {
+    countryCode,
+    region: readLocationString(cf?.region, 120),
+    city: readLocationString(cf?.city, 120),
+  };
 }
 
 function buildImageUrl(env: Env, imagePath: string | null): string | null {
@@ -708,9 +733,17 @@ async function handlePostViews(request: Request, env: Env, canonicalSlug: string
     const query = new URLSearchParams({ canonical_slug: `eq.${canonicalSlug}`, select: "view_count", limit: "1" });
     const rows = await supabaseRequest(env, `post_threads?${query.toString()}`);
     const row = Array.isArray(rows) && isRecord(rows[0]) ? rows[0] : null;
+    if (!row) return json(request, { error: "post-not-found" }, 404);
     return json(request, { viewCount: typeof row?.view_count === "number" ? row.view_count : 0 });
   }
-  const result = await supabaseRpc(env, "increment_post_view_count", { input_canonical_slug: canonicalSlug });
+  const location = getPostViewLocation(request);
+  const result = await supabaseRpc(env, "record_post_view", {
+    input_canonical_slug: canonicalSlug,
+    input_client_ip: getTrustedClientIp(request),
+    input_country_code: location.countryCode,
+    input_region: location.region,
+    input_city: location.city,
+  });
   const viewCount = typeof result === "number" ? result : Number(result);
   return json(request, { viewCount: Number.isFinite(viewCount) ? viewCount : 0 });
 }

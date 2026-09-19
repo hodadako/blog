@@ -1,7 +1,7 @@
 # 문제은행형 댓글 퀴즈 구현 보고서
 
 작성일: 2026-08-03
-마지막 진행 기록: 2026-08-06
+마지막 진행 기록: 2026-09-19
 
 ## 1. 기존 구조 분석
 
@@ -60,7 +60,8 @@ Next.js UI
 - `PATCH|DELETE /comments/{id}`: Worker에서 PBKDF2 비밀번호 검증 후 Soft Delete/수정
 - `/admin/*`: `ADMIN_API_SECRET`로 보호된 댓글·초대 토큰·문제은행·게시물-카테고리 매핑 조회/관리 경로
 - `/post-views/*`: 조회수도 Worker → Supabase 경로로 전환
-- `CF-Connecting-IP`만 신뢰하고 HMAC된 IP만 Supabase에 저장
+- `POST /post-views/*`: 브라우저의 실제 방문자 IP를 Worker에서 받아 `post_view_events`에 원문으로 저장하고, 가능한 경우 Cloudflare 국가·지역·도시와 방문 시각을 함께 기록한다.
+- `CF-Connecting-IP`만 신뢰하고 `X-Forwarded-For`는 무시한다.
 - 기존 사칙연산 `/challenge`는 `legacy-challenge-disabled` 410
 
 `wrangler.jsonc`에는 Worker URL, Supabase URL, GitHub 이미지 Base URL만 공개 변수로 두고 Secret은 `.dev.vars.example`에 이름만 선언했다. 실제 Secret 값은 저장소에 포함하지 않는다.
@@ -70,6 +71,7 @@ Next.js UI
 - `apps/web/src/components/quiz-gate.tsx`: 서버가 섞은 5개 선택지를 Radio 역할 버튼으로 표시하고 텍스트/이미지 문제를 모두 처리. 이미지에는 `alt`, lazy loading, 실패 Fallback, 선택 상태가 있다.
 - `apps/web/src/components/comment-form.tsx`: Worker에 직접 댓글을 제출하고 `idempotencyKey`를 유지한다. 권한 만료 시 입력 중인 작성자·비밀번호·본문을 지운 뒤 다시 받지 않고 QuizGate만 재시작한다.
 - `apps/web/src/lib/worker-client.ts`: 브라우저/서버의 Worker API 호출과 오류 코드를 표준화한다.
+- `infra/supabase/migrations/0008_post_view_tracking.sql`: 방문자 원본 IP·위치·시각 이벤트와 누적 조회수를 원자적으로 기록한다.
 - 게시물 페이지와 조회수 컴포넌트는 Worker의 댓글 조회/조회수 API를 사용한다.
 - `commentQuizCategory`를 Front Matter 타입과 파서에 추가했다. Worker는 Front Matter를 직접 신뢰하지 않고 Supabase `post_threads` 매핑을 최종 신뢰한다. 관리자 화면에서 게시물별 활성 카테고리를 저장하거나 기본값(GENERAL fallback)으로 해제할 수 있다.
 
@@ -124,9 +126,13 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 | `infra/supabase/migrations/0006_persist_quiz_failures.sql` | 오답/만료 Challenge 상태 영속화 |
 | `infra/supabase/tests/quiz_bank.sql` | 16개 문제은행/RLS/RPC 테스트 |
 | `infra/cloudflare-worker/src/index.ts` | Worker API 전체 구현, 게시물-카테고리 매핑, Workers 호환 PBKDF2 비밀번호 해싱 |
-| `infra/cloudflare-worker/src/index.spec.ts` | 댓글 저장·PBKDF2·게시물 매핑 회귀 테스트 |
+| `infra/cloudflare-worker/src/index.spec.ts` | 댓글 저장·PBKDF2·게시물 매핑·방문 회귀 테스트 |
+| `infra/supabase/migrations/0008_post_view_tracking.sql` | 게시물 방문 이벤트·조회수 원자 RPC |
+| `infra/supabase/tests/post_view_tracking.sql` | 방문 이벤트·RLS·입력 검증 pgTAP 테스트 |
 | `infra/cloudflare-worker/wrangler.jsonc` | Supabase/GitHub 공개 변수와 Custom Domain |
 | `apps/web/src/lib/worker-client.ts` | 공개 Worker API 클라이언트 |
+| `apps/web/src/lib/post-views.ts` | Worker 조회수 조회·기록 클라이언트 |
+| `apps/web/src/components/post-view-count.tsx` | 게시물 방문 기록과 조회수 표시 |
 | `apps/web/src/lib/worker-admin.ts` | 관리자 Worker 프록시 |
 | `apps/web/src/components/quiz-gate.tsx` | 텍스트·이미지 오지선다 UI |
 | `apps/web/src/components/comment-form.tsx` | Worker 댓글 작성과 초안 보존 |
@@ -146,7 +152,7 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 - GitHub Supabase Migrations 실행 `30828594365`가 성공했고, 원격 Supabase에 `0001`부터 `0007`까지 적용됐다.
 - 로컬 Supabase pgTAP은 2개 파일, 30개 테스트가 통과했다.
 - Worker를 `quiz.hodako.dev`에 배포했다. 현재 배포 버전은 `a59f3f3a-e7b6-458a-a983-8f30b442855a`다.
-- Worker Secret은 값 자체를 기록하지 않고 다음 이름으로 등록했다: `SUPABASE_SERVICE_ROLE_KEY`, `COMMENT_PASSWORD_PEPPER`, `COMMENT_AUTHORIZATION_SECRET`, `IP_HASH_SECRET`, `INVITE_TOKEN_PEPPER`, `ADMIN_API_SECRET`, 기존 `QUIZ_TOKEN_SECRET`.
+- Worker Secret은 값 자체를 기록하지 않는다. 방문 추적은 기존 `IP_HASH_SECRET`을 댓글/퀴즈 rate limit에만 사용하고, 조회 이벤트에는 원본 IP를 저장한다.
 - Vercel Production/Preview에 `WORKER_ADMIN_SECRET`을 등록했다. Development 환경은 Vercel CLI의 sensitive 환경 변수 제약으로 등록하지 않았다.
 - 위 배포의 Challenge Smoke Test가 `Invalid API key`로 500을 반환하는 것을 Worker 로그에서 확인했다. Supabase 프로젝트 API에서 유효한 `service_role` 키를 확인해 Worker의 `SUPABASE_SERVICE_ROLE_KEY` Secret을 교체했다.
 - Secret 교체 후 Challenge 발급은 HTTP 200으로 복구됐다. 운영 응답에는 `GENERAL` 카테고리와 5개 선택지만 포함되고 정답 필드는 포함되지 않았다.

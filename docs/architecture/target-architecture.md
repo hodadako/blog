@@ -15,7 +15,7 @@ Supabase
 - `apps/web`: Markdown 게시물 렌더링, 문제·선택지 UI, 댓글 UI, 관리자 세션과 Worker 관리자 API 프록시
 - `content/posts/{slug}/{locale}.md`: 게시물과 `commentQuizCategory` 메타데이터의 원본
 - `infra/cloudflare-worker`: 댓글/퀴즈의 신뢰 경계. Service Role Secret은 이 Worker에서만 사용
-- `infra/supabase`: 문제은행, 게시물-카테고리 매핑, Challenge, 권한, 댓글, Idempotency, Rate Limit과 Blacklist
+- `infra/supabase`: 문제은행, 게시물-카테고리 매핑, Challenge, 권한, 댓글, Idempotency, Rate Limit, Blacklist와 게시물 방문 이벤트
 - `infra/pulumi`: 기존 DNS·배포 인프라 코드. 별도 D1/KV/DO/R2는 사용하지 않음
 
 ## 2단계 인증 흐름
@@ -43,6 +43,8 @@ Supabase
 - `PATCH|DELETE /comments/{id}`
 - `GET|POST /post-views/{canonicalSlug}`
 
+`POST /post-views/{canonicalSlug}`는 브라우저가 Worker를 직접 호출해 실제 방문자의 Cloudflare 요청 메타데이터를 수집한다. 누적 조회수와 `post_view_events` 기록은 하나의 Supabase RPC에서 원자적으로 처리한다.
+
 ### 관리자
 
 `x-admin-api-key` Worker Secret으로 보호한다. Next.js 관리자 페이지는 HttpOnly 관리자 세션을 먼저 확인한 뒤 이 API를 서버에서 호출한다.
@@ -58,6 +60,7 @@ Supabase
 - `quiz_options.is_correct`, Challenge의 `correct_option_id`, `allowed_option_ids`, 비밀번호 해시는 공개 View/API 응답에서 제외한다.
 - 익명 역할은 문제은행·Challenge·권한·댓글 쓰기 테이블에 직접 권한이 없다. 공개 댓글 조회도 Worker View를 통해서만 수행한다.
 - Client IP는 Cloudflare가 설정한 `CF-Connecting-IP`만 사용하고 `X-Forwarded-For`는 신뢰하지 않는다. `IP_HASH_SECRET` HMAC 결과만 저장한다.
+- 게시물 방문 이벤트에는 Cloudflare가 제공한 원본 `CF-Connecting-IP`, 국가·지역·도시(가능한 경우), 방문 시각을 저장한다. `X-Forwarded-For`는 신뢰하지 않는다.
 - 초대 토큰은 `INVITE_TOKEN_PEPPER` HMAC 결과만 저장하고 원문은 발급 응답에서 한 번만 보여준다.
 - 댓글 비밀번호는 Worker Web Crypto PBKDF2(`pbkdf2-sha256`, 100,000회) 형식으로 저장한다. Cloudflare Workers Web Crypto가 100,000회를 초과하는 반복 횟수를 거부하므로 이 값을 고정한다. 기존 `scrypt$` 행은 Worker 수정/삭제 경로에서 호환되지 않으므로 별도 마이그레이션 대상이다.
 

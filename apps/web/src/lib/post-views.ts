@@ -1,6 +1,6 @@
 import { workerRequest } from "@/lib/worker-client";
 
-interface PostViewResponse {
+export interface PostViewResponse {
   viewCount?: number;
 }
 
@@ -9,7 +9,9 @@ export async function getPostViewCount(canonicalSlug: string): Promise<number> {
   return typeof result.viewCount === "number" && Number.isFinite(result.viewCount) ? result.viewCount : 0;
 }
 
-export async function incrementPostViewCount(canonicalSlug: string): Promise<number> {
+export async function recordPostView(canonicalSlug: string): Promise<number> {
   const result = await workerRequest<PostViewResponse>(`/post-views/${encodeURIComponent(canonicalSlug)}`, { method: "POST" });
   return typeof result.viewCount === "number" && Number.isFinite(result.viewCount) ? result.viewCount : 0;
 }
+
+export const incrementPostViewCount = recordPostView;

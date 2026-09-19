@@ -44,6 +44,9 @@ function mockSupabase(overrides: Record<string, unknown> = {}): void {
         expires_at: "2026-08-03T15:00:00.000Z",
       }]);
     }
+    if (url.endsWith("/rpc/record_post_view")) {
+      return Response.json(overrides.viewCount ?? 42);
+    }
     if (url.endsWith("/rpc/create_comment_with_authorization")) {
       return Response.json(overrides.comment ?? [{
         comment_id: "123e4567-e89b-42d3-a456-426614174098",
@@ -91,6 +94,42 @@ describe("quiz worker", () => {
     const payload = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(result.authorizationToken!.split(".")[0].replace(/-/g, "+").replace(/_/g, "/")), (char) => char.charCodeAt(0)))) as Record<string, unknown>;
     expect(payload).toMatchObject({ typ: "comment_write_authorization", purpose: "COMMENT_WRITE", canonicalSlug: "2025-retrospective" });
     expect(payload).not.toHaveProperty("answer");
+  });
+
+  it("records the client IP and Cloudflare location for post views", async () => {
+    let rpcBody: Record<string, unknown> | null = null;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (url.endsWith("/rpc/record_post_view")) {
+        rpcBody = JSON.parse(String(init?.body)) as Record<string, unknown>;
+        return Response.json(42);
+      }
+      return Response.json([]);
+    });
+
+    const request = new Request("https://quiz.hodako.dev/post-views/2025-retrospective", {
+      method: "POST",
+      headers: { "cf-connecting-ip": "203.0.113.10" },
+    });
+    Object.defineProperty(request, "cf", {
+      value: { country: "kr", region: "Seoul", city: "Seoul" },
+    });
+
+    const response = await worker.fetch(request, env);
+    const result = await response.json() as { viewCount?: number };
+
+    expect(response.status).toBe(200);
+    expect(result.viewCount).toBe(42);
+    expect(rpcBody).toMatchObject({
+      input_canonical_slug: "2025-retrospective",
+      input_country_code: "KR",
+      input_region: "Seoul",
+      input_city: "Seoul",
+      input_client_ip: "203.0.113.10",
+    });
+    if (!rpcBody) throw new Error("post view RPC was not called");
+    expect(rpcBody["input_client_ip"]).toBe("203.0.113.10");
+    expect(rpcBody).not.toHaveProperty("input_visitor_hash");
   });
 
   it("hashes a comment password with the Workers-compatible PBKDF2 format", async () => {
