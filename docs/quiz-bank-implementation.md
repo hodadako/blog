@@ -195,6 +195,7 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 
 - 커밋 `57314ee` (`feat(views): 게시물 방문 추적 추가`)를 `origin/main`에 Push했다.
 - 웹 테스트 9개, Worker 테스트 8개, 웹 타입 검사·빌드, Worker 타입 검사와 Wrangler 배포 dry-run이 통과했다.
+- 로컬 Supabase를 최신 마이그레이션으로 초기화한 뒤 pgTAP 3개 파일, 38개 테스트가 통과했다.
 - GitHub Quality 실행은 성공했다.
 - Worker를 `quiz.hodako.dev`에 배포했다. 배포 버전은 `7b3a00ca-24a3-489b-bcb2-77ab323ba51a`다.
 - Supabase 프로젝트 재개 후 GitHub Supabase Migrations 실행 `35421565833`이 성공했고 `0008_post_view_tracking.sql`이 원격에 적용됐다.
