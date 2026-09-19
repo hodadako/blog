@@ -197,8 +197,5 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 - 웹 테스트 9개, Worker 테스트 8개, 웹 타입 검사·빌드, Worker 타입 검사와 Wrangler 배포 dry-run이 통과했다.
 - GitHub Quality 실행은 성공했다.
 - Worker를 `quiz.hodako.dev`에 배포했다. 배포 버전은 `7b3a00ca-24a3-489b-bcb2-77ab323ba51a`다.
-
-### 외부 상태로 인해 남은 확인
-
-- GitHub Supabase Migrations 실행은 Supabase 프로젝트가 `paused` 상태여서 `supabase link` 단계에서 중단됐다. 따라서 `0008_post_view_tracking.sql`의 원격 적용은 아직 확인되지 않았다.
-- Supabase 프로젝트를 대시보드에서 재개했고 운영 GET `/post-views/2025-retrospective`는 `200`으로 복구됐다. 마이그레이션 workflow 재실행과 POST E2E 확인을 진행한다.
+- Supabase 프로젝트 재개 후 GitHub Supabase Migrations 실행 `35421565833`이 성공했고 `0008_post_view_tracking.sql`이 원격에 적용됐다.
+- 운영 E2E에서 POST `/post-views/2025-retrospective`가 `200`과 `viewCount: 5`를 반환했고, 직후 GET도 `200`과 `viewCount: 5`를 반환했다. 이 검증으로 테스트 방문 1건이 기록됐다.
