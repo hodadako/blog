@@ -186,3 +186,19 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 - 라이선스를 확인한 MUSIC 이미지와 실제 문제를 GitHub에 추가하고, 파일명으로 정답을 추측할 수 없는지 검토한다.
 - 관리자 문제 생성·수정 UI를 운영 환경에서 검증하고, 문제 통계·신고 관리 기능을 추가한다.
 - 운영 API 도메인을 `api.hodako.dev`로 사용할지 현재의 `quiz.hodako.dev`를 유지할지 결정한다. 변경 시 DNS Custom Domain과 `NEXT_PUBLIC_QUIZ_WORKER_URL`을 함께 갱신한다.
+
+## 12. 2026-09-19 조회수 추적 보강 진행 기록
+
+게시물 방문 이벤트를 원본 `CF-Connecting-IP`, Cloudflare 국가·지역·도시, 방문 시각과 함께 기록하고 누적 조회수를 같은 RPC에서 갱신하도록 구현했다. 브라우저의 조회수 컴포넌트는 Worker를 직접 호출한다.
+
+### 완료·확인된 상태
+
+- 커밋 `57314ee` (`feat(views): 게시물 방문 추적 추가`)를 `origin/main`에 Push했다.
+- 웹 테스트 9개, Worker 테스트 8개, 웹 타입 검사·빌드, Worker 타입 검사와 Wrangler 배포 dry-run이 통과했다.
+- GitHub Quality 실행은 성공했다.
+- Worker를 `quiz.hodako.dev`에 배포했다. 배포 버전은 `7b3a00ca-24a3-489b-bcb2-77ab323ba51a`다.
+
+### 외부 상태로 인해 남은 확인
+
+- GitHub Supabase Migrations 실행은 Supabase 프로젝트가 `paused` 상태여서 `supabase link` 단계에서 중단됐다. 따라서 `0008_post_view_tracking.sql`의 원격 적용은 아직 확인되지 않았다.
+- Supabase 프로젝트를 대시보드에서 재개했고 운영 GET `/post-views/2025-retrospective`는 `200`으로 복구됐다. 마이그레이션 workflow 재실행과 POST E2E 확인을 진행한다.

@@ -1,3 +1,4 @@
+-- Record server-observed post visits and increment the matching thread atomically.
 create table if not exists post_view_events (
   id uuid primary key default gen_random_uuid(),
   post_thread_id uuid not null references post_threads(id) on delete cascade,
