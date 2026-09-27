@@ -76,17 +76,18 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
 
   const position = `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
   const dateLabel = item.publishedOn.slice(0, 7).replace("-", ".");
+  const linkHost = new URL(item.href).hostname.replace(/^www\./, "");
 
   return (
     <article className="page-main record-view">
       <div className="record-view__topline">
         <Link className="record-view__back" href={backHref} replace scroll={false}>
-          ← {labels.backLabel}
+          {labels.backLabel}
         </Link>
         <span className="record-view__index">{position}</span>
       </div>
 
-      <div className="record-view__layout" key={item.id}>
+      <div className="record-view__layout">
         <button
           aria-label={labels.zoomLabel.replace("{title}", item.title)}
           className="record-view__art-button"
@@ -109,8 +110,14 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
           <h1 className="record-view__title">{item.title}</h1>
           <p className="record-view__source">{item.source}</p>
           {item.summary ? <p className="record-view__summary">{item.summary}</p> : null}
-          <a className="record-view__external" href={item.href} rel="noopener noreferrer" target="_blank">
-            {labels.openLabel} ↗
+          <a
+            aria-label={`${linkHost} · ${labels.externalLinkLabel}`}
+            className="record-view__external"
+            href={item.href}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {linkHost}
           </a>
         </div>
       </div>
@@ -118,14 +125,14 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
       <nav aria-label={labels.recordNavigationLabel} className="record-view__navigation">
         {previousHref ? (
           <Link href={previousHref} onClick={(event) => handleNavigationClick(event, "previous", previousHref)} replace>
-            ← {labels.previousLabel}
+            {labels.previousLabel}
           </Link>
-        ) : <span aria-disabled="true">← {labels.previousLabel}</span>}
+        ) : <span aria-disabled="true">{labels.previousLabel}</span>}
         {nextHref ? (
           <Link href={nextHref} onClick={(event) => handleNavigationClick(event, "next", nextHref)} replace>
-            {labels.nextLabel} →
+            {labels.nextLabel}
           </Link>
-        ) : <span aria-disabled="true">{labels.nextLabel} →</span>}
+        ) : <span aria-disabled="true">{labels.nextLabel}</span>}
       </nav>
 
       <dialog

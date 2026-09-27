@@ -80,7 +80,7 @@ interface SiteDictionary {
     filterLabel: string;
     allTypesLabel: string;
     emptyLabel: string;
-    openLabel: string;
+    externalLinkLabel: string;
     closeLabel: string;
     backLabel: string;
     previousLabel: string;
@@ -199,11 +199,11 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       filterLabel: "분류 필터",
       allTypesLabel: "전체",
       emptyLabel: "아직 이 분류에 남긴 기록이 없습니다.",
-      openLabel: "원문 보기",
+      externalLinkLabel: "관련 페이지를 새 탭에서 열기",
       closeLabel: "닫기",
-      backLabel: "Records",
-      previousLabel: "이전",
-      nextLabel: "다음",
+      backLabel: "목록으로",
+      previousLabel: "이전 기록",
+      nextLabel: "다음 기록",
       recordNavigationLabel: "기록 탐색",
       zoomLabel: "{title} 이미지 크게 보기",
       zoomViewerLabel: "확대된 기록 이미지",
@@ -335,11 +335,11 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       filterLabel: "Filter by type",
       allTypesLabel: "All",
       emptyLabel: "No records for this type yet.",
-      openLabel: "Open link",
+      externalLinkLabel: "Open related page in a new tab",
       closeLabel: "Close",
-      backLabel: "Records",
-      previousLabel: "Previous",
-      nextLabel: "Next",
+      backLabel: "Back to records",
+      previousLabel: "Previous record",
+      nextLabel: "Next record",
       recordNavigationLabel: "Browse records",
       zoomLabel: "View {title} image larger",
       zoomViewerLabel: "Enlarged record image",

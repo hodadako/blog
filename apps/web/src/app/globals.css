@@ -1142,10 +1142,6 @@ html:has(.record-zoom[open]) {
   min-height: min(60vh, 38rem);
 }
 
-html:not([data-records-transition]) .record-view__layout {
-  animation: record-view-enter 220ms ease both;
-}
-
 .record-view__art-button {
   display: grid;
   place-items: center;
@@ -1209,10 +1205,20 @@ html:not([data-records-transition]) .record-view__layout {
 
 .record-view__external {
   justify-self: start;
+  max-width: 100%;
   margin-top: var(--space-3);
-  color: var(--color-accent);
+  color: var(--color-text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
   text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
   text-underline-offset: 0.3em;
+  overflow-wrap: anywhere;
+}
+
+.record-view__external:hover {
+  color: var(--color-text);
+  text-decoration-color: currentColor;
 }
 
 .record-view__navigation {
@@ -1312,10 +1318,6 @@ html:not([data-records-transition]) .record-view__layout {
   from { opacity: 0; transform: translateX(-14px); }
 }
 
-@keyframes record-view-enter {
-  from { opacity: 0; translate: 0 8px; }
-}
-
 @keyframes record-tile-enter {
   from {
     opacity: 0;
@@ -1379,10 +1381,6 @@ html[data-records-direction="previous"]::view-transition-new(record-art) {
   .record-tile__art {
     transform: none;
     transition: none;
-  }
-
-  .record-view__layout {
-    animation: none !important;
   }
 
   ::view-transition-group(*),
