@@ -2,7 +2,7 @@ export const SUPPORTED_LOCALES = ["ko", "en"] as const;
 export const DEFAULT_LOCALE = "ko" as const;
 
 export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
-export type InspirationType = "book" | "article" | "film" | "exhibition" | "anime" | "album" | "conference";
+export type RecordType = "book" | "article" | "film" | "exhibition" | "anime" | "album" | "conference";
 
 export function isSupportedLocale(locale: string): locale is AppLocale {
   return SUPPORTED_LOCALES.includes(locale as AppLocale);
@@ -39,7 +39,7 @@ interface SiteDictionary {
     home: string;
     projects: string;
     blog: string;
-    inspirations: string;
+    records: string;
     admin: string;
     languageLabel: string;
     localeNames: Record<AppLocale, string>;
@@ -74,18 +74,21 @@ interface SiteDictionary {
     intro: string;
     activityUnavailableLabel: string;
   };
-  inspirationsPage: {
+  recordsPage: {
     heading: string;
-    intro: string;
-    note: string;
+    description: string;
+    filterLabel: string;
     allTypesLabel: string;
     emptyLabel: string;
-    yearLabel: string;
-    entriesLabel: string;
-    yearsStatLabel: string;
-    entriesStatLabel: string;
-    typesStatLabel: string;
-    types: Record<InspirationType, string>;
+    openLabel: string;
+    closeLabel: string;
+    backLabel: string;
+    previousLabel: string;
+    nextLabel: string;
+    recordNavigationLabel: string;
+    zoomLabel: string;
+    zoomViewerLabel: string;
+    types: Record<RecordType, string>;
   };
   blogIndex: {
     eyebrow: string;
@@ -152,7 +155,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       home: "홈",
       projects: "Projects",
       blog: "Posts",
-      inspirations: "Inspirations",
+      records: "Records",
       admin: "관리",
       languageLabel: "Language",
       localeNames: {
@@ -174,14 +177,14 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       profilePlaceholder: "profile-photo.jpg 파일을 추가하면 사진이 표시됩니다.",
       profileImageAlt: "호다코 프로필 사진",
       primaryCta: "Blog 둘러보기",
-      secondaryCta: "Inspirations 보기",
+      secondaryCta: "Records 보기",
       featuredLabel: "최근 글",
       featuredCta: "포스트 읽기",
       projectsLabel: "Projects",
       projectsHeading: "지금 걸어두는 프로젝트 링크",
       projectsCopy: "확인된 프로젝트만 짧게 남기고, 자세한 맥락은 블로그 글에서 이어갑니다.",
       projectsCta: "Projects 페이지 보기",
-      recentLabel: "Inspirations",
+      recentLabel: "Records",
       recentHeading: "최근에 남긴 글",
       recentCopy: "짧은 실험부터 운영 메모까지, 최근 업데이트를 한눈에 훑을 수 있는 촘촘한 아카이브입니다.",
     },
@@ -190,19 +193,20 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       intro: "현재 확인된 프로젝트 링크만 간단히 모아둔 목록입니다.",
       activityUnavailableLabel: "GitHub 활동 데이터를 지금은 불러오지 못했습니다.",
     },
-    inspirationsPage: {
-      heading: "Inspirations",
-      intro:
-        "생각의 흐름과 영감을 주는 경험들을 연도와 월 단위로 차분히 모아둔 아카이브입니다.",
-      note:
-        "다시 열어보고 싶은 문장, 화면, 공간을 생각하며 기록합니다.",
+    recordsPage: {
+      heading: "Records",
+      description: "책, 영화, 전시, 앨범처럼 오래 남은 경험들의 기록.",
+      filterLabel: "분류 필터",
       allTypesLabel: "전체",
-      emptyLabel: "아직 이 분류에 기록된 영감이 없습니다.",
-      yearLabel: "연도",
-      entriesLabel: "항목",
-      yearsStatLabel: "정리한 연도",
-      entriesStatLabel: "모아둔 레퍼런스",
-      typesStatLabel: "분류",
+      emptyLabel: "아직 이 분류에 남긴 기록이 없습니다.",
+      openLabel: "원문 보기",
+      closeLabel: "닫기",
+      backLabel: "Records",
+      previousLabel: "이전",
+      nextLabel: "다음",
+      recordNavigationLabel: "기록 탐색",
+      zoomLabel: "{title} 이미지 크게 보기",
+      zoomViewerLabel: "확대된 기록 이미지",
       types: {
         book: "책",
         article: "아티클",
@@ -287,7 +291,7 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       home: "Home",
       projects: "Projects",
       blog: "Posts",
-      inspirations: "Inspirations",
+      records: "Records",
       admin: "Admin",
       languageLabel: "Language",
       localeNames: {
@@ -309,14 +313,14 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       profilePlaceholder: "Add profile-photo.jpg to display your photo here.",
       profileImageAlt: "Profile photo of hodako",
       primaryCta: "Browse blog",
-      secondaryCta: "View inspirations",
+      secondaryCta: "View records",
       featuredLabel: "Latest post",
       featuredCta: "Open article",
       projectsLabel: "Projects",
       projectsHeading: "Current project links",
       projectsCopy: "Only confirmed projects are listed here for now, with fuller context left to blog posts.",
       projectsCta: "Open Projects page",
-      recentLabel: "Inspirations",
+      recentLabel: "Records",
       recentHeading: "Latest writing",
       recentCopy: "Recent essays, experiments, and operational notes collected in a tighter editorial archive.",
     },
@@ -325,19 +329,20 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       intro: "A minimal list of currently confirmed project links.",
       activityUnavailableLabel: "GitHub activity data is temporarily unavailable.",
     },
-    inspirationsPage: {
-      heading: "Inspirations",
-      intro:
-        "A quiet archive of books, essays, films, and exhibitions that keep nudging how I design, write, and build.",
-      note:
-        "Instead of aiming for a finished canon, I keep track of the moods, structures, and editorial cues I return to over time. It is a slow, hand-curated reference shelf for ongoing work.",
+    recordsPage: {
+      heading: "Records",
+      description: "Books, films, exhibitions, and albums worth keeping a record of.",
+      filterLabel: "Filter by type",
       allTypesLabel: "All",
-      emptyLabel: "No inspirations have been logged for this type yet.",
-      yearLabel: "Year",
-      entriesLabel: "entries",
-      yearsStatLabel: "Years tracked",
-      entriesStatLabel: "References logged",
-      typesStatLabel: "Types",
+      emptyLabel: "No records for this type yet.",
+      openLabel: "Open link",
+      closeLabel: "Close",
+      backLabel: "Records",
+      previousLabel: "Previous",
+      nextLabel: "Next",
+      recordNavigationLabel: "Browse records",
+      zoomLabel: "View {title} image larger",
+      zoomViewerLabel: "Enlarged record image",
       types: {
         book: "Book",
         article: "Article",

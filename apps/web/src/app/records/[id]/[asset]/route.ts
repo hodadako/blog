@@ -1,21 +1,21 @@
 import {promises as fs} from "node:fs";
-import {INSPIRATION_IMAGE_FILENAME, resolveInspirationImageFilePath} from "@/lib/inspirations";
+import {RECORD_IMAGE_FILENAME, resolveRecordImageFilePath} from "@/lib/records";
 
-const inspirationImageCache = new Map<string, Promise<Buffer>>();
+const recordImageCache = new Map<string, Promise<Buffer>>();
 
-function readCachedInspirationImage(imagePath: string): Promise<Buffer> {
-  const existing = inspirationImageCache.get(imagePath);
+function readCachedRecordImage(imagePath: string): Promise<Buffer> {
+  const existing = recordImageCache.get(imagePath);
 
   if (existing) {
     return existing;
   }
 
   const next = fs.readFile(imagePath).catch((error) => {
-    inspirationImageCache.delete(imagePath);
+    recordImageCache.delete(imagePath);
     throw error;
   });
 
-  inspirationImageCache.set(imagePath, next);
+  recordImageCache.set(imagePath, next);
   return next;
 }
 
@@ -25,17 +25,17 @@ export async function GET(
 ): Promise<Response> {
   const params = await context.params;
 
-  if (params.asset !== INSPIRATION_IMAGE_FILENAME) {
+  if (params.asset !== RECORD_IMAGE_FILENAME) {
     return new Response(null, {status: 404});
   }
 
-  const imagePath = resolveInspirationImageFilePath(params.id);
+  const imagePath = resolveRecordImageFilePath(params.id);
 
   if (!imagePath) {
     return new Response(null, {status: 404});
   }
 
-  const image = await readCachedInspirationImage(imagePath);
+  const image = await readCachedRecordImage(imagePath);
 
   return new Response(new Uint8Array(image), {
     headers: {

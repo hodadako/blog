@@ -1,48 +1,37 @@
 import {existsSync} from "node:fs";
 import path from "node:path";
-import type {AppLocale, InspirationType} from "@/lib/site";
+import type {AppLocale, RecordType} from "@/lib/site";
 
-export const INSPIRATION_IMAGE_FILENAME = "icon.png";
+export const RECORD_IMAGE_FILENAME = "icon.png";
 
-export const INSPIRATION_TYPES: ReadonlyArray<InspirationType> = ["book", "article", "film", "exhibition", "anime", "album", "conference"];
+export const RECORD_TYPES: ReadonlyArray<RecordType> = ["book", "article", "film", "exhibition", "anime", "album", "conference"];
 
-export function isInspirationType(value: string): value is InspirationType {
-  return INSPIRATION_TYPES.includes(value as InspirationType);
+export function isRecordType(value: string): value is RecordType {
+  return RECORD_TYPES.includes(value as RecordType);
 }
 
-interface InspirationEntry {
+interface RecordEntry {
   id: string;
   publishedOn: string;
-  type: InspirationType;
+  type: RecordType;
   href: string;
   source: Record<AppLocale, string>;
   title: Record<AppLocale, string>;
   summary: Record<AppLocale, string>;
 }
 
-export interface InspirationArchiveItem {
+export interface RecordItem {
   id: string;
-  type: InspirationType;
+  type: RecordType;
+  publishedOn: string;
   href: string;
   source: string;
   title: string;
   summary: string;
-  dateLabel: string;
   imageUrl?: string;
 }
 
-export interface InspirationArchiveMonth {
-  key: string;
-  label: string;
-  items: Array<InspirationArchiveItem>;
-}
-
-export interface InspirationArchiveYear {
-  year: string;
-  months: Array<InspirationArchiveMonth>;
-}
-
-const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
+const RECORD_ENTRIES: ReadonlyArray<RecordEntry> = [
   {
     id: "the-book-for",
     publishedOn: "2026-06-26",
@@ -155,7 +144,7 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
     id: "the-tunnel-to-summer-the-exit-of-goodbyes",
     publishedOn: "2023-09-14",
     type: "anime",
-    href: "https://bocchi.rocks",
+    href: "https://natsuton.com/",
     source: {
       ko: "타구치 토모히사",
       en: "Tomohisa Taguchi",
@@ -189,101 +178,48 @@ const INSPIRATION_ENTRIES: ReadonlyArray<InspirationEntry> = [
   },
 ];
 
-function resolveInspirationsContentDirectory(): string {
+function resolveRecordsContentDirectory(): string {
   const candidates = [
-    path.resolve(process.cwd(), "content/inspirations"),
-    path.resolve(process.cwd(), "../../content/inspirations"),
+    path.resolve(process.cwd(), "content/records"),
+    path.resolve(process.cwd(), "../../content/records"),
   ];
 
   const existing = candidates.find((candidate) => existsSync(candidate));
   return existing ?? candidates[0];
 }
 
-const inspirationsContentDirectory = resolveInspirationsContentDirectory();
+const recordsContentDirectory = resolveRecordsContentDirectory();
 
-export function buildInspirationImageUrl(id: string): string {
-  return `/inspirations/${encodeURIComponent(id)}/${INSPIRATION_IMAGE_FILENAME}`;
+export function buildRecordImageUrl(id: string): string {
+  return `/records/${encodeURIComponent(id)}/${RECORD_IMAGE_FILENAME}`;
 }
 
-export function resolveInspirationImageFilePath(id: string): string | null {
+export function resolveRecordImageFilePath(id: string): string | null {
   if (path.basename(id) !== id) {
     return null;
   }
 
-  const imagePath = path.join(inspirationsContentDirectory, id, INSPIRATION_IMAGE_FILENAME);
+  const imagePath = path.join(recordsContentDirectory, id, RECORD_IMAGE_FILENAME);
   return existsSync(imagePath) ? imagePath : null;
 }
 
-function getLocaleCode(locale: AppLocale): string {
-  return locale === "ko" ? "ko-KR" : "en-US";
-}
-
-function parseDateParts(value: string): {date: Date; year: string; monthKey: string} {
-  const [year, month, day] = value.split("-");
-  const date = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
-
-  return {
-    date,
-    year,
-    monthKey: `${year}-${month}`,
-  };
-}
-
-export function getInspirationsArchive(locale: AppLocale, type?: InspirationType): Array<InspirationArchiveYear> {
-  const monthFormatter = new Intl.DateTimeFormat(getLocaleCode(locale), {month: "long"});
-  const dateFormatter = new Intl.DateTimeFormat(getLocaleCode(locale), {
-    month: locale === "ko" ? "long" : "short",
-    day: "numeric",
-  });
-  const archive: Array<InspirationArchiveYear> = [];
+export function getRecordsCollection(locale: AppLocale, type?: RecordType): Array<RecordItem> {
   const entries = type
-    ? INSPIRATION_ENTRIES.filter((entry) => entry.type === type)
-    : INSPIRATION_ENTRIES;
+    ? RECORD_ENTRIES.filter((entry) => entry.type === type)
+    : RECORD_ENTRIES;
 
-  for (const entry of [...entries].sort((left, right) => right.publishedOn.localeCompare(left.publishedOn))) {
-    const {date, year, monthKey} = parseDateParts(entry.publishedOn);
-    const monthLabel = monthFormatter.format(date);
-    const item: InspirationArchiveItem = {
+  return [...entries]
+    .sort((left, right) => right.publishedOn.localeCompare(left.publishedOn))
+    .map((entry) => ({
       id: entry.id,
       type: entry.type,
+      publishedOn: entry.publishedOn,
       href: entry.href,
       source: entry.source[locale],
       title: entry.title[locale],
       summary: entry.summary[locale],
-      dateLabel: dateFormatter.format(date),
-      imageUrl: resolveInspirationImageFilePath(entry.id)
-        ? buildInspirationImageUrl(entry.id)
+      imageUrl: resolveRecordImageFilePath(entry.id)
+        ? buildRecordImageUrl(entry.id)
         : undefined,
-    };
-    const currentYear = archive[archive.length - 1];
-
-    if (!currentYear || currentYear.year !== year) {
-      archive.push({
-        year,
-        months: [
-          {
-            key: monthKey,
-            label: monthLabel,
-            items: [item],
-          },
-        ],
-      });
-      continue;
-    }
-
-    const currentMonth = currentYear.months[currentYear.months.length - 1];
-
-    if (!currentMonth || currentMonth.key !== monthKey) {
-      currentYear.months.push({
-        key: monthKey,
-        label: monthLabel,
-        items: [item],
-      });
-      continue;
-    }
-
-    currentMonth.items.push(item);
-  }
-
-  return archive;
+    }));
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import {FontToggle} from "@/components/font-toggle";
 import {LocaleSwitcher} from "@/components/locale-switcher";
 import {MobileHeaderShell} from "@/components/mobile-header-shell";
+import {SiteNavLinks} from "@/components/site-nav-links";
 import {ThemeToggle} from "@/components/theme-toggle";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
@@ -25,19 +26,14 @@ export function SiteHeader({locale}: SiteHeaderProps) {
           </Link>
 
           <div className="site-nav">
-            <nav className="site-nav__links" aria-label={dictionary.navigation.label}>
-              {SHOW_PROJECTS_NAV ? (
-                <Link className="site-nav__link" href={`/${locale}/projects`}>
-                  {dictionary.navigation.projects}
-                </Link>
-              ) : null}
-              <Link className="site-nav__link" href={`/${locale}/blog`}>
-                {dictionary.navigation.blog}
-              </Link>
-              <Link className="site-nav__link" href={`/${locale}/inspirations`}>
-                {dictionary.navigation.inspirations}
-              </Link>
-            </nav>
+            <SiteNavLinks
+              blogLabel={dictionary.navigation.blog}
+              label={dictionary.navigation.label}
+              locale={locale}
+              projectsLabel={dictionary.navigation.projects}
+              recordsLabel={dictionary.navigation.records}
+              showProjects={SHOW_PROJECTS_NAV}
+            />
             <div className="site-nav__controls">
               <Suspense>
                 <LocaleSwitcher currentLocale={locale} />
