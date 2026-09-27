@@ -88,6 +88,11 @@ interface SiteDictionary {
     recordNavigationLabel: string;
     zoomLabel: string;
     zoomViewerLabel: string;
+    tabNavigationLabel: string;
+    detailTabLabel: string;
+    profileTabLabel: string;
+    spinDiscLabel: string;
+    stopDiscLabel: string;
     types: Record<RecordType, string>;
   };
   blogIndex: {
@@ -202,11 +207,16 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       externalLinkLabel: "관련 페이지를 새 탭에서 열기",
       closeLabel: "닫기",
       backLabel: "목록으로",
-      previousLabel: "이전 기록",
-      nextLabel: "다음 기록",
+      previousLabel: "이전",
+      nextLabel: "다음",
       recordNavigationLabel: "기록 탐색",
       zoomLabel: "{title} 이미지 크게 보기",
       zoomViewerLabel: "확대된 기록 이미지",
+      tabNavigationLabel: "기록 보기 방식",
+      detailTabLabel: "상세",
+      profileTabLabel: "프로필",
+      spinDiscLabel: "디스크 돌리기",
+      stopDiscLabel: "디스크 멈추기",
       types: {
         book: "책",
         article: "아티클",
@@ -338,11 +348,16 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       externalLinkLabel: "Open related page in a new tab",
       closeLabel: "Close",
       backLabel: "Back to records",
-      previousLabel: "Previous record",
-      nextLabel: "Next record",
+      previousLabel: "Previous",
+      nextLabel: "Next",
       recordNavigationLabel: "Browse records",
       zoomLabel: "View {title} image larger",
       zoomViewerLabel: "Enlarged record image",
+      tabNavigationLabel: "Record views",
+      detailTabLabel: "Details",
+      profileTabLabel: "Profile",
+      spinDiscLabel: "Spin disc",
+      stopDiscLabel: "Stop disc",
       types: {
         book: "Book",
         article: "Article",

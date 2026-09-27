@@ -116,27 +116,26 @@ function RecordTile({item, index, locale, filterType, typeLabel, canTiltRef, onS
         onPointerLeave={settleTilt}
         onPointerMove={handlePointerMove}
       >
-        {item.imageUrl ? (
-          <img
-            alt=""
-            className="record-tile__art"
-            decoding="async"
-            draggable={false}
-            height="400"
-            loading={index < EAGER_TILE_COUNT ? "eager" : "lazy"}
-            ref={(element) => { artRef.current = element; }}
-            src={item.imageUrl}
-            width="400"
-          />
-        ) : (
-          <span aria-hidden="true" className="record-tile__art record-tile__art--placeholder" ref={(element) => { artRef.current = element; }}>
-            {typeLabel}
-          </span>
-        )}
-        <span className="record-tile__title">{item.title}</span>
-        <span className="record-tile__meta">
-          {item.source} · {typeLabel}
+        <span className="record-tile__frame">
+          {item.imageUrl ? (
+            <img
+              alt=""
+              className="record-tile__art"
+              decoding="async"
+              draggable={false}
+              height="400"
+              loading={index < EAGER_TILE_COUNT ? "eager" : "lazy"}
+              ref={(element) => { artRef.current = element; }}
+              src={item.imageUrl}
+              width="400"
+            />
+          ) : (
+            <span aria-hidden="true" className="record-tile__art record-tile__art--placeholder" ref={(element) => { artRef.current = element; }}>
+              {typeLabel}
+            </span>
+          )}
         </span>
+        <span className="record-tile__title">{item.title}</span>
       </Link>
     </li>
   );
@@ -154,14 +153,17 @@ export function RecordsGrid({collection, locale, filterType, typeLabels}: Record
       return;
     }
 
-    window.sessionStorage.removeItem(key);
     const position = Number(saved);
     if (!Number.isFinite(position)) {
+      window.sessionStorage.removeItem(key);
       return;
     }
 
-    const frame = requestAnimationFrame(() => window.scrollTo({top: position, behavior: "instant"}));
-    return () => cancelAnimationFrame(frame);
+    const timer = window.setTimeout(() => {
+      window.scrollTo({top: position, behavior: "instant"});
+      window.sessionStorage.removeItem(key);
+    }, 100);
+    return () => window.clearTimeout(timer);
   }, [locale, filterType]);
 
   function selectRecord(event: MouseEvent<HTMLAnchorElement>, item: RecordItem, art: HTMLElement | null): void {
