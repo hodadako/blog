@@ -7,6 +7,7 @@ import {useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardE
 import type {RecordItem} from "@/lib/records";
 import type {getDictionary} from "@/lib/site";
 import {navigateWithRecordsTransition, settleRecordsNavigation} from "./records-transition";
+import {useRecordOrientation} from "./use-record-orientation";
 
 interface RecordViewProps {
   item: RecordItem;
@@ -24,11 +25,14 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
   const router = useRouter();
   const zoomRef = useRef<HTMLDialogElement>(null);
   const artworkButtonRef = useRef<HTMLButtonElement>(null);
+  const artworkRef = useRef<HTMLImageElement>(null);
   const detailTabRef = useRef<HTMLButtonElement>(null);
   const profileTabRef = useRef<HTMLButtonElement>(null);
   const [tab, setTab] = useState<RecordTab>("detail");
   const [spinning, setSpinning] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
   const tabId = useId();
+  const orientation = useRecordOrientation(artworkRef, tab === "detail" && !zoomed, item.id);
 
   useEffect(() => {
     settleRecordsNavigation();
@@ -108,23 +112,33 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
 
       <div aria-labelledby={`${tabId}-${tab}`} className="record-view__layout" id={`${tabId}-panel`} role="tabpanel" tabIndex={0}>
         {tab === "detail" ? (
-          <div className="record-view__visual">
+          <div className={`record-view__visual${orientation.hasSensorSignal ? " record-view__visual--tilting" : ""}`}>
             <button
               aria-label={labels.zoomLabel.replace("{title}", item.title)}
               className="record-view__art-button record-frame"
               disabled={!item.imageUrl}
-              onClick={() => zoomRef.current?.showModal()}
+              onClick={() => { zoomRef.current?.showModal(); setZoomed(true); }}
               ref={artworkButtonRef}
               type="button"
             >
               <span className="record-view__art-window">
                 {item.imageUrl ? (
-                  <img alt={item.title} className="record-view__art" height="400" src={item.imageUrl} width="400" />
+                  <img alt={item.title} className="record-view__art" height="400" ref={artworkRef} src={item.imageUrl} width="400" />
                 ) : (
                   <span className="record-view__art record-view__art--placeholder">{labels.types[item.type]}</span>
                 )}
               </span>
             </button>
+            {orientation.available && item.imageUrl && (orientation.requiresPermission || orientation.hasSensorSignal) ? (
+              <button
+                aria-pressed={orientation.enabled}
+                className="record-view__orientation"
+                onClick={() => void orientation.toggle()}
+                type="button"
+              >
+                {orientation.denied ? labels.tiltDeniedLabel : orientation.enabled ? labels.tiltOffLabel : labels.tiltOnLabel}
+              </button>
+            ) : null}
           </div>
         ) : (
           <div className={`record-profile__visual record-frame${spinning ? " record-profile__visual--playing" : ""}`}>
@@ -210,7 +224,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
         aria-label={labels.zoomViewerLabel}
         className="record-zoom"
         onClick={(event) => { if (event.target === event.currentTarget) closeZoom(); }}
-        onClose={() => artworkButtonRef.current?.focus()}
+        onClose={() => { setZoomed(false); artworkButtonRef.current?.focus(); }}
         ref={zoomRef}
       >
         <button aria-label={labels.closeLabel} className="record-zoom__close" onClick={closeZoom} type="button">×</button>

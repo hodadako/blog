@@ -93,6 +93,9 @@ interface SiteDictionary {
     profileTabLabel: string;
     spinDiscLabel: string;
     stopDiscLabel: string;
+    tiltOnLabel: string;
+    tiltOffLabel: string;
+    tiltDeniedLabel: string;
     types: Record<RecordType, string>;
   };
   blogIndex: {
@@ -217,6 +220,9 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       profileTabLabel: "프로필",
       spinDiscLabel: "디스크 돌리기",
       stopDiscLabel: "디스크 멈추기",
+      tiltOnLabel: "기기를 움직여 보기",
+      tiltOffLabel: "기울임 끄기",
+      tiltDeniedLabel: "기울임 권한이 필요합니다",
       types: {
         book: "책",
         article: "아티클",
@@ -358,6 +364,9 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       profileTabLabel: "Profile",
       spinDiscLabel: "Spin disc",
       stopDiscLabel: "Stop disc",
+      tiltOnLabel: "Enable motion",
+      tiltOffLabel: "Stop tilt effect",
+      tiltDeniedLabel: "Tilt permission is needed",
       types: {
         book: "Book",
         article: "Article",

@@ -1247,6 +1247,10 @@ html:has(.record-zoom[open]) {
   text-decoration-color: currentColor;
 }
 
+.record-view__orientation {
+  display: none;
+}
+
 .record-view__tabs {
   display: flex;
   justify-content: center;
@@ -1442,6 +1446,7 @@ html:has(.record-zoom[open]) {
 .record-view__navigation a:focus-visible,
 .record-view__tabs button:focus-visible,
 .record-profile__play:focus-visible,
+.record-view__orientation:focus-visible,
 .record-zoom__close:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 4px;
@@ -2516,6 +2521,25 @@ html[data-records-direction="previous"]::view-transition-new(record-art) {
   .record-profile__visual {
     width: min(100%, 27rem);
     justify-self: center;
+  }
+
+  .record-view__orientation {
+    display: inline-block;
+    padding: var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font: 0.75rem var(--font-ui);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 0.25em;
+  }
+
+  .record-view__visual--tilting .record-view__art {
+    object-fit: cover;
+    transform: translate3d(var(--record-look-x, 0px), var(--record-look-y, 0px), 0) scale(1.08);
+    transform-origin: center;
+    will-change: transform;
   }
 
   .record-view__summary {
