@@ -1,9 +1,8 @@
 .root {
   overflow: hidden;
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
-  background: #111827;
-  box-shadow: var(--color-shell-content-shadow);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-code-surface);
 }
 
 .header {
@@ -20,13 +19,12 @@
   color: rgba(226, 232, 240, 0.72);
   font-family: var(--font-ui);
   font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0;
 }
 
 .copyButton {
   border: var(--border-width) solid rgba(148, 163, 184, 0.28);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: rgba(30, 41, 59, 0.88);
   color: #e2e8f0;
   cursor: pointer;

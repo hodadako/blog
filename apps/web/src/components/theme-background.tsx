@@ -12,7 +12,7 @@ export function ThemeBackground() {
 
   return (
     <div aria-hidden="true" className="site-shell__snowfall">
-      <Snowfall color="rgba(162, 177, 193, 0.95)" snowflakeCount={150} />
+      <Snowfall color="rgba(162, 177, 193, 0.95)" snowflakeCount={80} />
     </div>
   );
 }

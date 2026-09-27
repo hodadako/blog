@@ -19,7 +19,7 @@ export function SiteHeader({locale}: SiteHeaderProps) {
     <header className="site-header">
       <MobileHeaderShell>
         <div className="site-header__inner">
-          <Link className="brand-lockup" href={`/${locale}`}>
+          <Link className="brand-lockup" href={`/${locale}/blog`}>
             <span className="brand-lockup__eyebrow">{dictionary.siteTagline}</span>
             <strong className="brand-lockup__title">{dictionary.siteName}</strong>
           </Link>

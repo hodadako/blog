@@ -24,10 +24,11 @@ export async function generateMetadata({params}: BlogIndexProps) {
 export default async function BlogIndexPage({params}: BlogIndexProps) {
   const routeParams = await resolveRouteParams(params);
   const locale = resolveLocale(routeParams.locale);
+  const dictionary = getDictionary(locale);
   const data = await getBlogIndexPageData(locale);
 
   return (
-    <div className="page-main">
+    <div className="page-main blog-index-page">
       <section className="page-section">
         <div className="archive-list">
           {data.posts.map((post) => (

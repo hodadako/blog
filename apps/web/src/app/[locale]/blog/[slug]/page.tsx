@@ -19,6 +19,15 @@ interface BlogPostProps {
   params: Promise<BlogPostParams>;
 }
 
+function getArticleTitleVariant(title: string): "short" | "medium" | "long" | "xlong" {
+  const length = Array.from(title).length;
+
+  if (length <= 20) return "short";
+  if (length <= 40) return "medium";
+  if (length <= 80) return "long";
+  return "xlong";
+}
+
 interface BlogCommentsSectionProps {
   authorLabel: string;
   canonicalSlug: string;
@@ -127,7 +136,7 @@ export default async function BlogPostPage({params}: BlogPostProps) {
       <section className="page-section page-section--article">
         <article className="stack-lg article-column article-column--detail blog-post-page__article">
           <header className="article-header article-header--framed">
-            <h1 className="article-title">{post.title}</h1>
+            <h1 className={`article-title article-title--${getArticleTitleVariant(post.title)}`}>{post.title}</h1>
             <p className="article-summary">{post.description}</p>
             <div className="meta-row">
               <span>{post.publishedAt}</span>
