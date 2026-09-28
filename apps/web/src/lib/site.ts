@@ -33,7 +33,6 @@ export interface AdminCommentsCopy {
 
 interface SiteDictionary {
   siteName: string;
-  siteTagline: string;
   navigation: {
     label: string;
     home: string;
@@ -157,7 +156,6 @@ interface SiteDictionary {
 const dictionaries: Record<AppLocale, SiteDictionary> = {
   ko: {
     siteName: "호다코",
-    siteTagline: "언제나 개발 중.",
     navigation: {
       label: "주요 탐색",
       home: "홈",
@@ -301,7 +299,6 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
   },
   en: {
     siteName: "hodako",
-    siteTagline: "Work in progress.",
     navigation: {
       label: "Primary navigation",
       home: "Home",

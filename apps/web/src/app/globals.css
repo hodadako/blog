@@ -441,10 +441,9 @@ img {
 }
 
 .brand-lockup {
-  gap: var(--space-1);
+  text-decoration: none;
 }
 
-.brand-lockup__eyebrow,
 .section-eyebrow,
 .meta-row,
 .footer-note,
@@ -461,11 +460,6 @@ img {
   letter-spacing: 0;
 }
 
-.brand-lockup__eyebrow {
-  letter-spacing: 0.04em;
-}
-
-.brand-lockup__eyebrow,
 .section-eyebrow,
 .meta-row,
 .footer-note,
@@ -484,7 +478,6 @@ img {
   color: var(--color-text-muted);
 }
 
-.brand-lockup__eyebrow,
 .section-eyebrow,
 .meta-row,
 .footer-note,
