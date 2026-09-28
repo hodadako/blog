@@ -1,4 +1,5 @@
-import {existsSync} from "node:fs";
+import {createHash} from "node:crypto";
+import {existsSync, readFileSync} from "node:fs";
 import path from "node:path";
 import type {AppLocale, RecordType} from "@/lib/site";
 
@@ -191,7 +192,12 @@ function resolveRecordsContentDirectory(): string {
 const recordsContentDirectory = resolveRecordsContentDirectory();
 
 export function buildRecordImageUrl(id: string): string {
-  return `/records/${encodeURIComponent(id)}/${RECORD_IMAGE_FILENAME}`;
+  const imagePath = resolveRecordImageFilePath(id);
+  const version = imagePath
+    ? createHash("sha256").update(readFileSync(imagePath)).digest("hex").slice(0, 12)
+    : "missing";
+
+  return `/records/${encodeURIComponent(id)}/${RECORD_IMAGE_FILENAME}?v=${version}`;
 }
 
 export function resolveRecordImageFilePath(id: string): string | null {

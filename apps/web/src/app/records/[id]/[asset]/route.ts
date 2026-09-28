@@ -3,19 +3,20 @@ import {RECORD_IMAGE_FILENAME, resolveRecordImageFilePath} from "@/lib/records";
 
 const recordImageCache = new Map<string, Promise<Buffer>>();
 
-function readCachedRecordImage(imagePath: string): Promise<Buffer> {
-  const existing = recordImageCache.get(imagePath);
+function readCachedRecordImage(imagePath: string, version: string): Promise<Buffer> {
+  const cacheKey = `${imagePath}:${version}`;
+  const existing = recordImageCache.get(cacheKey);
 
   if (existing) {
     return existing;
   }
 
   const next = fs.readFile(imagePath).catch((error) => {
-    recordImageCache.delete(imagePath);
+    recordImageCache.delete(cacheKey);
     throw error;
   });
 
-  recordImageCache.set(imagePath, next);
+  recordImageCache.set(cacheKey, next);
   return next;
 }
 
@@ -35,7 +36,8 @@ export async function GET(
     return new Response(null, {status: 404});
   }
 
-  const image = await readCachedRecordImage(imagePath);
+  const version = new URL(_request.url).searchParams.get("v") ?? "unversioned";
+  const image = await readCachedRecordImage(imagePath, version);
 
   return new Response(new Uint8Array(image), {
     headers: {
