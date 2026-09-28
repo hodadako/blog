@@ -13,6 +13,8 @@ interface RecordViewProps {
   item: RecordItem;
   index: number;
   total: number;
+  initialTab: RecordTab;
+  initialPlaying: boolean;
   backHref: Route;
   previousHref?: Route;
   nextHref?: Route;
@@ -21,29 +23,73 @@ interface RecordViewProps {
 
 type RecordTab = "detail" | "profile";
 
-export function RecordView({item, index, total, backHref, previousHref, nextHref, labels}: RecordViewProps) {
+function hrefForTab(href: Route, tab: RecordTab, playing: boolean): Route {
+  return (tab === "profile" ? `${href}${href.includes("?") ? "&" : "?"}tab=profile${playing ? "&playing=1" : ""}` : href) as Route;
+}
+
+export function RecordView({item, index, total, initialTab, initialPlaying, backHref, previousHref, nextHref, labels}: RecordViewProps) {
   const router = useRouter();
   const zoomRef = useRef<HTMLDialogElement>(null);
   const artworkButtonRef = useRef<HTMLButtonElement>(null);
   const artworkRef = useRef<HTMLImageElement>(null);
   const detailTabRef = useRef<HTMLButtonElement>(null);
   const profileTabRef = useRef<HTMLButtonElement>(null);
-  const [tab, setTab] = useState<RecordTab>("detail");
-  const [spinning, setSpinning] = useState(false);
+  const [tab, setTab] = useState<RecordTab>(initialTab);
+  const [spinning, setSpinning] = useState(initialPlaying);
   const [zoomed, setZoomed] = useState(false);
   const tabId = useId();
   const orientation = useRecordOrientation(artworkRef, tab === "detail" && !zoomed, item.id);
 
   useEffect(() => {
     settleRecordsNavigation();
-    setTab("detail");
+    setTab(initialTab);
+    setSpinning(initialPlaying);
+  }, [initialTab, initialPlaying, item.id]);
+
+  useEffect(() => {
+    const restoreTab = (): void => {
+      const params = new URL(window.location.href).searchParams;
+      const restoredTab = params.get("tab") === "profile" ? "profile" : "detail";
+      setTab(restoredTab);
+      setSpinning(restoredTab === "profile" && params.get("playing") === "1");
+    };
+    window.addEventListener("popstate", restoreTab);
+    return () => window.removeEventListener("popstate", restoreTab);
+  }, []);
+
+  function selectTab(nextTab: RecordTab): void {
+    if (nextTab === tab) {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+    if (nextTab === "profile") {
+      url.searchParams.set("tab", "profile");
+    } else {
+      url.searchParams.delete("tab");
+    }
+    url.searchParams.delete("playing");
+    window.history.pushState(null, "", url);
+    setTab(nextTab);
     setSpinning(false);
-  }, [item.id]);
+  }
+
+  function togglePlaying(): void {
+    const nextPlaying = !spinning;
+    const url = new URL(window.location.href);
+    if (nextPlaying) {
+      url.searchParams.set("playing", "1");
+    } else {
+      url.searchParams.delete("playing");
+    }
+    window.history.replaceState(null, "", url);
+    setSpinning(nextPlaying);
+  }
 
   function navigate(direction: "previous" | "next", href: Route): void {
-    setSpinning(false);
     document.documentElement.dataset.recordsDirection = direction;
-    const transition = navigateWithRecordsTransition("detail", () => router.replace(href));
+    const targetHref = hrefForTab(href, tab, spinning);
+    const transition = navigateWithRecordsTransition("detail", () => router.push(targetHref, {scroll: false}));
 
     if (transition) {
       const clear = (): void => {
@@ -52,7 +98,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
       transition.finished.then(clear, clear);
     } else {
       delete document.documentElement.dataset.recordsDirection;
-      router.replace(href);
+      router.push(targetHref, {scroll: false});
     }
   }
 
@@ -74,7 +120,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [previousHref, nextHref]);
+  }, [previousHref, nextHref, tab, spinning]);
 
   function closeZoom(): void {
     zoomRef.current?.close();
@@ -95,7 +141,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
     }
     event.preventDefault();
     const nextTab = event.key === "Home" || event.key === "ArrowLeft" ? "detail" : "profile";
-    setTab(nextTab);
+    selectTab(nextTab);
     (nextTab === "detail" ? detailTabRef : profileTabRef).current?.focus();
   }
 
@@ -141,20 +187,29 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
             ) : null}
           </div>
         ) : (
-          <div className={`record-profile__visual record-frame${spinning ? " record-profile__visual--playing" : ""}`}>
+          <div className={`record-profile__visual${spinning ? " record-profile__visual--playing" : ""}`}>
             <div className="record-profile__stage">
               <div aria-hidden="true" className="record-profile__disc">
-                {item.imageUrl ? <img alt="" src={item.imageUrl} /> : <span>{labels.types[item.type]}</span>}
+                {item.imageUrl ? <img alt="" className="record-profile__label" src={item.imageUrl} /> : <span className="record-profile__label">{labels.types[item.type]}</span>}
                 <span className="record-profile__center" />
               </div>
               <span aria-hidden="true" className="record-profile__note record-profile__note--one">♪</span>
               <span aria-hidden="true" className="record-profile__note record-profile__note--two">♫</span>
               <span aria-hidden="true" className="record-profile__note record-profile__note--three">♪</span>
+              <button
+                aria-label={spinning ? labels.stopDiscLabel : labels.spinDiscLabel}
+                aria-pressed={spinning}
+                className="record-profile__play"
+                onClick={togglePlaying}
+                type="button"
+              >
+                <span aria-hidden="true">{spinning ? "Ⅱ" : "▶"}</span>
+              </button>
             </div>
           </div>
         )}
 
-        <div className="record-view__content">
+        <div className={`record-view__content${tab === "profile" ? " record-view__content--profile" : ""}`}>
           <p className="record-view__meta">
             {labels.types[item.type]} · <time dateTime={item.publishedOn}>{dateLabel}</time>
           </p>
@@ -174,11 +229,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
               </a>
             </>
           ) : (
-            <div className="record-profile__controls">
-              <button aria-pressed={spinning} className="record-profile__play" onClick={() => setSpinning((value) => !value)} type="button">
-                <span aria-hidden="true">{spinning ? "Ⅱ" : "▶"}</span>
-                {spinning ? labels.stopDiscLabel : labels.spinDiscLabel}
-              </button>
+            <div className="record-profile__links">
               <a aria-label={`${linkHost} · ${labels.externalLinkLabel}`} className="record-view__external" href={item.href} rel="noopener noreferrer" target="_blank">
                 {linkHost}
               </a>
@@ -189,14 +240,14 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
 
       <nav aria-label={labels.recordNavigationLabel} className="record-view__navigation">
         {previousHref ? (
-          <Link href={previousHref} onClick={(event) => handleNavigationClick(event, "previous", previousHref)} replace>{labels.previousLabel}</Link>
+          <Link href={hrefForTab(previousHref, tab, spinning)} onClick={(event) => handleNavigationClick(event, "previous", previousHref)} scroll={false}>{labels.previousLabel}</Link>
         ) : <span aria-disabled="true">{labels.previousLabel}</span>}
         <div aria-label={labels.tabNavigationLabel} className="record-view__tabs" role="tablist">
           <button
             aria-controls={`${tabId}-panel`}
             aria-selected={tab === "detail"}
             id={`${tabId}-detail`}
-            onClick={() => { setTab("detail"); setSpinning(false); }}
+            onClick={() => selectTab("detail")}
             onKeyDown={handleTabKeyDown}
             ref={detailTabRef}
             role="tab"
@@ -207,7 +258,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
             aria-controls={`${tabId}-panel`}
             aria-selected={tab === "profile"}
             id={`${tabId}-profile`}
-            onClick={() => setTab("profile")}
+            onClick={() => selectTab("profile")}
             onKeyDown={handleTabKeyDown}
             ref={profileTabRef}
             role="tab"
@@ -216,7 +267,7 @@ export function RecordView({item, index, total, backHref, previousHref, nextHref
           >{labels.profileTabLabel}</button>
         </div>
         {nextHref ? (
-          <Link href={nextHref} onClick={(event) => handleNavigationClick(event, "next", nextHref)} replace>{labels.nextLabel}</Link>
+          <Link href={hrefForTab(nextHref, tab, spinning)} onClick={(event) => handleNavigationClick(event, "next", nextHref)} scroll={false}>{labels.nextLabel}</Link>
         ) : <span aria-disabled="true">{labels.nextLabel}</span>}
       </nav>
 

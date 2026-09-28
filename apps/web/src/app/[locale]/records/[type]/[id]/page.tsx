@@ -12,7 +12,7 @@ interface RecordPageParams {
 
 interface RecordPageProps {
   params: Promise<RecordPageParams>;
-  searchParams: Promise<{from?: string}>;
+  searchParams: Promise<{from?: string; tab?: string; playing?: string}>;
 }
 
 export async function generateStaticParams(): Promise<Array<RecordPageParams>> {
@@ -60,6 +60,8 @@ export default async function RecordPage({params, searchParams}: RecordPageProps
     <RecordView
       backHref={getCollectionHref(locale, filterType)}
       index={index}
+      initialTab={query.tab === "profile" ? "profile" : "detail"}
+      initialPlaying={query.tab === "profile" && query.playing === "1"}
       item={item}
       labels={dictionary.recordsPage}
       nextHref={index < collection.length - 1 ? getRecordHref(locale, collection[index + 1], filterType) : undefined}
