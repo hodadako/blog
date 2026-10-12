@@ -30,6 +30,7 @@ export default async function BlogIndexPage({params}: BlogIndexProps) {
   return (
     <div className="page-main blog-index-page">
       <section className="page-section">
+        <h1 className="sr-only">{dictionary.blogIndex.heading}</h1>
         <div className="archive-list">
           {data.posts.map((post) => (
             <PostCard key={post.slug} locale={locale} post={post} />

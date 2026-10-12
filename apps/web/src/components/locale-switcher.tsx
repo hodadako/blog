@@ -26,6 +26,10 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
   const currentIndex = localeOptions.findIndex(({locale}) => locale === currentLocale);
 
   useEffect(() => {
+    document.documentElement.lang = currentLocale;
+  }, [currentLocale]);
+
+  useEffect(() => {
     if (!isOpen) {
       return;
     }
@@ -76,11 +80,12 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
       return;
     }
 
-    const nextPathname = pathname === `/${currentLocale}`
+    const translationPath = document.querySelector("[data-article-translations]")?.getAttribute(`data-translation-${nextLocale}`);
+    const nextPathname = translationPath || (pathname === `/${currentLocale}`
       ? `/${nextLocale}`
       : pathname.startsWith(`/${currentLocale}/`)
         ? pathname.replace(`/${currentLocale}/`, `/${nextLocale}/`)
-        : `/${nextLocale}`;
+        : `/${nextLocale}`);
     const nextSearch = window.location.search;
 
     window.location.assign(nextSearch ? `${nextPathname}${nextSearch}` : nextPathname);
@@ -123,6 +128,13 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
   return (
     <div
       className="locale-switcher"
+      onKeyDown={(event) => {
+        if (isOpen && event.key === "Escape") {
+          event.stopPropagation();
+          setIsOpen(false);
+          triggerRef.current?.focus();
+        }
+      }}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
           setIsOpen(false);

@@ -4,6 +4,7 @@ import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import {CodeBlock} from "@/components/code-block";
+import type {AppLocale} from "@/lib/site";
 
 type TrustedIframeProps = Pick<IframeHTMLAttributes<HTMLIFrameElement>, "allow" | "allowFullScreen" | "loading" | "referrerPolicy" | "src" | "title">;
 type TrustedImageProps = Pick<ImgHTMLAttributes<HTMLImageElement>, "alt" | "height" | "loading" | "referrerPolicy" | "src" | "title" | "width">;
@@ -196,7 +197,7 @@ function getCodeLanguage(className: string | undefined): string | null {
   return match?.[1] ?? null;
 }
 
-export function MarkdownArticle({content}: {content: string}) {
+export function MarkdownArticle({content, locale = "en"}: {content: string; locale?: AppLocale}) {
   const segments = getMarkdownSegments(content);
 
   return (
@@ -235,6 +236,9 @@ export function MarkdownArticle({content}: {content: string}) {
         return (
           <ReactMarkdown
             components={{
+              table({children}) {
+                return <table tabIndex={0} aria-label={locale === "ko" ? "본문 표" : "Article table"}>{children}</table>;
+              },
               code(props) {
                 const {children, className, ...restProps} = props;
                 const code = String(children).replace(/\n$/, "");
@@ -248,7 +252,7 @@ export function MarkdownArticle({content}: {content: string}) {
                   );
                 }
 
-                return <CodeBlock code={code} language={getCodeLanguage(className) ?? PLAIN_TEXT_LANGUAGE} />;
+                return <CodeBlock code={code} language={getCodeLanguage(className) ?? PLAIN_TEXT_LANGUAGE} locale={locale} />;
               },
               pre({children}) {
                 return <>{children}</>;

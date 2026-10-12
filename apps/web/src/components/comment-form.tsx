@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AppLocale } from "@/lib/site";
 import { WorkerApiError, workerRequest } from "@/lib/worker-client";
+import {Button, Input} from "@/components/ui";
 import { QuizGate } from "@/components/quiz-gate";
 
 interface CommentFormProps {
@@ -159,12 +160,12 @@ export function CommentForm({
             <div className="comment-form__identity">
               <label className="field">
                 <span className="field__label">{authorLabel}</span>
-                <input className="field__input" maxLength={80} name="author" onChange={(event) => setAuthor(event.target.value)} required type="text" value={author} />
+                <Input maxLength={80} name="author" onChange={(event) => setAuthor(event.target.value)} required type="text" value={author} />
               </label>
 
               <label className="field">
                 <span className="field__label">{passwordLabel}</span>
-                <input className="field__input" maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
+                <Input maxLength={72} minLength={8} name="password" onChange={(event) => setPassword(event.target.value)} required type="password" value={password} />
               </label>
             </div>
 
@@ -174,13 +175,13 @@ export function CommentForm({
             </label>
 
             <div className="button-row">
-              <button className="button" disabled={submitting || !author.trim() || password.length < 8 || !content.trim()} type="submit">
+              <Button disabled={submitting || !author.trim() || password.length < 8 || !content.trim()} type="submit">
                 {submitting ? "…" : submitLabel}
-              </button>
+              </Button>
             </div>
           </>
         ) : null}
-        {submitMessage ? <p className="status-text">{submitMessage}</p> : null}
+        <p className="status-text" role="status">{submitMessage}</p>
       </form>
       <input name="redirectTo" type="hidden" value={redirectTo} />
     </section>

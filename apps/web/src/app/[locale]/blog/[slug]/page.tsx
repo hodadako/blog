@@ -131,10 +131,21 @@ export default async function BlogPostPage({params}: BlogPostProps) {
     );
   }
 
+  const translations = await getPublishedLocalizedSlugVariants(post.canonicalSlug);
+  const translationPath = (target: AppLocale) => {
+    const translation = translations.find((variant) => variant.locale === target);
+    return translation ? `/${target}/blog/${translation.slug}` : undefined;
+  };
+
   return (
     <div className="page-main blog-post-page">
       <section className="page-section page-section--article">
-        <article className="stack-lg article-column article-column--detail blog-post-page__article">
+        <article
+          className="stack-lg article-column article-column--detail blog-post-page__article"
+          data-article-translations=""
+          data-translation-ko={translationPath("ko")}
+          data-translation-en={translationPath("en")}
+        >
           <header className="article-header article-header--framed">
             <h1 className={`article-title article-title--${getArticleTitleVariant(post.title)}`}>{post.title}</h1>
             <p className="article-summary">{post.description}</p>
@@ -153,7 +164,7 @@ export default async function BlogPostPage({params}: BlogPostProps) {
             </div>
           </header>
 
-          <MarkdownArticle content={post.body} />
+          <MarkdownArticle content={post.body} locale={locale} />
         </article>
       </section>
 

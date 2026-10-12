@@ -148,6 +148,16 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
                   key={option.id}
                   onClick={() => setSelectedOptionId(option.id)}
                   role="radio"
+                  tabIndex={selectedOptionId === option.id || (!selectedOptionId && index === 0) ? 0 : -1}
+                  onKeyDown={(event) => {
+                    const direction = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1
+                      : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+                    if (!direction) return;
+                    event.preventDefault();
+                    const nextIndex = (index + direction + challenge.options.length) % challenge.options.length;
+                    setSelectedOptionId(challenge.options[nextIndex].id);
+                    event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[nextIndex]?.focus();
+                  }}
                   type="button"
                 >
                   {option.imageUrl && !failed ? (

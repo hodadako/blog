@@ -5,6 +5,7 @@ import {LocaleSwitcher} from "@/components/locale-switcher";
 import {MobileHeaderShell} from "@/components/mobile-header-shell";
 import {SiteNavLinks} from "@/components/site-nav-links";
 import {ThemeToggle} from "@/components/theme-toggle";
+import {MotionToggle} from "@/components/motion-toggle";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
 const SHOW_PROJECTS_NAV = false;
@@ -18,7 +19,7 @@ export function SiteHeader({locale}: SiteHeaderProps) {
 
   return (
     <header className="site-header">
-      <MobileHeaderShell>
+      <MobileHeaderShell menuLabel={locale === "ko" ? "메뉴" : "Menu"}>
         <div className="site-header__inner">
           <Link className="brand-lockup" href={`/${locale}/blog`}>
             <strong className="brand-lockup__title">{dictionary.siteName}</strong>
@@ -37,8 +38,9 @@ export function SiteHeader({locale}: SiteHeaderProps) {
               <Suspense>
                 <LocaleSwitcher currentLocale={locale} />
               </Suspense>
-              <FontToggle />
-              <ThemeToggle />
+              <FontToggle locale={locale} />
+              <ThemeToggle locale={locale} />
+              <MotionToggle locale={locale} />
             </div>
           </div>
         </div>

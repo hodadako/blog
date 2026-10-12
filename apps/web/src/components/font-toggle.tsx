@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect, useState} from "react";
+import type {AppLocale} from "@/lib/site";
 
 type FontPreference = "default" | "pretendard";
 
@@ -18,11 +19,15 @@ function applyFontPreference(fontPreference: FontPreference): void {
 }
 
 function readStoredFontPreference(): FontPreference {
-  const storedFontPreference = window.localStorage.getItem(FONT_STORAGE_KEY);
-  return storedFontPreference === "pretendard" ? "pretendard" : "default";
+  try {
+    const storedFontPreference = window.localStorage.getItem(FONT_STORAGE_KEY);
+    return storedFontPreference === "pretendard" ? "pretendard" : "default";
+  } catch {
+    return "default";
+  }
 }
 
-export function FontToggle() {
+export function FontToggle({locale = "en"}: {locale?: AppLocale}) {
   const [fontPreference, setFontPreference] = useState<FontPreference>("default");
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -39,26 +44,33 @@ export function FontToggle() {
     }
 
     applyFontPreference(fontPreference);
-    window.localStorage.setItem(FONT_STORAGE_KEY, fontPreference);
+    try {
+      window.localStorage.setItem(FONT_STORAGE_KEY, fontPreference);
+    } catch {
+      // Keep the selected font usable for this session when storage is blocked.
+    }
   }, [fontPreference, isHydrated]);
 
   const isPretendard = fontPreference === "pretendard";
+  const switchLabel = locale === "ko"
+    ? `${isPretendard ? "기본" : "Pretendard"} 글꼴로 전환`
+    : `Switch to ${isPretendard ? "default" : "Pretendard"} font`;
 
   return (
     <button
-      aria-label={`Switch to ${isPretendard ? "default" : "Pretendard"} font`}
+      aria-label={switchLabel}
       aria-pressed={isPretendard}
       className="font-toggle__trigger"
       onClick={() => {
         setFontPreference((currentValue) => (currentValue === "pretendard" ? "default" : "pretendard"));
       }}
-      title={isPretendard ? "Switch to default font" : "Switch to Pretendard"}
+      title={switchLabel}
       type="button"
     >
       <span aria-hidden="true" className="font-toggle__icon">
         Ag
       </span>
-      <span className="font-toggle__label">{isPretendard ? "Pretendard" : "Default"}</span>
+      <span className="font-toggle__label">{isPretendard ? "Pretendard" : locale === "ko" ? "기본" : "Default"}</span>
     </button>
   );
 }

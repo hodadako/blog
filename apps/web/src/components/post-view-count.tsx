@@ -7,12 +7,14 @@ interface PostViewCountProps {
   canonicalSlug: string;
   label: string;
   incrementOnMount?: boolean;
+  initialCount?: number;
 }
 
-export function PostViewCount({ canonicalSlug, label, incrementOnMount = false }: PostViewCountProps) {
-  const [viewCount, setViewCount] = useState<number | null>(null);
+export function PostViewCount({ canonicalSlug, label, incrementOnMount = false, initialCount }: PostViewCountProps) {
+  const [viewCount, setViewCount] = useState<number | null>(initialCount ?? null);
 
   useEffect(() => {
+    if (initialCount !== undefined) return;
     let cancelled = false;
 
     async function load(): Promise<void> {
@@ -34,7 +36,7 @@ export function PostViewCount({ canonicalSlug, label, incrementOnMount = false }
     return () => {
       cancelled = true;
     };
-  }, [canonicalSlug, incrementOnMount]);
+  }, [canonicalSlug, incrementOnMount, initialCount]);
 
   if (viewCount === null) {
     return null;

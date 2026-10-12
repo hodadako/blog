@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import {SiteHeader} from "@/components/site-header";
 import {ThemeBackground} from "@/components/theme-background";
 import {ThemeProvider} from "@/components/theme-context";
+import {SkipLink} from "@/components/skip-link";
 import type {AppLocale} from "@/lib/site";
 
 interface SiteShellProps {
@@ -12,7 +13,7 @@ interface SiteShellProps {
 export function SiteShell({children, locale}: SiteShellProps) {
   return (
     <ThemeProvider>
-      <div className="site-shell">
+      <div className="site-shell" lang={locale}>
         <div aria-hidden="true" className="site-shell__sky">
           <span className="site-shell__sky-layer site-shell__sky-layer--glow" />
           <span className="site-shell__sky-layer site-shell__sky-layer--stars" />
@@ -28,9 +29,10 @@ export function SiteShell({children, locale}: SiteShellProps) {
         <ThemeBackground />
 
         <div className="site-shell__chrome">
+          <SkipLink label={locale === "ko" ? "본문으로 건너뛰기" : "Skip to content"} />
           <SiteHeader locale={locale} />
           <div className="site-shell__content">
-            <main>{children}</main>
+            <main id="main-content" tabIndex={-1}>{children}</main>
           </div>
         </div>
       </div>

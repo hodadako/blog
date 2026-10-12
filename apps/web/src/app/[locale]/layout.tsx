@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import {SiteDocument} from "@/components/site-document";
 import {SiteShell} from "@/components/site-shell";
 import {SUPPORTED_LOCALES, resolveLocale, resolveRouteParams} from "@/lib/site";
+
+export {metadata} from "@/components/site-document";
 
 export async function generateStaticParams(): Promise<Array<{locale: string}>> {
   return SUPPORTED_LOCALES.map((locale) => ({locale}));
@@ -19,5 +22,5 @@ export default async function LocaleLayout({children, params}: LocaleLayoutProps
   const routeParams = await resolveRouteParams(params);
   const locale = resolveLocale(routeParams.locale);
 
-  return <SiteShell locale={locale}>{children}</SiteShell>;
+  return <SiteDocument locale={locale}><SiteShell locale={locale}>{children}</SiteShell></SiteDocument>;
 }

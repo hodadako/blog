@@ -1,3 +1,4 @@
+import {Tag} from "@/components/ui";
 import Link from "next/link";
 import { PostViewCount } from "@/components/post-view-count";
 import type {AppLocale} from "@/lib/site";
@@ -6,9 +7,10 @@ import type {PostSummary} from "@/lib/types";
 interface PostCardProps {
   locale: AppLocale;
   post: PostSummary;
+  viewCount?: number;
 }
 
-export function PostCard({locale, post}: PostCardProps) {
+export function PostCard({locale, post, viewCount}: PostCardProps) {
   const cardClassName = post.iconUrl ? "post-card post-card--with-icon" : "post-card"
   const leadClassName = post.iconUrl
     ? "post-card__lead post-card__lead--with-icon"
@@ -26,7 +28,7 @@ export function PostCard({locale, post}: PostCardProps) {
               <span>{post.publishedAt}</span>
               <span>·</span>
               <span>{post.readingTime}</span>
-              <PostViewCount canonicalSlug={post.canonicalSlug} label={viewsLabel} />
+              <PostViewCount canonicalSlug={post.canonicalSlug} initialCount={viewCount} label={viewsLabel} />
             </div>
           </div>
 
@@ -49,9 +51,9 @@ export function PostCard({locale, post}: PostCardProps) {
           <div className="post-card__aside">
             <div className="tag-list">
               {post.tags.map((tag) => (
-                <span className="pill" key={tag}>
+                <Tag key={tag}>
                   #{tag}
-                </span>
+                </Tag>
               ))}
             </div>
           </div>
