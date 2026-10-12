@@ -5,7 +5,6 @@ import {parseChordPro} from "../src/features/guitar/chordpro/parser";
 
 const songs = [
   {slug: "vaundy--shiawase", path: "vaundy/shiawase.chopro", title: "しわあわせ"},
-  {slug: "hodako--quiet-walk", path: "hodako/quiet-walk.chopro", title: "저녁 산책"},
 ];
 
 test("redirects the root permanently and uses one searchable editorial index", async ({page, request}) => {
@@ -135,7 +134,7 @@ for (const width of [360, 390, 768, 1440]) {
 
 test("retains manual playback in reduced motion and closes options with keyboard focus", async ({page}) => {
   await page.emulateMedia({reducedMotion: "reduce"});
-  await page.goto("/songs/hodako--quiet-walk");
+  await page.goto("/songs/vaundy--shiawase");
   const optionsButton = page.getByRole("button", {name: "옵션", exact: true});
   await optionsButton.focus();
   await page.keyboard.press("Enter");

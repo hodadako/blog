@@ -5,25 +5,25 @@ const blogOrigin = `http://blog.localhost:${new URL(process.env.PLAYWRIGHT_BASE_
 test("serves the song and initial chord lyrics in static HTML", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 812 } });
   const page = await context.newPage();
-  const response = await page.goto("/songs/hodako--quiet-walk");
+  const response = await page.goto("/songs/vaundy--shiawase");
 
   expect(response?.status()).toBe(200);
-  await expect(page.getByRole("heading", { name: "저녁 산책" })).toBeVisible();
-  await expect(page.getByText("해가 천천히", { exact: false })).toBeVisible();
-  await expect(page.getByRole("button", { name: "C 운지법 보기" })).toHaveCount(4);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://guitar.hodako.dev/songs/hodako--quiet-walk");
+  await expect(page.getByRole("heading", { name: "しわあわせ" })).toBeVisible();
+  await expect(page.getByRole("region", {name: /しわあわせ 코드 악보/})).toBeVisible();
+  await expect(page.getByRole("button", { name: "F 운지법 보기" }).first()).toBeVisible();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://guitar.hodako.dev/songs/vaundy--shiawase");
   await context.close();
 });
 
 test("shows verified chord fingering and restores focus when the dialog closes", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/songs/hodako--quiet-walk");
+  await page.goto("/songs/vaundy--shiawase");
 
-  const chordButton = page.getByRole("button", { name: "C 운지법 보기" }).first();
+  const chordButton = page.getByRole("button", { name: "F 운지법 보기" }).first();
   await chordButton.click();
-  const dialog = page.getByRole("dialog", { name: "C" });
+  const dialog = page.getByRole("dialog", { name: "F" });
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("img", { name: "C 운지법" })).toBeVisible();
+  await expect(dialog.getByRole("img", { name: "F 운지법" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await expect(chordButton).toBeFocused();
@@ -35,15 +35,15 @@ test("shows verified chord fingering and restores focus when the dialog closes",
 });
 
 test("transposes and changes capo while keeping the original song model", async ({ page }) => {
-  await page.goto("/songs/hodako--quiet-walk");
+  await page.goto("/songs/vaundy--shiawase");
   const status = page.locator("[aria-live='polite']");
-  await expect(status).toContainText("운지 조성 G · 실음 조성 G");
+  await expect(status).toContainText("운지 조성 F · 실음 조성 F");
 
   await page.getByRole("button", { name: "한 음 높이기" }).click();
   await expect(status).toContainText("조옮김 +1");
   await page.getByRole("button", {name: "옵션", exact: true}).click();
   await page.getByLabel("카포 위치").selectOption("2");
-  await expect(status).toContainText("실음 조성 Ab");
+  await expect(status).toContainText("실음 조성 F#");
 
   await page.reload();
   const restoredStatus = page.locator("[aria-live='polite']");
@@ -52,13 +52,13 @@ test("transposes and changes capo while keeping the original song model", async 
   await expect(page.getByLabel("카포 위치")).toHaveValue("2");
 
   await page.getByRole("button", { name: "곡 설정 초기화" }).click();
-  await expect(restoredStatus).toContainText("운지 조성 G · 실음 조성 G");
+  await expect(restoredStatus).toContainText("운지 조성 F · 실음 조성 F");
   await expect(restoredStatus).toContainText("조옮김 0");
 });
 
 test("pauses time-based scrolling on manual input and stays within mobile width", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
-  await page.goto("/songs/hodako--quiet-walk");
+  await page.goto("/songs/vaundy--shiawase");
   await page.getByRole("button", {name: "옵션", exact: true}).click();
   await page.getByLabel("자동 스크롤 속도").selectOption("10");
   await page.keyboard.press("Escape");
@@ -89,8 +89,8 @@ test("searches the catalog on the Guitar home and songs index", async ({ page })
   await page.goto("/");
   await expect(page).toHaveURL(/\/songs$/);
   await expect(page.getByRole("heading", {name: "Songs", exact: true})).toBeVisible();
-  await page.getByLabel("곡 검색").fill("저녁");
-  await expect(page.getByRole("link", { name: "저녁 산책" })).toBeVisible();
+  await page.getByLabel("곡 검색").fill("Vaundy");
+  await expect(page.getByRole("link", { name: "しわあわせ" })).toBeVisible();
 
   await page.goto("/songs");
   await page.getByLabel("곡 검색").fill("missing");
@@ -104,7 +104,20 @@ test("serves host-specific robots and sitemaps", async ({ request }) => {
   expect(guitarXml).not.toContain("<loc>https://guitar.hodako.dev</loc>");
   expect(guitarXml).not.toContain("<loc>https://guitar.hodako.dev/</loc>");
   expect(guitarXml).toContain("https://guitar.hodako.dev/songs");
-  expect(guitarXml).toContain("https://guitar.hodako.dev/songs/hodako--quiet-walk");
+  expect(guitarXml).toContain("https://guitar.hodako.dev/songs/vaundy--shiawase");
+
+  expect(guitarXml).not.toContain("hodako--quiet-walk");
+  // Next's streamed/cached not-found shell may use 200; verify removal and
+  // noindex in the body too, on both the initial and cached response.
+  // https://nextjs.org/docs/app/api-reference/file-conventions/not-found
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const removedSong = await request.get("/songs/hodako--quiet-walk");
+    expect([200, 404]).toContain(removedSong.status());
+    const removedHtml = await removedSong.text();
+    expect(removedHtml).toContain("404: This page could not be found.");
+    expect(removedHtml).toContain('name="robots" content="noindex"');
+    expect(removedHtml).not.toContain("저녁 산책");
+  }
 
   const blogSitemap = await request.get(`${blogOrigin}/sitemap.xml`);
   expect(blogSitemap.status()).toBe(200);
@@ -124,7 +137,7 @@ test("keeps system theme, preferences, and reading controls usable when storage 
     });
   });
   const page = await context.newPage();
-  await page.goto("/songs/hodako--quiet-walk");
+  await page.goto("/songs/vaundy--shiawase");
   await expect(page.getByLabel("테마")).toHaveValue("light");
   await page.getByLabel("테마").selectOption("system");
   await page.getByRole("button", { name: "한 음 낮추기" }).click();
@@ -134,7 +147,7 @@ test("keeps system theme, preferences, and reading controls usable when storage 
 
 test("follows OS theme changes only while the System preference is selected", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
-  await page.goto("/songs/hodako--quiet-walk");
+  await page.goto("/songs/vaundy--shiawase");
   await page.getByLabel("테마").selectOption("system");
   await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("dark");
 
