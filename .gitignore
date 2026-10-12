@@ -18,6 +18,8 @@ dist
 # misc
 .DS_Store
 *.pem
+.junie/
+.sisyphus/
 
 # debug
 npm-debug.log*
