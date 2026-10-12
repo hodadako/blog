@@ -36,8 +36,27 @@ jobs:
       - name: Typecheck web application
         run: pnpm typecheck
 
+      - name: Typecheck local Guitar editor
+        run: pnpm guitar:editor:typecheck
+
       - name: Build web application
         run: pnpm build
+
+      - name: Verify the local editor is absent from production output
+        run: |
+          if rg -l 'GUITAR_EDITOR_CONTENT_ROOT|__editor/song' apps/web/.next/server; then
+            echo "Local editor code was included in the production server output."
+            exit 1
+          fi
+
+      - name: Install browser test engines
+        run: pnpm --filter web exec playwright install --with-deps chromium webkit
+
+      - name: Test Guitar browser flows
+        run: pnpm --filter web test:e2e
+
+      - name: Test local Guitar editor
+        run: pnpm guitar:editor:test:e2e
 
       - name: Check Worker binding types
         run: |

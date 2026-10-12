@@ -5,9 +5,12 @@ node_modules
 
 # testing
 coverage
+apps/web/test-results/
+apps/web/playwright-report/
 
 # next.js
 .next/
+.next-*/
 out/
 build
 dist

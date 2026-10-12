@@ -10,6 +10,9 @@
     "dev": "pnpm --filter web dev",
     "build": "pnpm --filter web build",
     "typecheck": "pnpm --filter web typecheck",
+    "guitar:editor": "pnpm --filter web guitar:editor",
+    "guitar:editor:typecheck": "pnpm --filter web guitar:editor:typecheck",
+    "guitar:editor:test:e2e": "pnpm --filter web test:editor:e2e",
     "test": "pnpm --filter web test && pnpm --dir infra/cloudflare-worker test",
     "prepare": "husky"
   },

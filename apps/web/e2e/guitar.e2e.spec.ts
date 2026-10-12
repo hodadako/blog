@@ -1,0 +1,188 @@
+import { expect, test } from "@playwright/test";
+
+test("serves the song and initial chord lyrics in static HTML", async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 812 } });
+  const page = await context.newPage();
+  const response = await page.goto("/songs/hodako--quiet-walk");
+
+  expect(response?.status()).toBe(200);
+  await expect(page.getByRole("heading", { name: "저녁 산책" })).toBeVisible();
+  await expect(page.getByText("해가 천천히", { exact: false })).toBeVisible();
+  await expect(page.getByRole("button", { name: "C 운지법 보기" })).toHaveCount(4);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://guitar.hodako.dev/songs/hodako--quiet-walk");
+  await context.close();
+});
+
+test("shows verified chord fingering and restores focus when the dialog closes", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/songs/hodako--quiet-walk");
+
+  const chordButton = page.getByRole("button", { name: "C 운지법 보기" }).first();
+  await chordButton.click();
+  const dialog = page.getByRole("dialog", { name: "C" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("img", { name: "C 운지법" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+  await expect(chordButton).toBeFocused();
+  await chordButton.click();
+  await expect(dialog).toBeVisible();
+  await dialog.getByRole("button", { name: "운지법 닫기" }).click();
+  await expect(dialog).not.toBeVisible();
+  await expect(chordButton).toBeFocused();
+});
+
+test("transposes and changes capo while keeping the original song model", async ({ page }) => {
+  await page.goto("/songs/hodako--quiet-walk");
+  const status = page.locator("[aria-live='polite']");
+  await expect(status).toContainText("운지 조성 G · 실음 조성 G");
+
+  await page.getByRole("button", { name: "한 음 높이기" }).click();
+  await expect(status).toContainText("조옮김 +1");
+  await page.getByLabel("카포 위치").selectOption("2");
+  await expect(status).toContainText("실음 조성 Ab");
+
+  await page.reload();
+  const restoredStatus = page.locator("[aria-live='polite']");
+  await expect(restoredStatus).toContainText("조옮김 +1");
+  await expect(page.getByLabel("카포 위치")).toHaveValue("2");
+
+  await page.getByRole("button", { name: "곡 설정 초기화" }).click();
+  await expect(restoredStatus).toContainText("운지 조성 G · 실음 조성 G");
+  await expect(restoredStatus).toContainText("조옮김 0");
+});
+
+test("pauses time-based scrolling on manual input and stays within mobile width", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto("/songs/hodako--quiet-walk");
+  await page.getByLabel("자동 스크롤 속도").selectOption("10");
+  const scrollButton = page.getByRole("button", { name: "자동 스크롤 시작 / 재개" });
+  await scrollButton.click();
+  await expect(page.getByRole("button", { name: "자동 스크롤 일시정지" })).toBeVisible();
+  await page.waitForTimeout(600);
+  const moved = await page.evaluate(() => window.scrollY);
+  expect(moved).toBeGreaterThan(0);
+  await page.mouse.wheel(0, 80);
+  await expect(page.getByRole("button", { name: "자동 스크롤 시작 / 재개" })).toBeVisible();
+
+  for (const width of [320, 375, 768, 1280]) {
+    await page.setViewportSize({ width, height: 740 });
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow, `horizontal overflow at ${width}px`).toBeLessThanOrEqual(1);
+  }
+});
+
+test("returns 404 for Guitar locale prefixes and internal route paths", async ({ request }) => {
+  for (const path of ["/ko", "/guitar", "/api/comments", "/__editor/songs"]) {
+    const response = await request.get(path);
+    expect(response.status(), path).toBe(404);
+  }
+});
+
+test("searches the catalog on the Guitar home and songs index", async ({ page }) => {
+  await page.goto("/");
+  await page.getByLabel("곡 검색").fill("저녁");
+  await expect(page.getByRole("link", { name: "저녁 산책" })).toBeVisible();
+
+  await page.goto("/songs");
+  await page.getByLabel("곡 검색").fill("missing");
+  await expect(page.getByText("검색 결과가 없습니다.")).toBeVisible();
+});
+
+test("serves host-specific robots and sitemaps", async ({ request }) => {
+  const guitarSitemap = await request.get("/sitemap.xml");
+  expect(guitarSitemap.status()).toBe(200);
+  const guitarXml = await guitarSitemap.text();
+  expect(guitarXml).toContain("https://guitar.hodako.dev/");
+  expect(guitarXml).toContain("https://guitar.hodako.dev/songs");
+  expect(guitarXml).toContain("https://guitar.hodako.dev/songs/hodako--quiet-walk");
+
+  const blogSitemap = await request.get("http://blog.localhost:4317/sitemap.xml");
+  expect(blogSitemap.status()).toBe(200);
+  expect(await blogSitemap.text()).not.toContain("guitar.hodako.dev");
+  const guitarRobots = await request.get("/robots.txt");
+  expect(await guitarRobots.text()).toContain("guitar.hodako.dev/sitemap.xml");
+  const blogRobots = await request.get("http://blog.localhost:4317/robots.txt");
+  expect(await blogRobots.text()).toContain("/ko/admin");
+});
+
+test("keeps system theme, preferences, and reading controls usable when storage is blocked", async ({ browser }) => {
+  const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
+  await context.addInitScript(() => {
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      get() { throw new DOMException("Storage denied", "SecurityError"); },
+    });
+  });
+  const page = await context.newPage();
+  await page.goto("/songs/hodako--quiet-walk");
+  await expect(page.getByLabel("테마")).toHaveValue("light");
+  await page.getByLabel("테마").selectOption("system");
+  await page.getByRole("button", { name: "한 음 낮추기" }).click();
+  await expect(page.locator("[aria-live='polite']")).toContainText("조옮김 -1");
+  await context.close();
+});
+
+test("follows OS theme changes only while the System preference is selected", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/songs/hodako--quiet-walk");
+  await page.getByLabel("테마").selectOption("system");
+  await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("dark");
+
+  await page.emulateMedia({ colorScheme: "light" });
+  await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("light");
+  await page.getByLabel("테마").selectOption("dark");
+  await page.emulateMedia({ colorScheme: "light" });
+  await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("dark");
+});
+
+test("preserves the blog locale redirect on a non-Guitar host", async ({ page }) => {
+  const response = await page.goto("http://blog.localhost:4317/");
+  expect(response?.status()).toBe(200);
+  await expect(page).toHaveURL(/\/(ko|en)\/blog$/);
+});
+
+test("keeps blog locale pages, theme preference, Records, and admin login available", async ({ page }) => {
+  await page.goto("http://blog.localhost:4317/ko/blog");
+  await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
+  const theme = page.locator("html");
+  const toggle = page.getByRole("button", { name: "별 테마로 전환" });
+  await toggle.click();
+  await expect(theme).toHaveAttribute("data-theme", "dark");
+  await page.reload();
+  await expect(theme).toHaveAttribute("data-theme", "dark");
+  await page.getByRole("button", { name: "Pretendard 글꼴로 전환" }).click();
+  await expect(theme).toHaveAttribute("data-font", "pretendard");
+  await page.reload();
+  await expect(theme).toHaveAttribute("data-font", "pretendard");
+
+  await page.getByRole("button", { name: /언어/ }).click();
+  await page.getByRole("menuitemradio", { name: "English" }).click();
+  await expect(page).toHaveURL("http://blog.localhost:4317/en/blog");
+  expect(await page.context().cookies("http://blog.localhost:4317")).toContainEqual(expect.objectContaining({ name: "site_locale", value: "en" }));
+  await expect(page.locator("main")).toBeVisible();
+
+  await page.goto("http://blog.localhost:4317/en/blog");
+  await expect(page).toHaveURL("http://blog.localhost:4317/en/blog");
+  await expect(page.locator("main")).toBeVisible();
+  await page.goto("http://blog.localhost:4317/ko/blog/gave-up-bean-validation");
+  await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "댓글", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "댓글 남기기" })).toBeVisible();
+
+  const postIcon = await page.request.get("http://blog.localhost:4317/posts/gave-up-bean-validation/icon.png");
+  expect(postIcon.status()).toBe(200);
+  expect(postIcon.headers()["content-type"]).toContain("image/png");
+
+  await page.goto("http://blog.localhost:4317/ko/records");
+  await expect(page.locator("main")).toBeVisible();
+  await page.goto("http://blog.localhost:4317/ko/records/album/the-book-for");
+  await expect(page.getByRole("heading", { name: "THE BOOK for," })).toBeVisible();
+
+  const legacyRecords = await page.request.get("http://blog.localhost:4317/ko/inspirations", { maxRedirects: 0 });
+  expect(legacyRecords.status()).toBe(308);
+  expect(legacyRecords.headers().location).toContain("/ko/records");
+
+  await page.goto("http://blog.localhost:4317/ko/admin/login");
+  await expect(page.getByRole("heading", { name: "관리자 로그인" })).toBeVisible();
+});

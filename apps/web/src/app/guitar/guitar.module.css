@@ -1,0 +1,273 @@
+.shell {
+  min-height: 100vh;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.brand {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav a {
+  color: inherit;
+}
+
+.themeControl {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.themeControl select {
+  min-height: 44px;
+  max-width: 10rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.intro {
+  max-width: 42rem;
+}
+
+.intro h1 {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+}
+
+.intro p {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+.card {
+  margin-top: 2rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+
+.controlGroup {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.controlGroup button,
+.controlGroup select,
+.readerButton {
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 0.6rem;
+  background: var(--color-surface-strong);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.controlGroup button:disabled,
+.controlGroup select:disabled,
+.readerButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.controlValue {
+  display: inline-flex;
+  align-items: center;
+  min-width: 3.5rem;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+.buttonRow {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pitchSummary {
+  flex: 1 1 100%;
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.songSheet {
+  margin-top: 1.5rem;
+  padding: clamp(1rem, 4vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: var(--color-surface);
+}
+
+.sectionHeading {
+  margin: 1.75rem 0 0.65rem;
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.lyricLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.1rem 0.15rem;
+  min-height: 2.2rem;
+  margin: 0;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  font-size: var(--song-font-size, 18px);
+}
+
+.lyricSegment {
+  display: inline-grid;
+  grid-template-rows: 44px auto;
+  min-width: 0;
+  max-width: 100%;
+  flex: 0 1 auto;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+.chordCell {
+  display: flex;
+  align-items: flex-end;
+  min-width: 0;
+}
+
+.chordButton {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.35rem 0.5rem;
+  border: 0;
+  border-radius: 0.45rem;
+  background: transparent;
+  color: var(--color-accent, #8db8ff);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.chordButton:hover,
+.chordButton:focus-visible {
+  background: var(--color-surface-strong);
+}
+
+.chordFallback {
+  padding: 0.35rem 0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.blankLine {
+  min-height: 1.5rem;
+}
+
+.performanceComment,
+.unsupportedLine,
+.warning {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.unsupportedLine,
+.warning {
+  padding: 0.65rem 0.8rem;
+  border-left: 3px solid #d39b35;
+  background: var(--color-surface-strong);
+}
+
+.dialog {
+  width: min(24rem, calc(100vw - 2rem));
+  max-width: none;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 1rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.65);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.diagram {
+  display: block;
+  width: min(100%, 15rem);
+  height: auto;
+  margin: 1rem auto;
+  color: var(--color-text);
+}
+
+.dialogCopy {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.scrollSpace {
+  height: 2rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .songSheet {
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .header,
+  .main {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
+}

@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "vitest run"
+    "guitar:editor": "vite --config tools/guitar-editor/vite.config.ts --configLoader runner",
+    "guitar:editor:typecheck": "tsc --noEmit -p tools/guitar-editor/tsconfig.json",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:editor:e2e": "playwright test -c tools/guitar-editor/playwright.config.mts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",
@@ -23,9 +27,11 @@
     "shiki": "^4.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.0",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vite": "^8.2.0"
   }
 }

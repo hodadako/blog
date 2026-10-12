@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["node", "vite/client"],
+    "incremental": false
+  },
+  "include": ["./main.tsx", "./server.ts", "./vite.config.ts", "./playwright.config.mts", "./setup.ts", "./teardown.ts", "./vite-env.d.ts", "./e2e/**/*.ts"]
+}
