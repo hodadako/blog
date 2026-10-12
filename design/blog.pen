@@ -1,0 +1,691 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "type": "frame",
+      "id": "TyAQi",
+      "x": 0,
+      "y": 0,
+      "name": "Blog List / light / Desktop",
+      "theme": {
+        "1:mode": "light",
+        "1:device": "desktop"
+      },
+      "clip": true,
+      "width": 1440,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        144
+      ],
+      "children": [
+        {
+          "id": "g3qmAJ",
+          "type": "ref",
+          "ref": "1:M9C1W",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "id": "xd1qm",
+          "type": "ref",
+          "ref": "1:VQ8Ia",
+          "name": "PostCard · first row",
+          "width": "fill_container",
+          "padding": [
+            16,
+            0,
+            "$1:--post-padding-y",
+            0
+          ]
+        },
+        {
+          "id": "A4Ibf",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "S23eB",
+      "x": 1560,
+      "y": 0,
+      "name": "Blog Article / light / Desktop",
+      "theme": {
+        "1:mode": "light",
+        "1:device": "desktop"
+      },
+      "clip": true,
+      "width": 1440,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        144
+      ],
+      "children": [
+        {
+          "id": "IuHnY",
+          "type": "ref",
+          "ref": "1:M9C1W",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "geiR2",
+          "name": "Reading column",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "EOXjK",
+              "name": "Article flow",
+              "width": 704,
+              "layout": "vertical",
+              "gap": 48,
+              "children": [
+                {
+                  "id": "h4a8m",
+                  "type": "ref",
+                  "ref": "1:wNfKB",
+                  "name": "Shared article header",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "b3X7t",
+                  "type": "ref",
+                  "ref": "1:QPR6q",
+                  "name": "Shared reading text",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "lkubm",
+                  "type": "ref",
+                  "ref": "1:N1tZX",
+                  "name": "Code sample · static syntax",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "EjxT5",
+              "name": "Comment boundary",
+              "width": "fill_container",
+              "stroke": "$1:--color-border",
+              "strokeWidth": {
+                "top": 1
+              },
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                24,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Dp1d6",
+                  "name": "Comments heading",
+                  "fill": "$1:--color-text",
+                  "content": "댓글",
+                  "fontFamily": "$1:--font-primary",
+                  "fontSize": 24,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "Rqckl",
+                  "type": "ref",
+                  "ref": "1:P6lfV",
+                  "name": "Comment author field",
+                  "width": 360
+                },
+                {
+                  "id": "SQ5B4",
+                  "type": "ref",
+                  "ref": "1:d1lHVe",
+                  "name": "Comment submit"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "PwDAY",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ykJ8U",
+      "x": 3120,
+      "y": 0,
+      "name": "Blog List / light / Mobile",
+      "theme": {
+        "1:mode": "light",
+        "1:device": "mobile"
+      },
+      "clip": true,
+      "width": 390,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        24
+      ],
+      "children": [
+        {
+          "id": "EP3pO",
+          "type": "ref",
+          "ref": "1:O6WQ3",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "id": "kRiD2",
+          "type": "ref",
+          "ref": "1:VQ8Ia",
+          "name": "PostCard · first row",
+          "width": "fill_container",
+          "padding": [
+            16,
+            0,
+            "$1:--post-padding-y",
+            0
+          ],
+          "descendants": {
+            "1:BSN0n": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "id": "odgGb",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pyAbz",
+      "x": 3630,
+      "y": 0,
+      "name": "Blog Article / light / Mobile",
+      "theme": {
+        "1:mode": "light",
+        "1:device": "mobile"
+      },
+      "clip": true,
+      "width": 390,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        24
+      ],
+      "children": [
+        {
+          "id": "iumcb",
+          "type": "ref",
+          "ref": "1:O6WQ3",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ZAGs7",
+          "name": "Reading column",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "v4Dnx",
+              "name": "Article flow",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 48,
+              "children": [
+                {
+                  "id": "eoEpN",
+                  "type": "ref",
+                  "ref": "1:wNfKB",
+                  "name": "Shared article header",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "n75fj",
+                  "type": "ref",
+                  "ref": "1:QPR6q",
+                  "name": "Shared reading text",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "H2WSwL",
+                  "type": "ref",
+                  "ref": "1:N1tZX",
+                  "name": "Code sample · static syntax",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "SJJdg",
+              "name": "Comment boundary",
+              "width": "fill_container",
+              "stroke": "$1:--color-border",
+              "strokeWidth": {
+                "top": 1
+              },
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                24,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "wGmgl",
+                  "name": "Comments heading",
+                  "fill": "$1:--color-text",
+                  "content": "댓글",
+                  "fontFamily": "$1:--font-primary",
+                  "fontSize": 24,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "EndwV",
+                  "type": "ref",
+                  "ref": "1:P6lfV",
+                  "name": "Comment author field",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "k5O03",
+                  "type": "ref",
+                  "ref": "1:d1lHVe",
+                  "name": "Comment submit"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "qSbKS",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "iDhJb",
+      "x": 4140,
+      "y": 0,
+      "name": "Blog List / dark / Desktop",
+      "theme": {
+        "1:mode": "dark",
+        "1:device": "desktop"
+      },
+      "clip": true,
+      "width": 1440,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        144
+      ],
+      "children": [
+        {
+          "id": "fgZVQ",
+          "type": "ref",
+          "ref": "1:M9C1W",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "id": "YihKO",
+          "type": "ref",
+          "ref": "1:VQ8Ia",
+          "name": "PostCard · first row",
+          "width": "fill_container",
+          "padding": [
+            16,
+            0,
+            "$1:--post-padding-y",
+            0
+          ]
+        },
+        {
+          "id": "zrTSY",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Awyd5",
+      "x": 5700,
+      "y": 0,
+      "name": "Blog Article / dark / Desktop",
+      "theme": {
+        "1:mode": "dark",
+        "1:device": "desktop"
+      },
+      "clip": true,
+      "width": 1440,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        144
+      ],
+      "children": [
+        {
+          "id": "TP3Hv",
+          "type": "ref",
+          "ref": "1:M9C1W",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "bXlzE",
+          "name": "Reading column",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "MdfKe",
+              "name": "Article flow",
+              "width": 704,
+              "layout": "vertical",
+              "gap": 48,
+              "children": [
+                {
+                  "id": "MotQE",
+                  "type": "ref",
+                  "ref": "1:wNfKB",
+                  "name": "Shared article header",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "GTfjP",
+                  "type": "ref",
+                  "ref": "1:QPR6q",
+                  "name": "Shared reading text",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "QuuH9",
+                  "type": "ref",
+                  "ref": "1:N1tZX",
+                  "name": "Code sample · static syntax",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "AdIBy",
+              "name": "Comment boundary",
+              "width": "fill_container",
+              "stroke": "$1:--color-border",
+              "strokeWidth": {
+                "top": 1
+              },
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                24,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Ei14D",
+                  "name": "Comments heading",
+                  "fill": "$1:--color-text",
+                  "content": "댓글",
+                  "fontFamily": "$1:--font-primary",
+                  "fontSize": 24,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "Q95OsL",
+                  "type": "ref",
+                  "ref": "1:P6lfV",
+                  "name": "Comment author field",
+                  "width": 360
+                },
+                {
+                  "id": "ATcAo",
+                  "type": "ref",
+                  "ref": "1:d1lHVe",
+                  "name": "Comment submit"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "UdqvK",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "GA9hw",
+      "x": 7260,
+      "y": 0,
+      "name": "Blog List / dark / Mobile",
+      "theme": {
+        "1:mode": "dark",
+        "1:device": "mobile"
+      },
+      "clip": true,
+      "width": 390,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        24
+      ],
+      "children": [
+        {
+          "id": "BEgKq",
+          "type": "ref",
+          "ref": "1:O6WQ3",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "id": "ao7H8",
+          "type": "ref",
+          "ref": "1:VQ8Ia",
+          "name": "PostCard · first row",
+          "width": "fill_container",
+          "padding": [
+            16,
+            0,
+            "$1:--post-padding-y",
+            0
+          ],
+          "descendants": {
+            "1:BSN0n": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "id": "u6GjH",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "mmZYj",
+      "x": 7770,
+      "y": 0,
+      "name": "Blog Article / dark / Mobile",
+      "theme": {
+        "1:mode": "dark",
+        "1:device": "mobile"
+      },
+      "clip": true,
+      "width": 390,
+      "fill": "$1:--color-page-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": [
+        0,
+        24
+      ],
+      "children": [
+        {
+          "id": "rSaN1",
+          "type": "ref",
+          "ref": "1:O6WQ3",
+          "name": "Shared navigation",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "KhpvP",
+          "name": "Reading column",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "FNvhP",
+              "name": "Article flow",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 48,
+              "children": [
+                {
+                  "id": "G0ZYn5",
+                  "type": "ref",
+                  "ref": "1:wNfKB",
+                  "name": "Shared article header",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "QasYH",
+                  "type": "ref",
+                  "ref": "1:QPR6q",
+                  "name": "Shared reading text",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "cGwMW",
+                  "type": "ref",
+                  "ref": "1:N1tZX",
+                  "name": "Code sample · static syntax",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ol7UE",
+              "name": "Comment boundary",
+              "width": "fill_container",
+              "stroke": "$1:--color-border",
+              "strokeWidth": {
+                "top": 1
+              },
+              "layout": "vertical",
+              "gap": 16,
+              "padding": [
+                24,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "AjLtT",
+                  "name": "Comments heading",
+                  "fill": "$1:--color-text",
+                  "content": "댓글",
+                  "fontFamily": "$1:--font-primary",
+                  "fontSize": 24,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "UbUz8",
+                  "type": "ref",
+                  "ref": "1:P6lfV",
+                  "name": "Comment author field",
+                  "width": "fill_container"
+                },
+                {
+                  "id": "CXBBN",
+                  "type": "ref",
+                  "ref": "1:d1lHVe",
+                  "name": "Comment submit"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "yzfRz",
+          "type": "ref",
+          "ref": "1:QLjAQ",
+          "name": "Shared footer",
+          "width": "fill_container"
+        }
+      ]
+    }
+  ],
+  "imports": {
+    "1": "hodako.lib.pen"
+  },
+  "fileToken": "fe5deafc-c6d5-4fae-a61a-ec38235b6c8d"
+}

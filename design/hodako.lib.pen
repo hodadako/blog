@@ -1,0 +1,2579 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "type": "frame",
+      "id": "bi8Au",
+      "x": 0,
+      "y": 0,
+      "name": "01 Foundations",
+      "theme": {
+        "mode": "light",
+        "device": "desktop"
+      },
+      "clip": true,
+      "width": 1100,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "text",
+          "id": "z7LArb",
+          "name": "Library title",
+          "fill": "$--color-text",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "HODAKO · Design System",
+          "fontFamily": "$--font-primary",
+          "fontSize": 32,
+          "fontWeight": "$--font-default-weight"
+        },
+        {
+          "type": "text",
+          "id": "wgEOn",
+          "name": "Identity",
+          "fill": "$--color-text",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "글을 중심에 두고, 눈과 별의 정체성을 유지합니다.",
+          "fontFamily": "$--font-primary",
+          "fontSize": 16,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "gpHwd",
+          "name": "Primitive palette",
+          "width": "fill_container",
+          "gap": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "j0DkD7",
+              "name": "ink",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "Ocrbl",
+                  "name": "ink swatch",
+                  "fill": "$--primitive-ink",
+                  "width": "fill_container",
+                  "height": 80,
+                  "stroke": "$--color-border",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "text",
+                  "id": "o7IMk6",
+                  "name": "ink label",
+                  "fill": "$--color-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "ink",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "t2LFUM",
+              "name": "navy",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "lhGD1",
+                  "name": "navy swatch",
+                  "fill": "$--primitive-navy",
+                  "width": "fill_container",
+                  "height": 80,
+                  "stroke": "$--color-border",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "text",
+                  "id": "vgjn8",
+                  "name": "navy label",
+                  "fill": "$--color-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "navy",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "f8Mx0x",
+              "name": "blue",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "S1mqHe",
+                  "name": "blue swatch",
+                  "fill": "$--primitive-blue",
+                  "width": "fill_container",
+                  "height": 80,
+                  "stroke": "$--color-border",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "text",
+                  "id": "P0sS0",
+                  "name": "blue label",
+                  "fill": "$--color-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "blue",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Yj3vN",
+              "name": "cyan",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "S8MDSD",
+                  "name": "cyan swatch",
+                  "fill": "$--primitive-cyan",
+                  "width": "fill_container",
+                  "height": 80,
+                  "stroke": "$--color-border",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "text",
+                  "id": "BYZz1",
+                  "name": "cyan label",
+                  "fill": "$--color-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "cyan",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jK5Hr",
+              "name": "paper",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "q3DKj2",
+                  "name": "paper swatch",
+                  "fill": "$--primitive-paper",
+                  "width": "fill_container",
+                  "height": 80,
+                  "stroke": "$--color-border",
+                  "strokeWidth": 1
+                },
+                {
+                  "type": "text",
+                  "id": "rciKe",
+                  "name": "paper label",
+                  "fill": "$--color-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "paper",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "K5m8X",
+          "name": "light semantic roles",
+          "theme": {
+            "mode": "light"
+          },
+          "width": "fill_container",
+          "fill": "$--color-surface",
+          "stroke": "$--color-border",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 12,
+          "padding": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "T5feD",
+              "name": "light heading",
+              "fill": "$--color-text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "light · Background / Text / Surface",
+              "fontFamily": "$--font-primary",
+              "fontSize": 24,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "FXzCX",
+              "name": "light body",
+              "fill": "$--color-text-muted",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "같은 역할의 변수를 테마에 맞게 적용합니다.",
+              "fontFamily": "$--font-primary",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "qEH0B",
+              "name": "light action",
+              "fill": "$--color-accent",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Link · 콘텐츠를 읽고 다음 글로 이동",
+              "fontFamily": "$--font-primary",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "u0SGY",
+          "name": "dark semantic roles",
+          "theme": {
+            "mode": "dark"
+          },
+          "width": "fill_container",
+          "fill": "$--color-surface",
+          "stroke": "$--color-border",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 12,
+          "padding": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "TV1LQ",
+              "name": "dark heading",
+              "fill": "$--color-text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "dark · Background / Text / Surface",
+              "fontFamily": "$--font-primary",
+              "fontSize": 24,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "aNanH",
+              "name": "dark body",
+              "fill": "$--color-text-muted",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "같은 역할의 변수를 테마에 맞게 적용합니다.",
+              "fontFamily": "$--font-primary",
+              "fontSize": 16,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "ia4IJ",
+              "name": "dark action",
+              "fill": "$--color-accent",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Link · 콘텐츠를 읽고 다음 글로 이동",
+              "fontFamily": "$--font-primary",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "nuJMt",
+          "name": "Spacing and type",
+          "fill": "$--color-text",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Spacing 4–64 · Reading width 704 · Body 16 / 1.65 · Metadata 14 / 1.5",
+          "fontFamily": "$--font-primary",
+          "fontSize": 16,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "R7JSI",
+          "name": "Technical boundary",
+          "fill": "$--color-text",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Motion 160ms / ease. 하늘·유성·눈·반응형 동작은 실제 브라우저에서 검증합니다.",
+          "fontFamily": "$--font-primary",
+          "fontSize": 14,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "eGM1D",
+      "x": 1220,
+      "y": 0,
+      "name": "02 Components · Light",
+      "theme": {
+        "mode": "light",
+        "device": "desktop"
+      },
+      "width": 1100,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "frame",
+          "id": "VQ8Ia",
+          "name": "PostCard",
+          "context": "a",
+          "reusable": true,
+          "clip": true,
+          "width": "fill_container",
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "bottom": "$--border-width"
+          },
+          "strokeAlignment": "inner",
+          "layout": "vertical",
+          "gap": "$--post-gap",
+          "padding": [
+            "$--post-padding-y",
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "JuJZN",
+              "name": "Post lead",
+              "context": "div",
+              "width": "fill_container",
+              "gap": "$--space-3",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "r4Yd6n",
+                  "name": "Post content",
+                  "context": "div",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": "$--space-3",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "o2HTc",
+                      "name": "Post title",
+                      "context": "h2",
+                      "fill": "$--color-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "그래서 나는 Bean Validation을 그만두었다.",
+                      "lineHeight": "$--leading-card-title",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": "$--text-card-title",
+                      "fontWeight": "$--heading-weight",
+                      "letterSpacing": "$--tracking-card"
+                    },
+                    {
+                      "type": "text",
+                      "id": "L3C2u",
+                      "name": "Post summary",
+                      "context": "p",
+                      "fill": "$--color-text-muted",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "비즈니스 규칙과 유효성 검증에 대한 고찰",
+                      "lineHeight": "$--leading-body",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": "$--text-body",
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hWf4V",
+                      "name": "Post metadata",
+                      "context": "div",
+                      "width": "fill_container",
+                      "gap": "$--space-2",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "WXxt7",
+                          "name": "2026-05-21",
+                          "context": "span",
+                          "fill": "$--color-text-muted",
+                          "content": "2026-05-21",
+                          "lineHeight": "$--leading-meta",
+                          "fontFamily": "$--font-primary",
+                          "fontSize": "$--text-meta",
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yVE8h",
+                          "name": "·",
+                          "context": "span",
+                          "fill": "$--color-text-muted",
+                          "content": "·",
+                          "lineHeight": "$--leading-meta",
+                          "fontFamily": "$--font-primary",
+                          "fontSize": "$--text-meta",
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "PHgyk",
+                          "name": "11분",
+                          "context": "span",
+                          "fill": "$--color-text-muted",
+                          "content": "11분",
+                          "lineHeight": "$--leading-meta",
+                          "fontFamily": "$--font-primary",
+                          "fontSize": "$--text-meta",
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BSN0n",
+                  "name": "Post icon frame",
+                  "context": "div",
+                  "clip": true,
+                  "width": 144,
+                  "height": 144,
+                  "fill": "$--color-surface-muted",
+                  "cornerRadius": "$--radius-md",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "rectangle",
+                      "id": "vCKeV",
+                      "name": "Post icon",
+                      "context": "img",
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "images/127.0.0.1/8c9b04ade98ebd01.png",
+                        "mode": "cover"
+                      },
+                      "width": "fill_container",
+                      "height": "fill_container"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "D3xZxq",
+              "name": "Post tags",
+              "context": "div",
+              "width": "fill_container",
+              "gap": "$--space-3",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "xQPxg",
+                  "name": "#Spring",
+                  "context": "span",
+                  "fill": "$--tag-text",
+                  "content": "#Spring",
+                  "lineHeight": 1,
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--tag-size",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "dAUKj",
+                  "name": "#Bean Validation",
+                  "context": "span",
+                  "fill": "$--tag-text",
+                  "content": "#Bean Validation",
+                  "lineHeight": 1,
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--tag-size",
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d1lHVe",
+          "name": "ActionButton / Neutral Solid",
+          "context": "Height is materialized from --button-height: pen 0.3.11 dimension variable setter treats it as sizing behavior. Re-materialize after token edits.",
+          "reusable": true,
+          "height": 48,
+          "fill": "$--button-background",
+          "cornerRadius": "$--button-radius",
+          "stroke": "$--color-text",
+          "strokeWidth": "$--border-width",
+          "padding": [
+            "$--button-padding-y",
+            "$--button-padding-x"
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "NCp7V",
+              "name": "Button label",
+              "fill": "$--button-text",
+              "content": "댓글 등록",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--button-font-size",
+              "fontWeight": "$--button-weight"
+            }
+          ]
+        },
+        {
+          "id": "u4dfxn",
+          "type": "ref",
+          "reusable": true,
+          "ref": "d1lHVe",
+          "name": "ActionButton / Neutral Weak",
+          "fill": "$--color-surface-muted",
+          "stroke": "$--color-transparent",
+          "context": "Neutral weak secondary action. Pair with one primary action.",
+          "descendants": {
+            "NCp7V": {
+              "fill": "$--color-text",
+              "content": "취소"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "P6lfV",
+          "name": "Input",
+          "reusable": true,
+          "width": 360,
+          "fill": "$--field-background",
+          "cornerRadius": "$--field-radius",
+          "stroke": "$--field-border",
+          "strokeWidth": "$--border-width",
+          "padding": [
+            "$--field-padding-y",
+            "$--field-padding-x"
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "OkJZz",
+              "name": "Input value",
+              "fill": "$--color-text",
+              "content": "댓글 작성자",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-body",
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "rbOZU",
+          "name": "Tag",
+          "reusable": true,
+          "fill": "$--tag-text",
+          "content": "#Spring",
+          "fontFamily": "$--font-primary",
+          "fontSize": "$--tag-size",
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "Lf5Pn",
+          "name": "TextLink",
+          "reusable": true,
+          "fill": "$--color-text-muted",
+          "content": "글 목록으로",
+          "fontFamily": "$--font-primary",
+          "fontSize": "$--text-caption",
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "M9C1W",
+          "name": "SiteHeader / Desktop",
+          "reusable": true,
+          "width": "fill_container",
+          "fill": "$--color-header",
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 24,
+          "padding": [
+            24,
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "oY5bJ",
+              "name": "Wordmark",
+              "fill": "$--color-text",
+              "content": "호다코",
+              "lineHeight": 0.98,
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-brand",
+              "fontWeight": "$--brand-weight",
+              "letterSpacing": "$--tracking-brand"
+            },
+            {
+              "type": "frame",
+              "id": "bpxFl",
+              "name": "Navigation and controls",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LujvF",
+                  "name": "글",
+                  "fill": "$--color-accent",
+                  "content": "글",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "QIxNw",
+                  "name": "기록",
+                  "fill": "$--color-text-muted",
+                  "content": "기록",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "NWlDy",
+                  "name": "한국어 ⌄",
+                  "fill": "$--color-text-muted",
+                  "content": "한국어 ⌄",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "vSdMh",
+                  "name": "Aa",
+                  "fill": "$--color-text-muted",
+                  "content": "Aa",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "J4X2a",
+                  "name": "❄ 눈",
+                  "fill": "$--color-text-muted",
+                  "content": "$--theme-label",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "TDVOp",
+                  "name": "Motion preference control",
+                  "fill": "$--color-text-muted",
+                  "content": "효과 정지",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "QLjAQ",
+          "name": "SiteFooter",
+          "reusable": true,
+          "width": "fill_container",
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "top": 1
+          },
+          "gap": 24,
+          "padding": [
+            16,
+            0
+          ],
+          "justifyContent": "space_between",
+          "children": [
+            {
+              "type": "text",
+              "id": "Omxn2",
+              "name": "호다코",
+              "fill": "$--color-text-muted",
+              "content": "호다코",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-meta",
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "ugbR8",
+              "name": "글 · GitHub",
+              "fill": "$--color-text-muted",
+              "content": "글 · GitHub",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-meta",
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "wNfKB",
+          "name": "Article Header",
+          "reusable": true,
+          "width": 704,
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "text",
+              "id": "fvjig",
+              "name": "Article title",
+              "fill": "$--color-text",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "그래서 나는 Bean Validation을 그만두었다.",
+              "lineHeight": "$--leading-article-title",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-article",
+              "fontWeight": "$--heading-weight",
+              "letterSpacing": "$--tracking-article"
+            },
+            {
+              "type": "text",
+              "id": "ZChUv",
+              "name": "Article summary",
+              "fill": "$--color-text-muted",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "비즈니스 규칙과 유효성 검증에 대한 고찰",
+              "lineHeight": 1.55,
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-article-summary",
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "OWaV0",
+              "name": "Article metadata",
+              "fill": "$--color-text-muted",
+              "content": "2026-05-21 · 11분",
+              "lineHeight": "$--leading-meta",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-meta",
+              "fontWeight": "normal"
+            },
+            {
+              "id": "sccm9",
+              "type": "ref",
+              "ref": "rbOZU",
+              "name": "Article tag"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "QPR6q",
+          "name": "Article Body",
+          "reusable": true,
+          "fill": "$--color-text-muted",
+          "textGrowth": "fixed-width",
+          "width": 704,
+          "content": "라이브러리의 시각적 사양과 실제 구현을 함께 확인합니다. 콘텐츠를 읽기 쉽게 정리하되 개인적인 배경과 서체를 유지합니다.",
+          "lineHeight": "$--leading-article",
+          "fontFamily": "$--font-primary",
+          "fontSize": "$--text-body",
+          "fontWeight": "normal"
+        },
+        {
+          "id": "O6WQ3",
+          "type": "ref",
+          "reusable": true,
+          "ref": "M9C1W",
+          "name": "SiteHeader / Mobile closed",
+          "width": 342,
+          "theme": {
+            "device": "mobile"
+          },
+          "descendants": {
+            "bpxFl": {
+              "type": "text",
+              "id": "h7pb7d",
+              "name": "Menu button",
+              "fill": "$--color-text-muted",
+              "content": "메뉴",
+              "fontFamily": "$--font-primary",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "N1tZX",
+          "name": "CodeBlock · static visual",
+          "context": "Static syntax sample. Runtime monospace fallback and Shiki colors remain application specifications.",
+          "reusable": true,
+          "width": 704,
+          "fill": "$--color-code-surface",
+          "cornerRadius": "$--radius-sm",
+          "stroke": "$--color-border",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 16,
+          "children": [
+            {
+              "type": "text",
+              "id": "tpTQ9",
+              "name": "Code toolbar",
+              "fill": "$--primitive-paper",
+              "content": "typescript                                      복사",
+              "fontFamily": "$--font-primary",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "F88ZvT",
+              "name": "Code content",
+              "fill": "$--primitive-paper",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "const rule = validate(input);\nreturn rule.isValid;",
+              "lineHeight": 1.65,
+              "fontFamily": "$--font-code",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "id": "W1ypWL",
+          "type": "ref",
+          "reusable": true,
+          "ref": "d1lHVe",
+          "name": "ActionButton / Brand Solid",
+          "fill": "$--button-brand-background",
+          "stroke": "$--button-brand-background",
+          "context": "Brand solid for a clearly identified main action. Do not repeat throughout a page.",
+          "descendants": {
+            "NCp7V": {
+              "fill": "$--button-brand-text",
+              "content": "확인하고 적용"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "rwN6W",
+      "x": 0,
+      "y": 950,
+      "name": "03 States · Light and Dark",
+      "width": 1100,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "frame",
+          "id": "SNNkW",
+          "name": "light states",
+          "theme": {
+            "mode": "light",
+            "device": "desktop"
+          },
+          "width": "fill_container",
+          "fill": "$--color-bg",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "S6JK8H",
+              "name": "light states heading",
+              "fill": "$--color-text",
+              "content": "light · Default / Hover / Focus / Disabled",
+              "fontFamily": "$--font-primary",
+              "fontSize": 24,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "azqIb",
+              "name": "light button states",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "id": "PCPAF",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Primary default"
+                },
+                {
+                  "id": "C5BFM9",
+                  "type": "ref",
+                  "ref": "u4dfxn",
+                  "name": "Secondary hover",
+                  "fill": "$--button-secondary-hover",
+                  "stroke": "$--color-border-strong"
+                },
+                {
+                  "id": "ALQsu",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Primary focus",
+                  "stroke": "$--color-accent",
+                  "strokeWidth": 2,
+                  "strokeAlignment": "outer"
+                },
+                {
+                  "id": "Ttwgn",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Primary disabled",
+                  "opacity": "$--button-disabled-opacity"
+                },
+                {
+                  "id": "Q85AWq",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Neutral solid hover",
+                  "fill": "$--button-neutral-hover"
+                }
+              ]
+            },
+            {
+              "id": "qKltQ",
+              "type": "ref",
+              "ref": "P6lfV",
+              "name": "Input focus",
+              "stroke": "$--color-accent",
+              "strokeWidth": 2,
+              "strokeAlignment": "outer"
+            },
+            {
+              "id": "YbJVE",
+              "type": "ref",
+              "ref": "VQ8Ia",
+              "name": "PostCard hover",
+              "width": "fill_container",
+              "theme": {},
+              "descendants": {
+                "o2HTc": {
+                  "fill": "$--color-accent"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "V03Slt",
+          "name": "dark states",
+          "theme": {
+            "mode": "dark",
+            "device": "desktop"
+          },
+          "width": "fill_container",
+          "fill": "$--color-bg",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": 24,
+          "children": [
+            {
+              "type": "text",
+              "id": "D2SHyn",
+              "name": "dark states heading",
+              "fill": "$--color-text",
+              "content": "dark · Default / Hover / Focus / Disabled",
+              "fontFamily": "$--font-primary",
+              "fontSize": 24,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "zbgvv",
+              "name": "dark button states",
+              "width": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "id": "KWDNj",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Primary default"
+                },
+                {
+                  "id": "i4onr",
+                  "type": "ref",
+                  "ref": "u4dfxn",
+                  "name": "Secondary hover",
+                  "fill": "$--button-secondary-hover",
+                  "stroke": "$--color-border-strong"
+                },
+                {
+                  "id": "g8f4MO",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Primary focus",
+                  "stroke": "$--color-accent",
+                  "strokeWidth": 2,
+                  "strokeAlignment": "outer"
+                },
+                {
+                  "id": "W7H4pr",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Primary disabled",
+                  "opacity": "$--button-disabled-opacity"
+                },
+                {
+                  "id": "uwmgu",
+                  "type": "ref",
+                  "ref": "d1lHVe",
+                  "name": "Neutral solid hover",
+                  "fill": "$--button-neutral-hover"
+                }
+              ]
+            },
+            {
+              "id": "VHcRk",
+              "type": "ref",
+              "ref": "P6lfV",
+              "name": "Input focus",
+              "stroke": "$--color-accent",
+              "strokeWidth": 2,
+              "strokeAlignment": "outer"
+            },
+            {
+              "id": "DLBig",
+              "type": "ref",
+              "ref": "VQ8Ia",
+              "name": "PostCard hover",
+              "width": "fill_container",
+              "theme": {},
+              "descendants": {
+                "o2HTc": {
+                  "fill": "$--color-accent"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "jvl51",
+      "x": 1220,
+      "y": 1650,
+      "name": "04 Wheel Picker · Anatomy / States / Usage",
+      "theme": {
+        "mode": "light"
+      },
+      "width": 1100,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "text",
+          "id": "Nw4pn",
+          "name": "Wheel Picker heading",
+          "fill": "$--color-text",
+          "content": "Wheel Picker",
+          "fontFamily": "$--font-primary",
+          "fontSize": 32,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "text",
+          "id": "eBZm6",
+          "name": "Wheel Picker purpose",
+          "fill": "$--color-text-muted",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "날짜·시간·수량처럼 순서가 있는 값을 선택합니다. 중앙 정렬 후 값을 확정합니다.",
+          "fontFamily": "$--font-primary",
+          "fontSize": 16,
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "oUTQh",
+          "name": "WheelPicker / Column",
+          "reusable": true,
+          "clip": true,
+          "width": 240,
+          "fill": "$--color-surface",
+          "cornerRadius": "$--wheel-radius",
+          "layout": "vertical",
+          "padding": [
+            0,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "LEMdO",
+              "name": "Option row 0",
+              "context": "Height projection of --wheel-item-height. Re-materialize after token edits.",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "$--color-transparent",
+              "cornerRadius": "$--wheel-radius",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "amU77",
+                  "name": "Option 08",
+                  "opacity": 0.25,
+                  "fill": "$--wheel-muted-text",
+                  "textGrowth": "fixed-width-height",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "content": "08",
+                  "textAlign": "center",
+                  "textAlignVertical": "middle",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--wheel-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GTdRy",
+              "name": "Option row 1",
+              "context": "Height projection of --wheel-item-height. Re-materialize after token edits.",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "$--color-transparent",
+              "cornerRadius": "$--wheel-radius",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "SliDa",
+                  "name": "Option 09",
+                  "opacity": 0.55,
+                  "fill": "$--wheel-muted-text",
+                  "textGrowth": "fixed-width-height",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "content": "09",
+                  "textAlign": "center",
+                  "textAlignVertical": "middle",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--wheel-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pJjWV",
+              "name": "Selection indicator and selected item",
+              "context": "Height projection of --wheel-item-height. Re-materialize after token edits.",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "$--wheel-selection-background",
+              "cornerRadius": "$--wheel-radius",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "tgPnj",
+                  "name": "Selected value",
+                  "fill": "$--wheel-text",
+                  "textGrowth": "fixed-width-height",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "content": "10",
+                  "textAlign": "center",
+                  "textAlignVertical": "middle",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--wheel-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Mn3P9",
+              "name": "Option row 3",
+              "context": "Height projection of --wheel-item-height. Re-materialize after token edits.",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "$--color-transparent",
+              "cornerRadius": "$--wheel-radius",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ZjxmM",
+                  "name": "Option 11",
+                  "opacity": 0.55,
+                  "fill": "$--wheel-muted-text",
+                  "textGrowth": "fixed-width-height",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "content": "11",
+                  "textAlign": "center",
+                  "textAlignVertical": "middle",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--wheel-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kA6f3",
+              "name": "Option row 4",
+              "context": "Height projection of --wheel-item-height. Re-materialize after token edits.",
+              "width": "fill_container",
+              "height": 44,
+              "fill": "$--color-transparent",
+              "cornerRadius": "$--wheel-radius",
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vZcx3",
+                  "name": "Option 12",
+                  "opacity": 0.25,
+                  "fill": "$--wheel-muted-text",
+                  "textGrowth": "fixed-width-height",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "content": "12",
+                  "textAlign": "center",
+                  "textAlignVertical": "middle",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--wheel-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AY68R",
+          "name": "Wheel Picker multi-column usage",
+          "gap": 8,
+          "children": [
+            {
+              "id": "rr5kj",
+              "type": "ref",
+              "ref": "oUTQh",
+              "name": "Hours",
+              "width": 240
+            },
+            {
+              "id": "ScRib",
+              "type": "ref",
+              "ref": "oUTQh",
+              "name": "Minutes",
+              "width": 240
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "EGVjl",
+          "name": "Wheel Picker dark and disabled",
+          "theme": {
+            "mode": "dark"
+          },
+          "width": "fill_container",
+          "fill": "$--color-bg",
+          "gap": 24,
+          "padding": 24,
+          "children": [
+            {
+              "id": "VHNX5",
+              "type": "ref",
+              "ref": "oUTQh",
+              "name": "Dark enabled"
+            },
+            {
+              "id": "u8ffU",
+              "type": "ref",
+              "ref": "oUTQh",
+              "name": "Dark disabled",
+              "opacity": "$--button-disabled-opacity"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "k7zVM",
+          "name": "Wheel Picker behavior boundary",
+          "fill": "$--color-text-muted",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "5 visible items · 44px rows · Loop off · Disabled keeps value · Arrow / Home / End\nScroll fog is a visual mask. Drag, scroll settling and keyboard interaction are implementation responsibilities.",
+          "lineHeight": 1.5,
+          "fontFamily": "$--font-primary",
+          "fontSize": 14,
+          "fontWeight": "normal"
+        }
+      ]
+    }
+  ],
+  "themes": {
+    "mode": [
+      "light",
+      "dark"
+    ],
+    "device": [
+      "desktop",
+      "mobile"
+    ]
+  },
+  "variables": {
+    "--font-body-default": {
+      "type": "string",
+      "value": "\"Blog Korean Title\", \"Segoe UI\", \"Helvetica Neue\", Arial, sans-serif"
+    },
+    "--font-ui-default": {
+      "type": "string",
+      "value": "\"Blog Korean Title\", \"Segoe UI\", \"Helvetica Neue\", Arial, sans-serif"
+    },
+    "--font-ui": {
+      "type": "string",
+      "value": "$--font-ui-default"
+    },
+    "--font-body-pretendard": {
+      "type": "string",
+      "value": "\"Pretendard Variable\", Pretendard, \"Pretendard GOV\", \"Noto Sans KR\", \"Apple SD Gothic Neo\", \"Segoe UI\", \"Helvetica Neue\", Arial, sans-serif"
+    },
+    "--font-ui-pretendard": {
+      "type": "string",
+      "value": "\"Pretendard Variable\", Pretendard, \"Pretendard GOV\", \"Noto Sans KR\", \"Apple SD Gothic Neo\", \"Segoe UI\", \"Helvetica Neue\", Arial, sans-serif"
+    },
+    "--font-body": {
+      "type": "string",
+      "value": "$--font-body-default"
+    },
+    "--color-page-bg": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-paper",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-ink",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-paper": {
+      "type": "color",
+      "value": "#fefcfb"
+    },
+    "--primitive-ink": {
+      "type": "color",
+      "value": "#0a1128"
+    },
+    "--color-sky-background": {
+      "type": "string",
+      "value": [
+        {
+          "value": "radial-gradient(circle at 20% 14%, rgba(190, 214, 255, 0.55), transparent 22%),\n    radial-gradient(circle at 80% 12%, rgba(203, 217, 243, 0.45), transparent 24%),\n    radial-gradient(circle at 54% 28%, rgba(168, 196, 240, 0.22), transparent 32%),\n    linear-gradient(180deg, #ffffff 0%, #f6f9ff 48%, #edf3fb 100%)",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "radial-gradient(circle at 20% 16%, rgba(88, 122, 228, 0.16), transparent 24%),\n    radial-gradient(circle at 80% 12%, rgba(108, 96, 202, 0.14), transparent 22%),\n    radial-gradient(circle at 56% 32%, rgba(38, 58, 116, 0.14), transparent 30%),\n    linear-gradient(180deg, #0b1733 0%, #06101f 42%, #020611 100%)",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-snowfall-flake": {
+      "type": "color",
+      "value": "$--primitive-legacy-snowfall-flake"
+    },
+    "--primitive-legacy-snowfall-flake": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#a2b1c1f2",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#e0e8f1f2",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-scheme": {
+      "type": "string",
+      "value": [
+        {
+          "value": "light",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "dark",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-bg": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-paper",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-ink",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-surface": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-paper",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-navy",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-navy": {
+      "type": "color",
+      "value": "#001f54"
+    },
+    "--color-surface-strong": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-paper",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-navy",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-surface-muted": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-paper-muted",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-blue",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-paper-muted": {
+      "type": "color",
+      "value": "#eff1f3"
+    },
+    "--primitive-blue": {
+      "type": "color",
+      "value": "#034078"
+    },
+    "--color-text": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-ink",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-paper",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-text-muted": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-ink-muted",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-dark-muted",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-ink-muted": {
+      "type": "color",
+      "value": "#4b6078"
+    },
+    "--primitive-dark-muted": {
+      "type": "color",
+      "value": "#becfdf"
+    },
+    "--color-border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-blue-border",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-blue",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-blue-border": {
+      "type": "color",
+      "value": "#688bac"
+    },
+    "--color-border-strong": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-blue",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-cyan",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-cyan": {
+      "type": "color",
+      "value": "#1282a2"
+    },
+    "--record-frame-border": {
+      "type": "color",
+      "value": "$--primitive-record-frame-border"
+    },
+    "--primitive-record-frame-border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#a7b3c1",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#677587",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-blue",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-cyan-readable",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--primitive-cyan-readable": {
+      "type": "color",
+      "value": "#70b3c6"
+    },
+    "--color-accent-soft": {
+      "type": "color",
+      "value": "$--primitive-legacy-accent-soft"
+    },
+    "--primitive-legacy-accent-soft": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#355c9a1a",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#6d89d63d",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-code-surface": {
+      "type": "color",
+      "value": "$--primitive-legacy-code-surface"
+    },
+    "--primitive-legacy-code-surface": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111827",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#111827",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-success": {
+      "type": "color",
+      "value": "$--primitive-legacy-success"
+    },
+    "--primitive-legacy-success": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#216349",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#8ad9b8",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-success-soft": {
+      "type": "color",
+      "value": "$--primitive-legacy-success-soft"
+    },
+    "--primitive-legacy-success-soft": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#2f8f681f",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#17664c3d",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-warning": {
+      "type": "color",
+      "value": "$--primitive-legacy-warning"
+    },
+    "--primitive-legacy-warning": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#775314",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#f0c47e",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-warning-soft": {
+      "type": "color",
+      "value": "$--primitive-legacy-warning-soft"
+    },
+    "--primitive-legacy-warning-soft": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#aa7a221f",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#81591a3d",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-danger": {
+      "type": "color",
+      "value": "$--primitive-legacy-danger"
+    },
+    "--primitive-legacy-danger": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#9b3b3b",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#ffb4ab",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-danger-soft": {
+      "type": "color",
+      "value": "$--primitive-legacy-danger-soft"
+    },
+    "--primitive-legacy-danger-soft": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#c45b5b1f",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#92423a3d",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-surface-panel": {
+      "type": "color",
+      "value": "$--color-surface"
+    },
+    "--color-surface-panel-strong": {
+      "type": "color",
+      "value": "$--color-surface-strong"
+    },
+    "--color-header": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-paper",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-navy",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-sky-top": {
+      "type": "color",
+      "value": "$--primitive-legacy-sky-top"
+    },
+    "--primitive-legacy-sky-top": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#ffffff",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#0b1733",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-sky-base": {
+      "type": "color",
+      "value": "$--primitive-legacy-sky-base"
+    },
+    "--primitive-legacy-sky-base": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#edf3fb",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#020611",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-sky-glow": {
+      "type": "color",
+      "value": "$--primitive-legacy-sky-glow"
+    },
+    "--primitive-legacy-sky-glow": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#adcaff29",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#6480f633",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-sky-star": {
+      "type": "color",
+      "value": "$--primitive-legacy-sky-star"
+    },
+    "--primitive-legacy-sky-star": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#5f70894c",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#f7f9ffeb",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-sky-star-soft": {
+      "type": "color",
+      "value": "$--primitive-legacy-sky-star-soft"
+    },
+    "--primitive-legacy-sky-star-soft": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#8898af33",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#a8bbff66",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-meteor-core": {
+      "type": "color",
+      "value": "$--primitive-legacy-meteor-core"
+    },
+    "--primitive-legacy-meteor-core": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#ffffff00",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#f5f8fffa",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-meteor-tail": {
+      "type": "color",
+      "value": "$--primitive-legacy-meteor-tail"
+    },
+    "--primitive-legacy-meteor-tail": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#ffffff00",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#a8c4ff75",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--color-meteor-glow": {
+      "type": "color",
+      "value": "$--primitive-legacy-meteor-glow"
+    },
+    "--primitive-legacy-meteor-glow": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#ffffff00",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#b4d0ff8f",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--space-1": {
+      "type": "number",
+      "value": 4
+    },
+    "--space-2": {
+      "type": "number",
+      "value": 8
+    },
+    "--space-3": {
+      "type": "number",
+      "value": 12
+    },
+    "--space-4": {
+      "type": "number",
+      "value": 16
+    },
+    "--space-5": {
+      "type": "number",
+      "value": 24
+    },
+    "--space-6": {
+      "type": "number",
+      "value": 32
+    },
+    "--space-7": {
+      "type": "number",
+      "value": 48
+    },
+    "--space-8": {
+      "type": "number",
+      "value": 64
+    },
+    "--radius-sm": {
+      "type": "number",
+      "value": 4
+    },
+    "--radius-md": {
+      "type": "number",
+      "value": 8
+    },
+    "--radius-lg": {
+      "type": "number",
+      "value": 12
+    },
+    "--radius-pill": {
+      "type": "number",
+      "value": 999
+    },
+    "--border-width": {
+      "type": "number",
+      "value": 1
+    },
+    "--shadow-overlay": {
+      "type": "string",
+      "value": [
+        {
+          "value": "0 0.75rem 2rem rgba(33, 49, 75, 0.14)",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "0 0.75rem 2rem rgba(1, 4, 10, 0.22)",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--container-width": {
+      "type": "number",
+      "value": 1152
+    },
+    "--measure-width": {
+      "type": "number",
+      "value": 704
+    },
+    "--panel-width": {
+      "type": "number",
+      "value": 384
+    },
+    "--text-caption": {
+      "type": "number",
+      "value": 13
+    },
+    "--text-body": {
+      "type": "number",
+      "value": 16
+    },
+    "--text-card-title": {
+      "type": "number",
+      "value": [
+        {
+          "value": 24,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": 20,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--weight-heading": {
+      "type": "number",
+      "value": 600
+    },
+    "--leading-body": {
+      "type": "number",
+      "value": 1.65
+    },
+    "--leading-card-title": {
+      "type": "number",
+      "value": 1.32
+    },
+    "--tracking-heading": {
+      "type": "string",
+      "value": "-0.025em"
+    },
+    "--motion-ui": {
+      "type": "number",
+      "value": 160
+    },
+    "--button-radius": {
+      "type": "number",
+      "value": "$--radius-md"
+    },
+    "--button-padding-x": {
+      "type": "number",
+      "value": "$--space-4"
+    },
+    "--button-padding-y": {
+      "type": "number",
+      "value": "$--space-3"
+    },
+    "--button-background": {
+      "type": "color",
+      "value": "$--color-text"
+    },
+    "--button-text": {
+      "type": "color",
+      "value": "$--color-surface-strong"
+    },
+    "--button-secondary-hover": {
+      "type": "color",
+      "value": "$--color-surface-muted"
+    },
+    "--button-disabled-opacity": {
+      "type": "number",
+      "value": 55
+    },
+    "--field-radius": {
+      "type": "number",
+      "value": "$--radius-sm"
+    },
+    "--field-padding-x": {
+      "type": "number",
+      "value": "$--space-4"
+    },
+    "--field-padding-y": {
+      "type": "number",
+      "value": "$--space-3"
+    },
+    "--field-background": {
+      "type": "color",
+      "value": "$--color-surface-muted"
+    },
+    "--post-padding-y": {
+      "type": "number",
+      "value": "$--space-5"
+    },
+    "--post-gap": {
+      "type": "number",
+      "value": "$--space-3"
+    },
+    "--tag-size": {
+      "type": "number",
+      "value": 12
+    },
+    "--tag-text": {
+      "type": "color",
+      "value": "$--color-text-muted"
+    },
+    "--font-primary": {
+      "type": "string",
+      "value": "GyeonggiTitle"
+    },
+    "--font-code": {
+      "type": "string",
+      "value": "Roboto Mono"
+    },
+    "--heading-weight": {
+      "type": "string",
+      "value": "600"
+    },
+    "--brand-weight": {
+      "type": "string",
+      "value": "700"
+    },
+    "--text-meta": {
+      "type": "number",
+      "value": 14
+    },
+    "--text-brand": {
+      "type": "number",
+      "value": [
+        {
+          "value": 34,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": 24,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--text-article": {
+      "type": "number",
+      "value": [
+        {
+          "value": 36,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": 30,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--leading-heading": {
+      "type": "number",
+      "value": 1.2
+    },
+    "--leading-meta": {
+      "type": "number",
+      "value": 1.5
+    },
+    "--leading-article": {
+      "type": "number",
+      "value": 1.72
+    },
+    "--tracking-card": {
+      "type": "number",
+      "value": [
+        {
+          "value": -0.6,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": -0.5,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--post-icon-width": {
+      "type": "number",
+      "value": [
+        {
+          "value": 144,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": 120,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--motion-easing": {
+      "type": "string",
+      "value": "ease"
+    },
+    "--primitive-transparent": {
+      "type": "color",
+      "value": "#00000000"
+    },
+    "--color-transparent": {
+      "type": "color",
+      "value": "$--primitive-transparent"
+    },
+    "--font-default-weight": {
+      "type": "string",
+      "value": "500"
+    },
+    "--button-font-size": {
+      "type": "number",
+      "value": 14
+    },
+    "--button-height": {
+      "type": "number",
+      "value": 48
+    },
+    "--button-neutral-hover": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--primitive-blue",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--primitive-paper-muted",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--button-brand-background": {
+      "type": "color",
+      "value": "$--primitive-blue"
+    },
+    "--button-brand-text": {
+      "type": "color",
+      "value": "$--primitive-paper"
+    },
+    "--wheel-item-height": {
+      "type": "number",
+      "value": 44
+    },
+    "--wheel-visible-items": {
+      "type": "number",
+      "value": 5
+    },
+    "--wheel-text": {
+      "type": "color",
+      "value": "$--color-text"
+    },
+    "--wheel-muted-text": {
+      "type": "color",
+      "value": "$--color-text-muted"
+    },
+    "--wheel-selection-background": {
+      "type": "color",
+      "value": "$--color-surface-muted"
+    },
+    "--wheel-radius": {
+      "type": "number",
+      "value": "$--radius-md"
+    },
+    "--wheel-font-size": {
+      "type": "number",
+      "value": 20
+    },
+    "--leading-article-title": {
+      "type": "number",
+      "value": 1.22
+    },
+    "--field-border": {
+      "type": "color",
+      "value": "$--color-border-strong"
+    },
+    "--button-brand-hover": {
+      "type": "color",
+      "value": "$--primitive-navy"
+    },
+    "--tracking-article": {
+      "type": "number",
+      "value": [
+        {
+          "value": -0.9,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": -0.75,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--tracking-brand": {
+      "type": "number",
+      "value": [
+        {
+          "value": -0.85,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": -0.6,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--text-article-summary": {
+      "type": "number",
+      "value": [
+        {
+          "value": 18,
+          "theme": {
+            "device": "desktop"
+          }
+        },
+        {
+          "value": 17,
+          "theme": {
+            "device": "mobile"
+          }
+        }
+      ]
+    },
+    "--theme-label": {
+      "type": "string",
+      "value": [
+        {
+          "value": "❄ 눈",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "☄ 별",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--button-weight": {
+      "type": "string",
+      "value": "$--font-default-weight"
+    }
+  },
+  "fileToken": "c4430149-e7d0-4d2f-941a-81fcf8896828",
+  "fonts": [
+    {
+      "name": "__nextjs-Geist",
+      "url": "fonts/127.0.0.1/c88ab7d5c971e5f9.woff2",
+      "weight": [
+        400,
+        600
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "start": 400,
+          "end": 600
+        }
+      ]
+    },
+    {
+      "name": "__nextjs-Geist Mono",
+      "url": "fonts/127.0.0.1/ffee273285ac29d7.woff2",
+      "weight": [
+        400,
+        600
+      ],
+      "axes": [
+        {
+          "tag": "wght",
+          "start": 400,
+          "end": 600
+        }
+      ]
+    },
+    {
+      "name": "Blog Korean Title",
+      "url": "fonts/127.0.0.1/e3984e066086954a.woff",
+      "weight": 500
+    },
+    {
+      "name": "GyeonggiTitle",
+      "url": "fonts/127.0.0.1/b4328a1786ca6dc4.woff",
+      "weight": 300
+    },
+    {
+      "name": "GyeonggiTitle",
+      "url": "fonts/127.0.0.1/8c4fbd7a662728b3.woff",
+      "weight": 700
+    },
+    {
+      "name": "GyeonggiTitle",
+      "url": "fonts/gyeonggi/Title_Medium.otf",
+      "weight": 500
+    }
+  ]
+}
