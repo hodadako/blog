@@ -101,3 +101,17 @@ From `docs/git-rules.md`:
 3. Apply minimal, scoped edits.
 4. Run the narrowest relevant validation commands.
 5. Update docs when workflow or architecture changes.
+
+## 12) Design System
+- UI 변경 전에 `docs/design-system/README.md`, `audit.md`, `components.md`, `workflow.md`와 `design/hodako.lib.pen`을 확인한다.
+- 시각 SSOT는 pen.dev 라이브러리다. 대응 component와 Variables를 먼저 확인하고 승인된 디자인 사양을 구현한다.
+- 기존 토큰/컴포넌트를 우선 재사용한다. 기존 토큰으로 해결할 수 있는 스타일에 임의 Hex/Magic Number를 추가하지 않는다.
+- 시각 사양은 원칙적으로 `.lib.pen`을 먼저 수정한다. 코드에서 의도적으로 변경했다면 기존 origin/Variables에 반영한다.
+- UI를 대량 재생성하거나 유사 컴포넌트를 중복 구현하지 않는다. Variant와 준비 컴포넌트의 실제 목적을 registry에 기록한다.
+- 목적 없는 Card/Badge/Icon/Glow/Gradient/Shadow를 추가하지 않는다. 콘텐츠 가독성과 의도된 개인적 정체성을 함께 유지한다.
+- 기본 서체는 경기천년제목 Medium (`design/fonts/gyeonggi/Title_Medium.otf`). 웹의 기존 Blog Korean Title alias와 Light/Bold/font toggle를 임의 교체하지 않는다.
+- Blog List 홈페이지/redirect/wordmark/Starry/Snowy/Shooting Stars, 완료된 P0/P1 구조를 유지한다. Records/Guitar 대규모 리디자인을 섞지 않는다.
+- Global/Component/Experimental 변경을 구분하고 기존 승인 범위에 따라 진행한다. 실험을 확정 원본에 바로 섞지 않는다.
+- MCP 실행 전 활성 파일을 확인한다. `.pen` 내부를 일반 parser로 읽거나 serialized IDs/references를 수동 수정하지 않는다.
+- 디자인과 코드가 자동 동기화된다고 가정하지 않는다. 최소 Diff, 브라우저 rendering, 타입/테스트/빌드로 검증하고 기술적 예외를 문서화한다.
+- 자체 Design Lab/별도 비주얼 편집기/중복 토큰 원본을 추가하지 않는다. Storybook은 필요 시 구현 검증 도구로만 검토한다.

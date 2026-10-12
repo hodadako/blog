@@ -1,0 +1,185 @@
+/* Implementation projection of design/hodako.lib.pen. Change the approved library first. */
+:root {
+  --primitive-ink: #0a1128;
+  --primitive-navy: #001f54;
+  --primitive-blue: #034078;
+  --primitive-cyan: #1282a2;
+  --primitive-paper: #fefcfb;
+  --primitive-paper-muted: #eff1f3;
+  --primitive-blue-border: #688bac;
+  --primitive-cyan-readable: #70b3c6;
+  --primitive-ink-muted: #4b6078;
+  --primitive-dark-muted: #becfdf;
+
+  --font-body-default: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui-default: "Blog Korean Title", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-brand: var(--font-ui);
+  --font-body-pretendard: "Pretendard Variable", Pretendard, "Pretendard GOV", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-ui-pretendard: "Pretendard Variable", Pretendard, "Pretendard GOV", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-body: var(--font-body-default);
+  --font-ui: var(--font-ui-default);
+
+  --color-page-bg: var(--primitive-ink);
+  --color-sky-background:
+    radial-gradient(circle at 20% 16%, rgba(88, 122, 228, 0.16), transparent 24%),
+    radial-gradient(circle at 80% 12%, rgba(108, 96, 202, 0.14), transparent 22%),
+    radial-gradient(circle at 56% 32%, rgba(38, 58, 116, 0.14), transparent 30%),
+    linear-gradient(180deg, #0b1733 0%, #06101f 42%, #020611 100%);
+  --color-snowfall-flake: var(--primitive-legacy-snowfall-flake);
+  --color-scheme: dark;
+
+  --color-bg: var(--primitive-ink);
+  --color-surface: var(--primitive-navy);
+  --color-surface-strong: var(--primitive-navy);
+  --color-surface-muted: var(--primitive-blue);
+  --color-text: var(--primitive-paper);
+  --color-text-muted: var(--primitive-dark-muted);
+  --color-border: var(--primitive-blue);
+  --color-border-strong: var(--primitive-cyan);
+  --record-frame-border: var(--primitive-record-frame-border);
+  --color-accent: var(--primitive-cyan-readable);
+  --color-accent-soft: var(--primitive-legacy-accent-soft);
+  --color-code-surface: var(--primitive-legacy-code-surface);
+  --color-success: var(--primitive-legacy-success);
+  --color-success-soft: var(--primitive-legacy-success-soft);
+  --color-warning: var(--primitive-legacy-warning);
+  --color-warning-soft: var(--primitive-legacy-warning-soft);
+  --color-danger: var(--primitive-legacy-danger);
+  --color-danger-soft: var(--primitive-legacy-danger-soft);
+  --color-surface-panel: var(--color-surface);
+  --color-surface-panel-strong: var(--color-surface-strong);
+  --color-header: var(--primitive-navy);
+  --color-sky-top: var(--primitive-legacy-sky-top);
+  --color-sky-base: var(--primitive-legacy-sky-base);
+  --color-sky-glow: var(--primitive-legacy-sky-glow);
+  --color-sky-star: var(--primitive-legacy-sky-star);
+  --color-sky-star-soft: var(--primitive-legacy-sky-star-soft);
+  --color-meteor-core: var(--primitive-legacy-meteor-core);
+  --color-meteor-tail: var(--primitive-legacy-meteor-tail);
+  --color-meteor-glow: var(--primitive-legacy-meteor-glow);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-pill: 999px;
+
+  --border-width: 1px;
+  --shadow-overlay: 0 0.75rem 2rem rgba(1, 4, 10, 0.22);
+
+  --container-width: 72rem;
+  --measure-width: 44rem;
+  --panel-width: 24rem;
+  --text-caption: 0.8125rem;
+  --text-body: 1rem;
+  --text-card-title: clamp(1.25rem, 2.5vw, 1.5rem);
+  --weight-heading: 600;
+  --leading-body: 1.65;
+  --leading-card-title: 1.32;
+  --tracking-heading: -0.025em;
+  --motion-ui: 160ms;
+  --snow-static-radius: 1.5px;
+  --button-radius: var(--radius-md);
+  --button-padding-x: var(--space-4);
+  --button-padding-y: var(--space-3);
+  --button-background: var(--color-text);
+  --button-text: var(--color-surface-strong);
+  --button-secondary-hover: var(--color-surface-muted);
+  --button-weight: var(--font-default-weight);
+  --button-disabled-opacity: 0.55;
+  --field-radius: var(--radius-sm);
+  --field-padding-x: var(--space-4);
+  --field-padding-y: var(--space-3);
+  --field-background: var(--color-surface-muted);
+  --post-padding-y: var(--space-5);
+  --post-gap: var(--space-3);
+  --tag-size: 0.75rem;
+  --tag-text: var(--color-text-muted);
+
+  --font-default-weight: 500;
+  --button-font-size: 0.875rem;
+  --button-height: 3rem;
+  --button-brand-background: var(--primitive-blue);
+  --button-brand-text: var(--primitive-paper);
+  --wheel-item-height: 2.75rem;
+  --wheel-font-size: 1.25rem;
+  --field-border: var(--color-border-strong);
+  --wheel-visible-items: 5;
+  --wheel-text: var(--color-text);
+  --wheel-muted-text: var(--color-text-muted);
+  --wheel-selection-background: var(--color-surface-muted);
+  --wheel-radius: var(--radius-md);
+
+  --primitive-legacy-snowfall-flake: #e0e8f1f2;
+  --primitive-record-frame-border: #677587;
+  --primitive-legacy-accent-soft: #6d89d63d;
+  --primitive-legacy-code-surface: #111827;
+  --primitive-legacy-success: #8ad9b8;
+  --primitive-legacy-success-soft: #17664c3d;
+  --primitive-legacy-warning: #f0c47e;
+  --primitive-legacy-warning-soft: #81591a3d;
+  --primitive-legacy-danger: #ffb4ab;
+  --primitive-legacy-danger-soft: #92423a3d;
+  --primitive-legacy-sky-top: #0b1733;
+  --primitive-legacy-sky-base: #020611;
+  --primitive-legacy-sky-glow: #6480f633;
+  --primitive-legacy-sky-star: #f7f9ffeb;
+  --primitive-legacy-sky-star-soft: #a8bbff66;
+  --primitive-legacy-meteor-core: #f5f8fffa;
+  --primitive-legacy-meteor-tail: #a8c4ff75;
+  --primitive-legacy-meteor-glow: #b4d0ff8f;
+  --primitive-transparent: #00000000;
+  --color-transparent: var(--primitive-transparent);
+  --button-neutral-hover: var(--primitive-paper-muted);
+  --button-brand-hover: var(--primitive-navy);
+}
+
+[data-theme="light"] {
+  --button-neutral-hover: var(--primitive-blue);
+  --color-page-bg: var(--primitive-paper);
+  --color-sky-background:
+    radial-gradient(circle at 20% 14%, rgba(190, 214, 255, 0.55), transparent 22%),
+    radial-gradient(circle at 80% 12%, rgba(203, 217, 243, 0.45), transparent 24%),
+    radial-gradient(circle at 54% 28%, rgba(168, 196, 240, 0.22), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f6f9ff 48%, #edf3fb 100%);
+  --color-scheme: light;
+
+  --color-bg: var(--primitive-paper);
+  --color-surface: var(--primitive-paper);
+  --color-surface-strong: var(--primitive-paper);
+  --color-surface-muted: var(--primitive-paper-muted);
+  --color-text: var(--primitive-ink);
+  --color-text-muted: var(--primitive-ink-muted);
+  --color-border: var(--primitive-blue-border);
+  --color-border-strong: var(--primitive-blue);
+  --color-accent: var(--primitive-blue);
+  --color-header: var(--primitive-paper);
+  --shadow-overlay: 0 0.75rem 2rem rgba(33, 49, 75, 0.14);
+  --primitive-legacy-snowfall-flake: #a2b1c1f2;
+  --primitive-record-frame-border: #a7b3c1;
+  --primitive-legacy-accent-soft: #355c9a1a;
+  --primitive-legacy-code-surface: #111827;
+  --primitive-legacy-success: #216349;
+  --primitive-legacy-success-soft: #2f8f681f;
+  --primitive-legacy-warning: #775314;
+  --primitive-legacy-warning-soft: #aa7a221f;
+  --primitive-legacy-danger: #9b3b3b;
+  --primitive-legacy-danger-soft: #c45b5b1f;
+  --primitive-legacy-sky-top: #ffffff;
+  --primitive-legacy-sky-base: #edf3fb;
+  --primitive-legacy-sky-glow: #adcaff29;
+  --primitive-legacy-sky-star: #5f70894c;
+  --primitive-legacy-sky-star-soft: #8898af33;
+  --primitive-legacy-meteor-core: #ffffff00;
+  --primitive-legacy-meteor-tail: #ffffff00;
+  --primitive-legacy-meteor-glow: #ffffff00;
+}
+
