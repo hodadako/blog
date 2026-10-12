@@ -67,7 +67,9 @@ function parseInline(source: string, lineNumber: number, section: string | undef
     if (pendingChord) flush(true);
     else if (text) flush();
 
-    if (raw.startsWith("*")) {
+    if (raw === "N.C.") {
+      pendingChord = { kind: "no-chord", raw, location: range(lineNumber, cursor + 1, close + 2) };
+    } else if (raw.startsWith("*")) {
       pendingChord = { kind: "annotation", raw: raw.slice(1), location: range(lineNumber, cursor + 1, close + 2) };
     } else {
       const chord = parseChordName(raw);

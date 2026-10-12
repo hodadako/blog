@@ -45,4 +45,16 @@ describe("Guitar pitch and capo calculations", () => {
     expect(() => deriveSongView(document, { transpose: 13, capo: 0 })).toThrow(RangeError);
     expect(() => deriveSongView(document, { transpose: 0, capo: 13 })).toThrow(RangeError);
   });
+
+  it("keeps rests and whitespace unchanged when transposing slash chords with a capo", () => {
+    const original = parseChordPro("{title: Sample}\n{artist: Writer}\n{key: D}\n[N.C.]前  [D/F#]한글 뒤");
+    const derived = deriveSongView(original, {transpose: 2, capo: 1});
+    const source = original.lines.find((line) => line.kind === "lyrics");
+    const target = derived.document.lines.find((line) => line.kind === "lyrics");
+    if (source?.kind !== "lyrics" || target?.kind !== "lyrics") throw new Error("Missing lyric rows");
+    expect(target.segments[0]).toEqual(source.segments[0]);
+    expect(target.segments[1].chord?.raw).toBe("Eb/G");
+    expect(target.segments.map(({text}) => text)).toEqual(source.segments.map(({text}) => text));
+    expect(target.segments[1].chord?.location).toEqual(source.segments[1].chord?.location);
+  });
 });

@@ -1391,6 +1391,485 @@
           "fontWeight": "normal"
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "IjHo1",
+      "x": 0,
+      "y": 2712,
+      "name": "05 Guitar · Editorial Songbook",
+      "theme": {
+        "mode": "light",
+        "device": "desktop"
+      },
+      "width": 900,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 32,
+      "children": [
+        {
+          "type": "frame",
+          "id": "l89K6m",
+          "name": "Guitar / Header",
+          "reusable": true,
+          "width": 832,
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 24,
+          "padding": [
+            24,
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "UuQHU",
+              "name": "Identity",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "GUmRn",
+                  "name": "Shared blog wordmark",
+                  "fill": "$--color-text",
+                  "content": "호다코",
+                  "lineHeight": 0.98,
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-brand",
+                  "fontWeight": "$--brand-weight",
+                  "letterSpacing": "$--tracking-brand"
+                },
+                {
+                  "type": "text",
+                  "id": "NLIl4",
+                  "name": "Guitar section",
+                  "fill": "$--color-text-muted",
+                  "content": "/ guitar",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "VySAL",
+              "name": "Theme preference",
+              "fill": "$--color-text-muted",
+              "content": "밝게 ⌄",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "$--font-default-weight"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AI7qw",
+          "name": "Guitar / Search",
+          "reusable": true,
+          "width": 704,
+          "stroke": "$--field-border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "padding": [
+            12,
+            0
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "SHUvh",
+              "name": "Search placeholder",
+              "fill": "$--color-text-muted",
+              "content": "Search songs…",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-body",
+              "fontWeight": "$--font-default-weight"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "yySqV",
+          "name": "Guitar / SongRow",
+          "reusable": true,
+          "width": 704,
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "gap": 24,
+          "padding": [
+            "$--space-5",
+            0
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "HIwLB",
+              "name": "Song information",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bhLax",
+                  "name": "Song title",
+                  "fill": "$--color-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "しわあわせ",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-card-title",
+                  "fontWeight": "$--heading-weight"
+                },
+                {
+                  "type": "text",
+                  "id": "fzkAG",
+                  "name": "Artist",
+                  "fill": "$--color-text-muted",
+                  "content": "Vaundy",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-body",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "LrzGI",
+              "name": "Row affordance",
+              "fill": "$--color-text-muted",
+              "content": "→",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-body",
+              "fontWeight": "$--font-default-weight"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "koSj9",
+          "name": "Guitar / SongSheet",
+          "context": "52rem maximum; original lyric rows preserve source character anchors and scroll internally on narrow viewports. Runtime font size 14–28px.",
+          "reusable": true,
+          "width": 832,
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            24,
+            0
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "u309nq",
+              "name": "Source section",
+              "fill": "$--color-text-muted",
+              "content": "Intro",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "$--font-default-weight"
+            },
+            {
+              "type": "text",
+              "id": "zmoel",
+              "name": "Source chord row",
+              "fill": "$--color-accent",
+              "content": "F/A    Bb    F/C    F",
+              "fontFamily": "$--font-primary",
+              "fontSize": 18,
+              "fontWeight": "$--font-default-weight"
+            },
+            {
+              "type": "text",
+              "id": "GsYu2",
+              "name": "Source section verse",
+              "fill": "$--color-text-muted",
+              "content": "Part 1",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "$--font-default-weight"
+            },
+            {
+              "type": "frame",
+              "id": "o3IAj",
+              "name": "Anchored chord lyric row",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "O6gdAl",
+                  "name": "Segment F/A",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "MAug5",
+                      "name": "Chord F/A",
+                      "fill": "$--color-accent",
+                      "content": "F/A",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 18,
+                      "fontWeight": "$--font-default-weight"
+                    },
+                    {
+                      "type": "text",
+                      "id": "mX5va",
+                      "name": "Source lyric F/A",
+                      "fill": "$--color-text",
+                      "content": "僕の時価総額400",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 18,
+                      "fontWeight": "$--font-default-weight"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "u9sd3L",
+                  "name": "Segment Bb",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PrWYO",
+                      "name": "Chord Bb",
+                      "fill": "$--color-accent",
+                      "content": "Bb",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 18,
+                      "fontWeight": "$--font-default-weight"
+                    },
+                    {
+                      "type": "text",
+                      "id": "oTFHM",
+                      "name": "Source lyric Bb",
+                      "fill": "$--color-text",
+                      "content": "円の心臓と",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": 18,
+                      "fontWeight": "$--font-default-weight"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jhOA4",
+          "name": "Guitar / PlaybackToolbar",
+          "context": "Single toolbar: quiet desktop controls, mobile bottom fixed with safe-area and document-end clearance. Options and available chord diagrams use native dialog, Escape and focus restoration.",
+          "reusable": true,
+          "width": 360,
+          "fill": "$--color-bg",
+          "stroke": "$--color-border",
+          "strokeWidth": {
+            "top": 1
+          },
+          "gap": 8,
+          "padding": 8,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Asf9g",
+              "name": "Playback −",
+              "width": 44,
+              "height": 44,
+              "cornerRadius": "$--radius-sm",
+              "stroke": "$--field-border",
+              "strokeWidth": 1,
+              "padding": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FYDiU",
+                  "name": "Label −",
+                  "fill": "$--color-text",
+                  "content": "−",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--button-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lsBwK",
+              "name": "Playback 0",
+              "width": 44,
+              "height": 44,
+              "cornerRadius": "$--radius-sm",
+              "stroke": "$--field-border",
+              "strokeWidth": 1,
+              "padding": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "g3qDuw",
+                  "name": "Label 0",
+                  "fill": "$--color-text",
+                  "content": "0",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--button-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WhcRV",
+              "name": "Playback ＋",
+              "width": 44,
+              "height": 44,
+              "cornerRadius": "$--radius-sm",
+              "stroke": "$--field-border",
+              "strokeWidth": 1,
+              "padding": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YvNiS",
+                  "name": "Label ＋",
+                  "fill": "$--color-text",
+                  "content": "＋",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--button-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "x0Ac1Z",
+              "name": "Playback 스크롤 시작",
+              "height": 44,
+              "cornerRadius": "$--radius-sm",
+              "stroke": "$--field-border",
+              "strokeWidth": 1,
+              "padding": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Tkyit",
+                  "name": "Label 스크롤 시작",
+                  "fill": "$--color-text",
+                  "content": "스크롤 시작",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--button-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "mFEbB",
+              "name": "Playback 옵션",
+              "width": 44,
+              "height": 44,
+              "cornerRadius": "$--radius-sm",
+              "stroke": "$--field-border",
+              "strokeWidth": 1,
+              "padding": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "z9cTy",
+                  "name": "Label 옵션",
+                  "fill": "$--color-text",
+                  "content": "옵션",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--button-font-size",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "mDcPO",
+      "x": 980,
+      "y": 2712,
+      "name": "06 Guitar · Editorial Songbook · Dark",
+      "theme": {
+        "mode": "dark",
+        "device": "desktop"
+      },
+      "width": 900,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 32,
+      "children": [
+        {
+          "id": "CgmVJ",
+          "type": "ref",
+          "ref": "l89K6m",
+          "name": "Guitar / Header · Dark",
+          "descendants": {
+            "VySAL": {
+              "content": "어둡게 ⌄"
+            }
+          }
+        },
+        {
+          "id": "hcIHP",
+          "type": "ref",
+          "ref": "AI7qw",
+          "name": "Guitar / Search · Dark"
+        },
+        {
+          "id": "mHOUM",
+          "type": "ref",
+          "ref": "yySqV",
+          "name": "Guitar / SongRow · Dark"
+        },
+        {
+          "id": "WF0l7",
+          "type": "ref",
+          "ref": "koSj9",
+          "name": "Guitar / SongSheet · Dark"
+        },
+        {
+          "id": "tvuRM",
+          "type": "ref",
+          "ref": "jhOA4",
+          "name": "Guitar / PlaybackToolbar · Dark"
+        }
+      ]
     }
   ],
   "themes": {

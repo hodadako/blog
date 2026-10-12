@@ -13,8 +13,8 @@ export default function GuitarSongsPage() {
   const songs = getGuitarSongSummaries();
 
   return (
-    <section className={styles.intro}>
-      <h1>곡 목록</h1>
+    <section className={styles.index}>
+      <h1 className="page-title">Songs</h1>
       <SongSearch emptyMessage="아직 등록된 곡이 없습니다." songs={songs} />
     </section>
   );

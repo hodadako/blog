@@ -6,6 +6,8 @@ import styles from "./guitar.module.css";
 import { guitarHref } from "@/lib/guitar-links";
 import { ThemeProvider } from "@/components/theme-context";
 import { ThemePreferenceSelect } from "@/features/guitar/components/theme-preference";
+import {SiteFooter} from "@/components/site-footer";
+import {getDictionary} from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://guitar.hodako.dev"),
@@ -19,13 +21,18 @@ export default function GuitarLayout({ children }: { children: ReactNode }) {
     <ThemeProvider>
       <div className={styles.shell}>
         <header className={styles.header}>
-          <Link className={styles.brand} href={guitarHref("/")}>Hodako Guitar</Link>
-          <nav aria-label="주요 탐색" className={styles.nav}>
-            <Link href={guitarHref("/songs")}>곡 목록</Link>
-          </nav>
+          <div className={styles.identity}>
+            <a className="brand-lockup" href="https://www.hodako.dev/ko/blog">
+              <strong className="brand-lockup__title">{getDictionary("ko").siteName}</strong>
+            </a>
+            <nav aria-label="주요 탐색">
+              <Link className={styles.sectionLink} href={guitarHref("/songs")}><span aria-hidden="true">/ </span>guitar</Link>
+            </nav>
+          </div>
           <ThemePreferenceSelect />
         </header>
         <main className={styles.main}>{children}</main>
+        <div className={styles.footer}><SiteFooter locale="ko" postsHref={guitarHref("/songs")} postsLabel="Songs" /></div>
       </div>
     </ThemeProvider>
     </SiteDocument>

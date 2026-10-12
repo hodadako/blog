@@ -18,6 +18,10 @@
 | Article Header `wNfKB` | Blog slug page의 article-header | 제목 길이별 font clamp는 코드. 원장의 대표 예시는 medium 제목 |
 | Article Body `QPR6q` | `lib/markdown.tsx` MarkdownArticle | 실제 Markdown과 읽기 폭. 페이지 시안은 대표 발췌 |
 | CodeBlock `N1tZX` | `code-block.tsx`, `code-block.module.css` | 캔버스 정적 코드 예시. 실제 Shiki syntax 색상, 복사 및 language는 구현 사양 |
+| Guitar Header `l89K6m` | `app/guitar/layout.tsx`, `theme-preference.tsx`, guitar.module.css | 기존 wordmark와 공통 ThemeProvider. Guitar의 간결한 섹션 표시·System/Light/Dark 선택 |
+| Guitar Search `AI7qw` / SongRow `yySqV` | `features/guitar/components/song-search.tsx` | 검색 하나와 전체 행 링크. 44rem 목록 폭, 검색 결과·초기화는 runtime |
+| Guitar SongSheet `koSj9` | `features/guitar/components/song-reader.tsx` | 원문 행·코드 시작 문자·공백 보존. 52rem 상한, 긴 행 내부 스크롤 및 14–28px 사용자 설정은 기술 사양 |
+| Guitar PlaybackToolbar `jhOA4` | 같은 SongReader | 조옮김·스크롤·옵션. 모바일 safe-area와 고정 툴바, 키보드/포커스/팝업은 실제 브라우저 검증 |
 
 ## 구성 방식
 

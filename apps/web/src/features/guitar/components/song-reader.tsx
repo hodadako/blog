@@ -15,6 +15,7 @@ interface SongReaderProps {
   sourceCapo: number;
   slug: string;
   document: ChordProDocument;
+  backHref?: string;
 }
 
 function Fretboard({ voicing, chordName }: { voicing: ChordVoicing; chordName: string }) {
@@ -56,29 +57,32 @@ function Fretboard({ voicing, chordName }: { voicing: ChordVoicing; chordName: s
   );
 }
 
-function ChordControl({ chord, onOpen }: { chord: ParsedChord; onOpen: (chord: ParsedChord, voicing: ChordVoicing | undefined, trigger: HTMLButtonElement) => void }) {
+type OpenChord = (chord: ParsedChord, voicing: ChordVoicing, trigger: HTMLButtonElement) => void;
+
+function ChordControl({ chord, onOpen }: { chord: ParsedChord; onOpen: OpenChord }) {
   const voicing = getChordVoicing(chord);
-  const label = voicing ? `${chord.raw} 운지법 보기` : `${chord.raw}, 등록된 운지법 없음`;
+  if (!voicing) return <span className={styles.chordText}>{chord.raw}</span>;
   return (
-    <button aria-label={label} className={styles.chordButton} onClick={(event) => onOpen(chord, voicing, event.currentTarget)} type="button">
+    <button aria-label={`${chord.raw} 운지법 보기`} className={styles.chordButton} onClick={(event) => onOpen(chord, voicing, event.currentTarget)} type="button">
       {chord.raw}
     </button>
   );
 }
 
-function LyricRow({ line, onOpen }: { line: LyricLine; onOpen: (chord: ParsedChord, voicing: ChordVoicing | undefined, trigger: HTMLButtonElement) => void }) {
+function LyricRow({ line, onOpen }: { line: LyricLine; onOpen: OpenChord }) {
   return (
-    <p className={styles.lyricLine}>
+    <p className={styles.lyricLine} data-has-lyrics={line.segments.some(({text}) => text.trim().length > 0)} data-source-line={line.location.line}>
       {line.segments.map((segment, index) => {
         let chordContent: ReactNode = null;
         if (segment.chord?.kind === "chord") chordContent = <ChordControl chord={segment.chord} onOpen={onOpen} />;
         else if (segment.chord?.kind === "unsupported-chord") chordContent = <span aria-label={`${segment.chord.raw}, 미지원 코드`} className={styles.chordFallback}>{segment.chord.raw}</span>;
         else if (segment.chord?.kind === "annotation") chordContent = <span className={styles.chordFallback}>({segment.chord.raw})</span>;
+        else if (segment.chord?.kind === "no-chord") chordContent = <span aria-label="No Chord, 연주 쉼" className={styles.chordFallback}>{segment.chord.raw}</span>;
 
         return (
-          <span className={styles.lyricSegment} key={`segment-${index}`}>
+          <span className={styles.lyricSegment} data-chord-kind={segment.chord?.kind} data-source-column={segment.chord?.location.column} key={`segment-${index}`}>
             <span className={styles.chordCell}>{chordContent}</span>
-            <span>{segment.text || "\u00a0"}</span>
+            <span className={styles.lyricText}>{segment.text}</span>
           </span>
         );
       })}
@@ -86,7 +90,7 @@ function LyricRow({ line, onOpen }: { line: LyricLine; onOpen: (chord: ParsedCho
   );
 }
 
-export function SongReader({ title, artist, keyName, sourceCapo, slug, document }: SongReaderProps) {
+export function SongReader({ title, artist, keyName, sourceCapo, slug, document, backHref }: SongReaderProps) {
   const preferences = useGuitarPreferences(slug, sourceCapo);
   const { transpose, capo, fontSize, scrollSpeed, ready } = preferences;
   const scroll = useAutoScroll(scrollSpeed, ready);
@@ -94,9 +98,11 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document 
   const [selectedVoicing, setSelectedVoicing] = useState<ChordVoicing | undefined>();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionsRef = useRef<HTMLDialogElement>(null);
+  const optionsTriggerRef = useRef<HTMLButtonElement>(null);
   const view = useMemo(() => deriveSongView(document, { transpose, capo }), [document, transpose, capo]);
 
-  const openChord = (chord: ParsedChord, voicing: ChordVoicing | undefined, trigger: HTMLButtonElement): void => {
+  const openChord: OpenChord = (chord, voicing, trigger) => {
     scroll.pause();
     setSelectedChord(chord);
     setSelectedVoicing(voicing);
@@ -111,24 +117,38 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document 
   };
 
   let previousSection: string | undefined;
-  const warningDiagnostics = document.diagnostics.filter(({ severity }) => severity === "warning");
+  let bodyStarted = false;
+  const warnings = [...new Set(document.diagnostics
+    .filter(({severity, code}) => severity === "warning" && (code === "unsupported-chord" || code === "unsupported-directive"))
+    .map(({message}) => message))];
 
   return (
-    <article>
-      <header>
-        <p>{artist} · 코드 악보</p>
-        <h1>{title}</h1>
+    <article className={styles.reader}>
+      <header className={styles.songHeader}>
+        {backHref && <a className={styles.backLink} href={backHref}>← Songs</a>}
+        <h1 className={`article-title ${styles.songHeading}`}>{title}</h1>
+        <p className={styles.artist}>{artist}</p>
+        <p className={styles.sourceMeta}>기본 운지 조성 {keyName} · 원본 카포 {sourceCapo}프렛</p>
       </header>
 
       <section aria-label="악보 조작" className={styles.toolbar}>
-        <div className={styles.controlGroup}>
-          <span>조옮김</span>
-          <div className={styles.buttonRow}>
+          <div aria-label="조옮김" className={styles.buttonRow}>
             <button aria-label="한 음 낮추기" disabled={!ready || transpose <= -12} onClick={() => preferences.setTranspose(transpose - 1)} type="button">−</button>
-            <button aria-label="조옮김 원복" disabled={!ready || transpose === 0} onClick={() => preferences.setTranspose(0)} type="button">원복</button>
+            <button aria-label={`조옮김 원복 (현재 ${transpose > 0 ? `+${transpose}` : transpose})`} disabled={!ready || transpose === 0} onClick={() => preferences.setTranspose(0)} type="button">{transpose > 0 ? `+${transpose}` : transpose}</button>
             <button aria-label="한 음 높이기" disabled={!ready || transpose >= 12} onClick={() => preferences.setTranspose(transpose + 1)} type="button">＋</button>
           </div>
+        <button aria-label={scroll.running ? "자동 스크롤 일시정지" : "자동 스크롤 시작 / 재개"} aria-pressed={scroll.running} className={styles.readerButton} disabled={!ready} onClick={scroll.toggle} type="button">
+          {scroll.running ? "스크롤 정지" : "스크롤 시작"}
+        </button>
+        <button aria-haspopup="dialog" className={styles.readerButton} ref={optionsTriggerRef} onClick={() => {scroll.pause(); optionsRef.current?.showModal();}} type="button">옵션</button>
+      </section>
+
+      <dialog aria-labelledby="guitar-options-title" className={styles.dialog} ref={optionsRef} onClose={() => optionsTriggerRef.current?.focus({preventScroll: true})}>
+        <div className={styles.dialogHeader}>
+          <h2 id="guitar-options-title">악보 설정</h2>
+          <button aria-label="악보 설정 닫기" className={styles.readerButton} onClick={() => optionsRef.current?.close()} type="button">닫기</button>
         </div>
+        <div className={styles.optionsFields}>
         <label className={styles.controlGroup}>
           <span>카포 위치</span>
           <select aria-label="카포 위치" disabled={!ready} onChange={(event) => preferences.setCapo(Number(event.currentTarget.value))} value={capo}>
@@ -149,25 +169,18 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document 
             {Array.from({ length: 10 }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
           </select>
         </label>
-        <button aria-pressed={scroll.running} className={styles.readerButton} disabled={!ready} onClick={scroll.toggle} type="button">
-          {scroll.running ? "자동 스크롤 일시정지" : "자동 스크롤 시작 / 재개"}
-        </button>
         <button className={styles.readerButton} disabled={!ready} onClick={preferences.resetSong} type="button">곡 설정 초기화</button>
         <p aria-live="polite" className={styles.pitchSummary}>
           운지 조성 {view.displayKey ?? keyName} · 실음 조성 {view.soundingKey ?? keyName} · 원본 카포 {sourceCapo}프렛 · 조옮김 {transpose > 0 ? `+${transpose}` : transpose} · 자동 스크롤 {scrollSpeed * 5}px/s
         </p>
-      </section>
+        </div>
+      </dialog>
 
-      {warningDiagnostics.length > 0 && (
-        <aside className={styles.warning} role="status">
-          일부 표기를 그대로 표시합니다: {warningDiagnostics.map(({ message }) => message).join(" · ")}
-        </aside>
-      )}
-
-      <section aria-label={`${title} 코드 악보`} className={styles.songSheet} style={{ "--song-font-size": `${fontSize}px` } as CSSProperties}>
+      <section aria-label={`${title} 코드 악보, 긴 행은 가로로 스크롤할 수 있습니다`} tabIndex={0} className={styles.songSheet} style={{ "--song-font-size": `${fontSize}px` } as CSSProperties}>
         {view.document.lines.map((line, index) => {
           if (line.kind === "source-comment") return null;
-          if (line.kind === "blank") return <div aria-hidden="true" className={styles.blankLine} key={`blank-${index}`} />;
+          if (line.kind === "blank") return bodyStarted ? <div aria-hidden="true" className={styles.blankLine} key={`blank-${index}`} /> : null;
+          bodyStarted = true;
           if (line.kind === "performance-comment") return <p className={styles.performanceComment} key={`comment-${index}`}>{line.text}</p>;
           if (line.kind === "unsupported-directive") return <p className={styles.unsupportedLine} key={`unsupported-${index}`}>미지원 지시어: {line.raw}</p>;
           const heading = line.section && line.section !== previousSection ? line.section : undefined;
@@ -181,6 +194,8 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document 
         })}
       </section>
 
+      {warnings.length > 0 && <details className={styles.warning}><summary>일부 원문 표기 안내</summary><ul>{warnings.map((message) => <li key={message}>{message}</li>)}</ul></details>}
+
       <dialog
         aria-labelledby="guitar-chord-dialog-title"
         className={styles.dialog}
@@ -191,10 +206,8 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document 
           <h2 id="guitar-chord-dialog-title">{selectedChord?.raw ?? "코드 운지법"}</h2>
           <button aria-label="운지법 닫기" className={styles.readerButton} onClick={() => dialogRef.current?.close()} type="button">닫기</button>
         </div>
-        {selectedVoicing ? (
+        {selectedVoicing && (
           <Fretboard chordName={selectedChord?.raw ?? "코드"} voicing={selectedVoicing} />
-        ) : (
-          <p className={styles.dialogCopy}>등록된 운지법이 없습니다. 코드 표기는 악보에 그대로 표시됩니다.</p>
         )}
         {selectedVoicing && <p className={styles.dialogCopy}>6번 현에서 1번 현 순서입니다. 카포는 새 너트로 보고 표시한 프렛부터 셉니다.</p>}
       </dialog>

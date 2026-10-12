@@ -49,7 +49,14 @@ export interface InlineAnnotation {
   location: SourceRange;
 }
 
-export type ChordToken = ParsedChord | UnsupportedChord | InlineAnnotation;
+/** A deliberate rest; it has no pitch and must never be transposed. */
+export interface NoChord {
+  kind: "no-chord";
+  raw: string;
+  location: SourceRange;
+}
+
+export type ChordToken = ParsedChord | UnsupportedChord | InlineAnnotation | NoChord;
 
 export interface LyricSegment {
   text: string;

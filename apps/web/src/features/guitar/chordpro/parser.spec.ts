@@ -34,6 +34,16 @@ describe("parseChordPro", () => {
     expect(document.diagnostics.filter(({ severity }) => severity === "warning")).toHaveLength(2);
   });
 
+  it("preserves No Chord rests and their character anchors without unsupported warnings", () => {
+    const document = parseChordPro(`${base}[N.C.]쉼  [D/F#]다음[N.C.]尾`);
+    const line = document.lines.find((item) => item.kind === "lyrics");
+    if (line?.kind !== "lyrics") throw new Error("Missing lyric row");
+    expect(line.segments.map(({text}) => text).join("")).toBe("쉼  다음尾");
+    expect(line.segments.map(({chord}) => chord?.kind)).toEqual(["no-chord", "chord", "no-chord"]);
+    expect(line.segments[0].chord?.location.column).toBe(1);
+    expect(document.diagnostics).toEqual([]);
+  });
+
   it("detects unclosed and nested sections", () => {
     const document = parseChordPro(`${base}{sov}\n{soc}\ntext`);
     expect(document.diagnostics.map(({ code }) => code)).toEqual(expect.arrayContaining([

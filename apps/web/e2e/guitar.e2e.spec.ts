@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+const blogOrigin = `http://blog.localhost:${new URL(process.env.PLAYWRIGHT_BASE_URL ?? "http://guitar.localhost:4317").port}`;
+
 test("serves the song and initial chord lyrics in static HTML", async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 812 } });
   const page = await context.newPage();
@@ -39,12 +41,14 @@ test("transposes and changes capo while keeping the original song model", async 
 
   await page.getByRole("button", { name: "한 음 높이기" }).click();
   await expect(status).toContainText("조옮김 +1");
+  await page.getByRole("button", {name: "옵션", exact: true}).click();
   await page.getByLabel("카포 위치").selectOption("2");
   await expect(status).toContainText("실음 조성 Ab");
 
   await page.reload();
   const restoredStatus = page.locator("[aria-live='polite']");
   await expect(restoredStatus).toContainText("조옮김 +1");
+  await page.getByRole("button", {name: "옵션", exact: true}).click();
   await expect(page.getByLabel("카포 위치")).toHaveValue("2");
 
   await page.getByRole("button", { name: "곡 설정 초기화" }).click();
@@ -55,7 +59,9 @@ test("transposes and changes capo while keeping the original song model", async 
 test("pauses time-based scrolling on manual input and stays within mobile width", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto("/songs/hodako--quiet-walk");
+  await page.getByRole("button", {name: "옵션", exact: true}).click();
   await page.getByLabel("자동 스크롤 속도").selectOption("10");
+  await page.keyboard.press("Escape");
   const scrollButton = page.getByRole("button", { name: "자동 스크롤 시작 / 재개" });
   await scrollButton.click();
   await expect(page.getByRole("button", { name: "자동 스크롤 일시정지" })).toBeVisible();
@@ -81,6 +87,8 @@ test("returns 404 for Guitar locale prefixes and internal route paths", async ({
 
 test("searches the catalog on the Guitar home and songs index", async ({ page }) => {
   await page.goto("/");
+  await expect(page).toHaveURL(/\/songs$/);
+  await expect(page.getByRole("heading", {name: "Songs", exact: true})).toBeVisible();
   await page.getByLabel("곡 검색").fill("저녁");
   await expect(page.getByRole("link", { name: "저녁 산책" })).toBeVisible();
 
@@ -93,16 +101,17 @@ test("serves host-specific robots and sitemaps", async ({ request }) => {
   const guitarSitemap = await request.get("/sitemap.xml");
   expect(guitarSitemap.status()).toBe(200);
   const guitarXml = await guitarSitemap.text();
-  expect(guitarXml).toContain("https://guitar.hodako.dev/");
+  expect(guitarXml).not.toContain("<loc>https://guitar.hodako.dev</loc>");
+  expect(guitarXml).not.toContain("<loc>https://guitar.hodako.dev/</loc>");
   expect(guitarXml).toContain("https://guitar.hodako.dev/songs");
   expect(guitarXml).toContain("https://guitar.hodako.dev/songs/hodako--quiet-walk");
 
-  const blogSitemap = await request.get("http://blog.localhost:4317/sitemap.xml");
+  const blogSitemap = await request.get(`${blogOrigin}/sitemap.xml`);
   expect(blogSitemap.status()).toBe(200);
   expect(await blogSitemap.text()).not.toContain("guitar.hodako.dev");
   const guitarRobots = await request.get("/robots.txt");
   expect(await guitarRobots.text()).toContain("guitar.hodako.dev/sitemap.xml");
-  const blogRobots = await request.get("http://blog.localhost:4317/robots.txt");
+  const blogRobots = await request.get(`${blogOrigin}/robots.txt`);
   expect(await blogRobots.text()).toContain("/ko/admin");
 });
 
@@ -137,13 +146,13 @@ test("follows OS theme changes only while the System preference is selected", as
 });
 
 test("preserves the blog locale redirect on a non-Guitar host", async ({ page }) => {
-  const response = await page.goto("http://blog.localhost:4317/");
+  const response = await page.goto(`${blogOrigin}/`);
   expect(response?.status()).toBe(200);
   await expect(page).toHaveURL(/\/(ko|en)\/blog$/);
 });
 
 test("keeps blog locale pages, theme preference, Records, and admin login available", async ({ page }) => {
-  await page.goto("http://blog.localhost:4317/ko/blog");
+  await page.goto(`${blogOrigin}/ko/blog`);
   await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
   const theme = page.locator("html");
   const toggle = page.getByRole("button", { name: "별 테마로 전환" });
@@ -158,31 +167,31 @@ test("keeps blog locale pages, theme preference, Records, and admin login availa
 
   await page.getByRole("button", { name: /언어/ }).click();
   await page.getByRole("menuitemradio", { name: "English" }).click();
-  await expect(page).toHaveURL("http://blog.localhost:4317/en/blog");
-  expect(await page.context().cookies("http://blog.localhost:4317")).toContainEqual(expect.objectContaining({ name: "site_locale", value: "en" }));
+  await expect(page).toHaveURL(`${blogOrigin}/en/blog`);
+  expect(await page.context().cookies(blogOrigin)).toContainEqual(expect.objectContaining({ name: "site_locale", value: "en" }));
   await expect(page.locator("main")).toBeVisible();
 
-  await page.goto("http://blog.localhost:4317/en/blog");
-  await expect(page).toHaveURL("http://blog.localhost:4317/en/blog");
+  await page.goto(`${blogOrigin}/en/blog`);
+  await expect(page).toHaveURL(`${blogOrigin}/en/blog`);
   await expect(page.locator("main")).toBeVisible();
-  await page.goto("http://blog.localhost:4317/ko/blog/gave-up-bean-validation");
+  await page.goto(`${blogOrigin}/ko/blog/gave-up-bean-validation`);
   await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "댓글", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "댓글 남기기" })).toBeVisible();
 
-  const postIcon = await page.request.get("http://blog.localhost:4317/posts/gave-up-bean-validation/icon.png");
+  const postIcon = await page.request.get(`${blogOrigin}/posts/gave-up-bean-validation/icon.png`);
   expect(postIcon.status()).toBe(200);
   expect(postIcon.headers()["content-type"]).toContain("image/png");
 
-  await page.goto("http://blog.localhost:4317/ko/records");
+  await page.goto(`${blogOrigin}/ko/records`);
   await expect(page.locator("main")).toBeVisible();
-  await page.goto("http://blog.localhost:4317/ko/records/album/the-book-for");
+  await page.goto(`${blogOrigin}/ko/records/album/the-book-for`);
   await expect(page.getByRole("heading", { name: "THE BOOK for," })).toBeVisible();
 
-  const legacyRecords = await page.request.get("http://blog.localhost:4317/ko/inspirations", { maxRedirects: 0 });
+  const legacyRecords = await page.request.get(`${blogOrigin}/ko/inspirations`, { maxRedirects: 0 });
   expect(legacyRecords.status()).toBe(308);
   expect(legacyRecords.headers().location).toContain("/ko/records");
 
-  await page.goto("http://blog.localhost:4317/ko/admin/login");
+  await page.goto(`${blogOrigin}/ko/admin/login`);
   await expect(page.getByRole("heading", { name: "관리자 로그인" })).toBeVisible();
 });

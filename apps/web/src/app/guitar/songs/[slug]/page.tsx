@@ -35,5 +35,5 @@ export default async function GuitarSongPage({ params }: GuitarSongPageProps) {
   const song = getGuitarSong(slug);
   if (!song) notFound();
 
-  return <SongReader artist={song.artist} document={song.document} keyName={song.key} slug={song.slug} sourceCapo={song.document.metadata.capo} title={song.title} />;
+  return <SongReader artist={song.artist} backHref="/songs" document={song.document} keyName={song.key} slug={song.slug} sourceCapo={song.document.metadata.capo} title={song.title} />;
 }
