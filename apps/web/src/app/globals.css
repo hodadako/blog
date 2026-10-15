@@ -313,8 +313,7 @@ img {
   opacity: var(--button-disabled-opacity);
 }
 
-.font-toggle__icon,
-.theme-toggle__icon {
+.font-toggle__icon {
   color: var(--color-accent);
 }
 

@@ -18,7 +18,6 @@ export function ThemeToggle({locale = "en"}: {locale?: AppLocale}) {
       title={switchLabel}
       type="button"
     >
-      <span aria-hidden="true" className="theme-toggle__icon">{isDark ? "☄" : "❄"}</span>
       <span className="theme-toggle__label">{locale === "ko" ? isDark ? "별" : "눈" : themeLabel}</span>
     </button>
   );

@@ -716,14 +716,29 @@
                   "fontWeight": "normal"
                 },
                 {
-                  "type": "text",
-                  "id": "J4X2a",
-                  "name": "❄ 눈",
-                  "fill": "$--color-text-muted",
-                  "content": "$--theme-label",
-                  "fontFamily": "$--font-primary",
-                  "fontSize": "$--text-caption",
-                  "fontWeight": "normal"
+                  "type": "frame",
+                  "id": "X7NQm",
+                  "name": "Current theme control",
+                  "height": 36,
+                  "fill": "$--color-accent-soft",
+                  "cornerRadius": "$--radius-md",
+                  "stroke": "$--color-border",
+                  "strokeWidth": 1,
+                  "padding": "$--space-2",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "J4X2a",
+                      "name": "Theme label",
+                      "context": "Current theme label: 눈 / 별; source theme determines label. String variable is materialized for pen renderer.",
+                      "fill": "$--color-text",
+                      "content": "눈",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": "$--text-caption",
+                      "fontWeight": "normal"
+                    }
+                  ]
                 },
                 {
                   "type": "text",
@@ -1458,14 +1473,28 @@
               ]
             },
             {
-              "type": "text",
-              "id": "VySAL",
-              "name": "Theme preference",
-              "fill": "$--color-text-muted",
-              "content": "밝게 ⌄",
-              "fontFamily": "$--font-primary",
-              "fontSize": "$--text-caption",
-              "fontWeight": "$--font-default-weight"
+              "type": "frame",
+              "id": "vOUtV",
+              "name": "Current theme preference",
+              "height": 44,
+              "fill": "$--color-accent-soft",
+              "cornerRadius": "$--radius-md",
+              "stroke": "$--color-border",
+              "strokeWidth": 1,
+              "padding": "$--space-2",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "VySAL",
+                  "name": "Theme preference",
+                  "fill": "$--color-text",
+                  "content": "밝게",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "$--font-default-weight"
+                }
+              ]
             }
           ]
         },
@@ -1549,7 +1578,10 @@
             {
               "type": "text",
               "id": "LrzGI",
+              "x": 689,
+              "y": 40,
               "name": "Row affordance",
+              "enabled": false,
               "fill": "$--color-text-muted",
               "content": "→",
               "fontFamily": "$--font-primary",
@@ -1841,7 +1873,8 @@
           "name": "Guitar / Header · Dark",
           "descendants": {
             "VySAL": {
-              "content": "어둡게 ⌄"
+              "content": "어둡게",
+              "fill": "$--color-text"
             }
           }
         },
@@ -2984,13 +3017,13 @@
       "type": "string",
       "value": [
         {
-          "value": "❄ 눈",
+          "value": "눈",
           "theme": {
             "mode": "light"
           }
         },
         {
-          "value": "☄ 별",
+          "value": "별",
           "theme": {
             "mode": "dark"
           }

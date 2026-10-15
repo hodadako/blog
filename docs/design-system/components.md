@@ -23,6 +23,8 @@
 | Guitar SongSheet `koSj9` | `features/guitar/components/song-reader.tsx` | 원문 행·코드 시작 문자·공백 보존. 52rem 상한, 긴 행 내부 스크롤 및 14–28px 사용자 설정은 기술 사양 |
 | Guitar PlaybackToolbar `jhOA4` | 같은 SongReader | 조옮김·스크롤·옵션. 모바일 safe-area와 고정 툴바, 키보드/포커스/팝업은 실제 브라우저 검증 |
 
+테마 제어는 glyph/caret 없이 현재 선택 배경과 텍스트만 표시한다. Guitar의 native select/키보드 선택은 유지하고 목록 행·Songs 복귀 링크의 장식 화살표만 제거했다. 원장 `J4X2a`의 눈/별 문구는 text renderer의 string-variable literal 표시를 피하려 대표 light 문구로 materialize했다. 실제 테마·locale별 문구는 코드가 결정한다. 390/1440px Light/Dark에서 Blog/Guitar 전환과 overflow를 확인했다.
+
 ## 구성 방식
 
 - Component마다 **Purpose → Anatomy → Variants → States → Usage → Implementation → Validation**을 유지한다. [ActionButton](components/action-button.md), [WheelPicker](components/wheel-picker.md)를 첫 상세 문서로 삼는다.

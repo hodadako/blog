@@ -8,7 +8,7 @@ export function ThemePreferenceSelect() {
   return (
     <label className={styles.themeControl}>
       <span>테마</span>
-      <select aria-label="테마" onChange={(event) => setPreference(event.currentTarget.value as ThemePreference)} value={preference}>
+      <select aria-label="테마" className="theme-toggle__trigger theme-toggle__trigger--current" onChange={(event) => setPreference(event.currentTarget.value as ThemePreference)} value={preference}>
         <option value="system">시스템 설정</option>
         <option value="light">밝게</option>
         <option value="dark">어둡게</option>

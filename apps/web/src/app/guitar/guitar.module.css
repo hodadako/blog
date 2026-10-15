@@ -57,12 +57,9 @@
 }
 
 .themeControl select {
+  appearance: none;
   min-height: calc(var(--space-6) + var(--space-3));
   padding: var(--space-2);
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  color: var(--color-text-muted);
   font: inherit;
 }
 
@@ -165,7 +162,7 @@
   font-size: var(--text-body);
 }
 
-.rowArrow, .empty {
+.empty {
   color: var(--color-text-muted);
 }
 

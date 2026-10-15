@@ -34,7 +34,6 @@ export function SongSearch({ songs, emptyMessage }: SongSearchProps) {
           <li key={song.slug}>
             <Link className={styles.songRow} href={guitarHref(("/songs/" + song.slug) as Parameters<typeof guitarHref>[0])}>
               <span className={styles.songInfo}><span className={styles.songTitle}>{song.title}</span><span className={styles.artist}>{song.artist}</span></span>
-              <span aria-hidden="true" className={styles.rowArrow}>→</span>
             </Link>
           </li>
         ))}</ul>
