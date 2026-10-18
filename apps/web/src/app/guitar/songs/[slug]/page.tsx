@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getGuitarSong, loadGuitarCatalog } from "@/features/guitar/server/catalog";
 import { SongReader } from "@/features/guitar/components/song-reader";
+import { AdPlacement } from "@/components/ads/ad-placement";
 
 export const dynamicParams = false;
 
@@ -35,5 +36,8 @@ export default async function GuitarSongPage({ params }: GuitarSongPageProps) {
   const song = getGuitarSong(slug);
   if (!song) notFound();
 
-  return <SongReader artist={song.artist} backHref="/songs" document={song.document} keyName={song.key} slug={song.slug} sourceCapo={song.document.metadata.capo} title={song.title} />;
+  return <>
+    <SongReader artist={song.artist} backHref="/songs" document={song.document} keyName={song.key} slug={song.slug} sourceCapo={song.document.metadata.capo} title={song.title} />
+    <AdPlacement site="guitar" placement="song-end" locale="ko" />
+  </>;
 }

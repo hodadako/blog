@@ -9,6 +9,7 @@ import {getBlogPostPageData} from "@/lib/server/blog";
 import { findCanonicalSlugByLocalizedSlug, findLocalizedSlug, getAllPostParams, getPostMetadataBySlug, getPublishedLocalizedSlugVariants } from "@/lib/content";
 import { listWorkerComments } from "@/lib/worker-client";
 import { redirect } from "next/navigation";
+import { AdPlacement } from "@/components/ads/ad-placement";
 
 interface BlogPostParams {
   locale: string;
@@ -167,6 +168,8 @@ export default async function BlogPostPage({params}: BlogPostProps) {
           <MarkdownArticle content={post.body} locale={locale} />
         </article>
       </section>
+
+      <AdPlacement site="blog" placement="article-end" locale={locale} />
 
       <Suspense
         fallback={

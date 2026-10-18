@@ -4,6 +4,7 @@ import Script from "next/script";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { env } from "@/lib/env";
+import { getAdPublisherId } from "@/lib/ads";
 
 const metadata: Metadata = {
   title: {
@@ -22,8 +23,12 @@ interface SiteDocumentProps {
 export {metadata};
 
 export function SiteDocument({children, locale}: SiteDocumentProps) {
+  const publisherId = getAdPublisherId();
   return (
     <html data-theme="light" lang={locale} style={{colorScheme: "light"}} suppressHydrationWarning>
+      <head>
+        {publisherId && <meta name="google-adsense-account" content={publisherId} />}
+      </head>
       <body>
         <Script id="motion-bootstrap" strategy="beforeInteractive">
           {`(function(){try{if(window.localStorage.getItem("site-motion")==="paused"){document.documentElement.dataset.motion="paused";}}catch(error){}})();`}

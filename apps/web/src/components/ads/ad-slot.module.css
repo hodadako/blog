@@ -1,0 +1,24 @@
+.slot {
+  width: 100%;
+  max-width: var(--measure-width);
+  min-width: 0;
+  margin: var(--space-7) auto;
+}
+
+.slot[data-ad-site="blog"] {
+  width: min(calc(100% - var(--space-5) * 2), var(--measure-width));
+  margin-block: 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-caption);
+}
+
+.creative {
+  min-height: 250px;
+  max-width: 100%;
+  overflow: hidden;
+}

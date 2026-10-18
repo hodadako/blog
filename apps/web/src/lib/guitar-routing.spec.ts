@@ -27,6 +27,7 @@ describe("Guitar host routing", () => {
   it("allows only framework and declared public SEO/assets to pass through", () => {
     expect(resolveGuitarPath("/sitemap.xml").kind).toBe("pass");
     expect(resolveGuitarPath("/robots.txt").kind).toBe("pass");
+    expect(resolveGuitarPath("/ads.txt").kind).toBe("pass");
     expect(resolveGuitarPath("/_next/static/app.js").kind).toBe("pass");
     expect(resolveGuitarPath("/fonts/ko/woff/Title_Bold.woff").kind).toBe("pass");
   });

@@ -1903,6 +1903,60 @@
           "name": "Guitar / PlaybackToolbar · Dark"
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "LpYsZ",
+      "x": 0,
+      "y": 3456,
+      "name": "07 Manual Ads · consented geometry",
+      "width": 800,
+      "height": 430,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 48,
+      "children": [
+        {
+          "type": "text",
+          "id": "yMAGe",
+          "name": "AdSlot technical context",
+          "fill": "$--color-text-muted",
+          "content": "Manual ad · shown only after consent and valid configuration",
+          "fontFamily": "$--font-primary",
+          "fontSize": "$--text-caption",
+          "fontWeight": "normal"
+        },
+        {
+          "type": "frame",
+          "id": "GrQ3A",
+          "name": "AdSlot / Manual",
+          "context": "44rem maximum; no DOM before valid config + consent. Rectangle creative reserves >=250px. No card or decorative surface.",
+          "reusable": true,
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": "$--space-2",
+          "children": [
+            {
+              "type": "text",
+              "id": "emBuE",
+              "name": "Advertisement label",
+              "fill": "$--color-text-muted",
+              "content": "광고",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "y3toxV",
+              "name": "External creative · minimum reserved height",
+              "width": "fill_container",
+              "height": 250
+            }
+          ]
+        }
+      ]
     }
   ],
   "themes": {

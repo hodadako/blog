@@ -22,6 +22,7 @@
 | Guitar Search `AI7qw` / SongRow `yySqV` | `features/guitar/components/song-search.tsx` | 검색 하나와 전체 행 링크. 44rem 목록 폭, 검색 결과·초기화는 runtime |
 | Guitar SongSheet `koSj9` | `features/guitar/components/song-reader.tsx` | 원문 행·코드 시작 문자·공백 보존. 52rem 상한, 긴 행 내부 스크롤 및 14–28px 사용자 설정은 기술 사양 |
 | Guitar PlaybackToolbar `jhOA4` | 같은 SongReader | 조옮김·스크롤·옵션. 모바일 safe-area와 고정 툴바, 키보드/포커스/팝업은 실제 브라우저 검증 |
+| Manual AdSlot `GrQ3A` | `components/ads/ad-slot.tsx`, ad-slot.module.css | 허용된 설정+동의 뒤 표시. 44rem, 작은 locale label, 외부 creative 최소 250px 예약. 기본 OFF/미동의는 DOM 없음. 원장 `LpYsZ`는 승인 후 geometry 설명이며 실제 광고 미리보기가 아님 |
 
 테마 제어는 glyph/caret 없이 현재 선택 배경과 텍스트만 표시한다. Guitar의 native select/키보드 선택은 유지하고 목록 행·Songs 복귀 링크의 장식 화살표만 제거했다. 원장 `J4X2a`의 눈/별 문구는 text renderer의 string-variable literal 표시를 피하려 대표 light 문구로 materialize했다. 실제 테마·locale별 문구는 코드가 결정한다. 390/1440px Light/Dark에서 Blog/Guitar 전환과 overflow를 확인했다.
 

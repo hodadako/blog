@@ -31,7 +31,7 @@ export function resolveGuitarPath(pathname: string): GuitarRouteDecision {
   const songMatch = pathname.match(/^\/songs\/([a-z0-9-]+--[a-z0-9-]+)$/);
   if (songMatch) return { kind: "rewrite", pathname: `/guitar/songs/${songMatch[1]}` };
 
-  if (pathname === "/sitemap.xml" || pathname === "/robots.txt" || pathname.startsWith("/_next/")) {
+  if (pathname === "/sitemap.xml" || pathname === "/robots.txt" || pathname === "/ads.txt" || pathname.startsWith("/_next/")) {
     return { kind: "pass" };
   }
 
