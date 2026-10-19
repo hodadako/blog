@@ -37,7 +37,7 @@ export default async function GuitarSongPage({ params }: GuitarSongPageProps) {
   if (!song) notFound();
 
   return <>
-    <SongReader artist={song.artist} backHref="/songs" document={song.document} keyName={song.key} slug={song.slug} sourceCapo={song.document.metadata.capo} title={song.title} />
+    <SongReader artist={song.artist} backHref="/songs" document={song.document} keyName={song.key} readings={song.readings} slug={song.slug} sourceCapo={song.document.metadata.capo} title={song.title} />
     <AdPlacement site="guitar" placement="song-end" locale="ko" />
   </>;
 }

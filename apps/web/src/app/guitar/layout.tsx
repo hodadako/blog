@@ -26,7 +26,7 @@ export default function GuitarLayout({ children }: { children: ReactNode }) {
               <strong className="brand-lockup__title">{getDictionary("ko").siteName}</strong>
             </a>
             <nav aria-label="주요 탐색">
-              <Link className={styles.sectionLink} href={guitarHref("/songs")}><span aria-hidden="true">/ </span>guitar</Link>
+              <Link aria-current="location" className={styles.sectionLink} href={guitarHref("/songs")}>악보</Link>
             </nav>
           </div>
           <ThemePreferenceSelect />

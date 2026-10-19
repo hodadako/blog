@@ -18,13 +18,16 @@
 | Article Header `wNfKB` | Blog slug page의 article-header | 제목 길이별 font clamp는 코드. 원장의 대표 예시는 medium 제목 |
 | Article Body `QPR6q` | `lib/markdown.tsx` MarkdownArticle | 실제 Markdown과 읽기 폭. 페이지 시안은 대표 발췌 |
 | CodeBlock `N1tZX` | `code-block.tsx`, `code-block.module.css` | 캔버스 정적 코드 예시. 실제 Shiki syntax 색상, 복사 및 language는 구현 사양 |
-| Guitar Header `l89K6m` | `app/guitar/layout.tsx`, `theme-preference.tsx`, guitar.module.css | 기존 wordmark와 공통 ThemeProvider. Guitar의 간결한 섹션 표시·System/Light/Dark 선택 |
+| Guitar Header `l89K6m` | `app/guitar/layout.tsx`, `theme-preference.tsx`, guitar.module.css | 기존 wordmark·악보 링크·공통 current theme trigger. 자동/눈/별 선택 |
 | Guitar Search `AI7qw` / SongRow `yySqV` | `features/guitar/components/song-search.tsx` | 검색 하나와 전체 행 링크. 44rem 목록 폭, 검색 결과·초기화는 runtime |
 | Guitar SongSheet `koSj9` | `features/guitar/components/song-reader.tsx` | 원문 행·코드 시작 문자·공백 보존. 52rem 상한, 긴 행 내부 스크롤 및 14–28px 사용자 설정은 기술 사양 |
-| Guitar PlaybackToolbar `jhOA4` | 같은 SongReader | 조옮김·스크롤·옵션. 모바일 safe-area와 고정 툴바, 키보드/포커스/팝업은 실제 브라우저 검증 |
+| Guitar Settings rail `jhOA4` | 같은 SongReader | 조옮김/카포/가사 표기/폰트/속도/개인 커버 프리셋. Desktop sticky left, mobile inline collapse. 기존 toolbar origin ID 보존, native modal/bottom-fixed bar 제거 |
+| Guitar Chord inspector `BVZyH` | 같은 SongReader / voicings.ts | hover/focus/tap. Desktop sticky right, mobile small non-modal inspector. 실제 SVG와 검증된 frets는 코드 책임 |
 | Manual AdSlot `GrQ3A` | `components/ads/ad-slot.tsx`, ad-slot.module.css | 허용된 설정+동의 뒤 표시. 44rem, 작은 locale label, 외부 creative 최소 250px 예약. 기본 OFF/미동의는 DOM 없음. 원장 `LpYsZ`는 승인 후 geometry 설명이며 실제 광고 미리보기가 아님 |
 
 테마 제어는 glyph/caret 없이 현재 선택 배경과 텍스트만 표시한다. Guitar의 native select/키보드 선택은 유지하고 목록 행·Songs 복귀 링크의 장식 화살표만 제거했다. 원장 `J4X2a`의 눈/별 문구는 text renderer의 string-variable literal 표시를 피하려 대표 light 문구로 materialize했다. 실제 테마·locale별 문구는 코드가 결정한다. 390/1440px Light/Dark에서 Blog/Guitar 전환과 overflow를 확인했다.
+
+Guitar reading workspace는 `O4NtM1`/`qYzsl` Light/Dark 보드에 기록한다. 기존 header/sheet/settings origin을 재사용했다. 왼쪽/오른쪽 rail은 공통 space-8의 세 배 폭이며, CSS breakpoint와 sticky/overflow/개인 저장은 런타임 사양이다. 카테고리는 기존 태그의 실제 값이며 탭 같은 조용한 텍스트 필터를 사용한다. 새 팔레트/폰트/버튼 라이브러리를 추가하지 않았다.
 
 ## 구성 방식
 

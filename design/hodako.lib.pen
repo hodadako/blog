@@ -1463,9 +1463,9 @@
                 {
                   "type": "text",
                   "id": "NLIl4",
-                  "name": "Guitar section",
+                  "name": "Songs navigation",
                   "fill": "$--color-text-muted",
-                  "content": "/ guitar",
+                  "content": "악보",
                   "fontFamily": "$--font-primary",
                   "fontSize": "$--text-caption",
                   "fontWeight": "$--font-default-weight"
@@ -1489,7 +1489,7 @@
                   "id": "VySAL",
                   "name": "Theme preference",
                   "fill": "$--color-text",
-                  "content": "밝게",
+                  "content": "눈",
                   "fontFamily": "$--font-primary",
                   "fontSize": "$--text-caption",
                   "fontWeight": "$--font-default-weight"
@@ -1594,9 +1594,9 @@
           "type": "frame",
           "id": "koSj9",
           "name": "Guitar / SongSheet",
-          "context": "52rem maximum; original lyric rows preserve source character anchors and scroll internally on narrow viewports. Runtime font size 14–28px.",
+          "context": "Original anchors retained; source-preserving alternate readings; trailing blank rows trimmed. Internal horizontal scrolling, no document-end spacer.",
           "reusable": true,
-          "width": 832,
+          "width": 704,
           "stroke": "$--color-border",
           "strokeWidth": {
             "top": 1
@@ -1708,92 +1708,98 @@
         {
           "type": "frame",
           "id": "jhOA4",
-          "name": "Guitar / PlaybackToolbar",
-          "context": "Single toolbar: quiet desktop controls, mobile bottom fixed with safe-area and document-end clearance. Options and available chord diagrams use native dialog, Escape and focus restoration.",
+          "name": "Guitar / Settings rail",
+          "context": "Sticky left settings on desktop; inline collapsible panel on mobile. No modal or fixed bottom toolbar.",
           "reusable": true,
-          "width": 360,
+          "width": 192,
           "fill": "$--color-bg",
           "stroke": "$--color-border",
-          "strokeWidth": {
-            "top": 1
-          },
-          "gap": 8,
-          "padding": 8,
+          "layout": "vertical",
+          "gap": "$--space-4",
           "justifyContent": "center",
           "alignItems": "center",
           "children": [
             {
               "type": "frame",
-              "id": "Asf9g",
-              "name": "Playback −",
-              "width": 44,
-              "height": 44,
-              "cornerRadius": "$--radius-sm",
-              "stroke": "$--field-border",
-              "strokeWidth": 1,
-              "padding": 8,
-              "justifyContent": "center",
+              "id": "htDGC",
+              "name": "Transpose stepper",
+              "gap": "$--space-1",
               "alignItems": "center",
               "children": [
                 {
-                  "type": "text",
-                  "id": "FYDiU",
-                  "name": "Label −",
-                  "fill": "$--color-text",
-                  "content": "−",
-                  "fontFamily": "$--font-primary",
-                  "fontSize": "$--button-font-size",
-                  "fontWeight": "$--font-default-weight"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "lsBwK",
-              "name": "Playback 0",
-              "width": 44,
-              "height": 44,
-              "cornerRadius": "$--radius-sm",
-              "stroke": "$--field-border",
-              "strokeWidth": 1,
-              "padding": 8,
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
+                  "type": "frame",
+                  "id": "Asf9g",
+                  "name": "Playback −",
+                  "width": 44,
+                  "height": 44,
+                  "fill": "$--color-surface-muted",
+                  "cornerRadius": "$--radius-md",
+                  "stroke": "$--field-border",
+                  "padding": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "FYDiU",
+                      "name": "Label −",
+                      "fill": "$--color-text",
+                      "content": "−",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": "$--button-font-size",
+                      "fontWeight": "$--font-default-weight"
+                    }
+                  ]
+                },
                 {
-                  "type": "text",
-                  "id": "g3qDuw",
-                  "name": "Label 0",
-                  "fill": "$--color-text",
-                  "content": "0",
-                  "fontFamily": "$--font-primary",
-                  "fontSize": "$--button-font-size",
-                  "fontWeight": "$--font-default-weight"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "WhcRV",
-              "name": "Playback ＋",
-              "width": 44,
-              "height": 44,
-              "cornerRadius": "$--radius-sm",
-              "stroke": "$--field-border",
-              "strokeWidth": 1,
-              "padding": 8,
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
+                  "type": "frame",
+                  "id": "lsBwK",
+                  "name": "Playback 0",
+                  "width": 44,
+                  "height": 44,
+                  "fill": "$--color-surface-muted",
+                  "cornerRadius": "$--radius-md",
+                  "stroke": "$--field-border",
+                  "padding": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g3qDuw",
+                      "name": "Label 0",
+                      "fill": "$--color-text",
+                      "content": "0",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": "$--button-font-size",
+                      "fontWeight": "$--font-default-weight"
+                    }
+                  ]
+                },
                 {
-                  "type": "text",
-                  "id": "YvNiS",
-                  "name": "Label ＋",
-                  "fill": "$--color-text",
-                  "content": "＋",
-                  "fontFamily": "$--font-primary",
-                  "fontSize": "$--button-font-size",
-                  "fontWeight": "$--font-default-weight"
+                  "type": "frame",
+                  "id": "WhcRV",
+                  "name": "Playback ＋",
+                  "width": 44,
+                  "height": 44,
+                  "fill": "$--color-surface-muted",
+                  "cornerRadius": "$--radius-md",
+                  "stroke": "$--field-border",
+                  "padding": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "YvNiS",
+                      "name": "Label ＋",
+                      "fill": "$--color-text",
+                      "content": "＋",
+                      "fontFamily": "$--font-primary",
+                      "fontSize": "$--button-font-size",
+                      "fontWeight": "$--font-default-weight"
+                    }
+                  ]
                 }
               ]
             },
@@ -1802,9 +1808,9 @@
               "id": "x0Ac1Z",
               "name": "Playback 스크롤 시작",
               "height": 44,
-              "cornerRadius": "$--radius-sm",
+              "fill": "$--color-surface-muted",
+              "cornerRadius": "$--radius-md",
               "stroke": "$--field-border",
-              "strokeWidth": 1,
               "padding": 8,
               "justifyContent": "center",
               "alignItems": "center",
@@ -1824,7 +1830,10 @@
             {
               "type": "frame",
               "id": "mFEbB",
+              "x": 74,
+              "y": 240,
               "name": "Playback 옵션",
+              "enabled": false,
               "width": 44,
               "height": 44,
               "cornerRadius": "$--radius-sm",
@@ -1845,6 +1854,40 @@
                   "fontWeight": "$--font-default-weight"
                 }
               ]
+            },
+            {
+              "type": "text",
+              "id": "hYoio",
+              "name": "Capo setting",
+              "fill": "$--color-text",
+              "content": "카포     0프렛",
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "k0hZoD",
+              "name": "Lyrics setting",
+              "fill": "$--color-text-muted",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "가사 표기\n원문 · Romaji\nEnglish · 한글 발음",
+              "lineHeight": 1.7,
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "AivMw",
+              "name": "Cover preset setting",
+              "fill": "$--color-text-muted",
+              "content": "내 커버 프리셋\n이름 · 링크 · 키 · 카포\n현재 설정 저장",
+              "lineHeight": 1.7,
+              "fontFamily": "$--font-primary",
+              "fontSize": "$--text-caption",
+              "fontWeight": "normal"
             }
           ]
         }
@@ -1873,7 +1916,7 @@
           "name": "Guitar / Header · Dark",
           "descendants": {
             "VySAL": {
-              "content": "어둡게",
+              "content": "별",
               "fill": "$--color-text"
             }
           }
@@ -1955,6 +1998,232 @@
               "height": 250
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "O4NtM1",
+      "x": 2400,
+      "y": 0,
+      "name": "08 Guitar · Reading workspace",
+      "width": 1280,
+      "height": 920,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": "$--space-7",
+      "padding": 64,
+      "children": [
+        {
+          "id": "i730Op",
+          "type": "ref",
+          "ref": "l89K6m",
+          "name": "Shared identity and theme",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "c8ZU4E",
+          "name": "Settings · Sheet · Fingering",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "id": "RPTUw",
+              "type": "ref",
+              "ref": "jhOA4",
+              "name": "Sticky settings rail",
+              "width": 192
+            },
+            {
+              "type": "frame",
+              "id": "vK2MR",
+              "name": "Song reading column",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "A0A2c",
+                  "name": "Song title",
+                  "fill": "$--color-text",
+                  "content": "しわあわせ",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 36,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "FNDKg",
+                  "name": "Song artist",
+                  "fill": "$--color-text-muted",
+                  "content": "Vaundy",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "cbNPp",
+                  "type": "ref",
+                  "ref": "koSj9",
+                  "name": "Anchored song sheet",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BVZyH",
+              "name": "Guitar / Chord inspector",
+              "context": "Sticky right-hand inspector follows chord hover/focus; tap opens a small non-modal inspector on narrow screens. No backdrop.",
+              "reusable": true,
+              "width": 192,
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "pgwrh",
+                  "name": "Chord inspector title",
+                  "fill": "$--color-text",
+                  "content": "F/A",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 28,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "cBd3i",
+                  "name": "Fingering values",
+                  "fill": "$--color-accent",
+                  "content": "×  0  3  2  1  1",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "VuofO",
+                  "name": "Chord inspector help",
+                  "fill": "$--color-text-muted",
+                  "content": "6번 현부터 1번 현 순서\n코드에 커서를 올려 확인",
+                  "lineHeight": 1.7,
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "qWx8z",
+          "name": "Quiet footer",
+          "fill": "$--color-text-muted",
+          "content": "호다코                                                 악보    GitHub",
+          "fontFamily": "$--font-primary",
+          "fontSize": 13,
+          "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "qYzsl",
+      "x": 3760,
+      "y": 0,
+      "name": "09 Guitar · Reading workspace · Dark",
+      "theme": {
+        "mode": "dark"
+      },
+      "width": 1280,
+      "height": 920,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": "$--space-7",
+      "padding": 64,
+      "children": [
+        {
+          "id": "JPf7p",
+          "type": "ref",
+          "ref": "l89K6m",
+          "name": "Shared identity and theme",
+          "width": "fill_container",
+          "descendants": {
+            "VySAL": {
+              "content": "별"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Q3dhV",
+          "name": "Settings · Sheet · Fingering",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "id": "xJUZt",
+              "type": "ref",
+              "ref": "jhOA4",
+              "name": "Sticky settings rail",
+              "width": 192
+            },
+            {
+              "type": "frame",
+              "id": "zATKz",
+              "name": "Song reading column",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "LosRe",
+                  "name": "Song title",
+                  "fill": "$--color-text",
+                  "content": "しわあわせ",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 36,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "XEQ4r",
+                  "name": "Song artist",
+                  "fill": "$--color-text-muted",
+                  "content": "Vaundy",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": 16,
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "DYiVo",
+                  "type": "ref",
+                  "ref": "koSj9",
+                  "name": "Anchored song sheet",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "id": "c1QaL",
+              "type": "ref",
+              "ref": "BVZyH"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "fHOPl",
+          "name": "Quiet footer",
+          "fill": "$--color-text-muted",
+          "content": "호다코                                                 악보    GitHub",
+          "fontFamily": "$--font-primary",
+          "fontSize": 13,
+          "fontWeight": "normal"
         }
       ]
     }

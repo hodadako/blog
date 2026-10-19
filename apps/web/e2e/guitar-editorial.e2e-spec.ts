@@ -70,16 +70,15 @@ for (const width of [360, 390, 768, 1440]) {
         await page.goto(`/songs/${song.slug}`);
         await expect(page.getByRole("heading", {name: song.title, exact: true})).toBeVisible();
         await page.screenshot({animations: "disabled", path: test.info().outputPath(`${song.slug}-${width}-${theme}.png`)});
+        const settingsToggle = page.getByRole("button", {name: "악보 설정 열기", exact: true});
+        if (await settingsToggle.isVisible()) await settingsToggle.click();
         await page.getByRole("button", {name: "한 음 높이기"}).click();
-        await page.getByRole("button", {name: "옵션", exact: true}).click();
-        const options = page.getByRole("dialog", {name: "악보 설정"});
+        const options = page.getByRole("complementary", {name: "악보 설정"});
         await expect(options).toBeVisible();
         const larger = options.getByRole("button", {name: "글자 크게"});
         for (let i = 0; i < 7 && await larger.isEnabled(); i++) await larger.click();
         await expect(options.getByText("28px", {exact: true})).toBeVisible();
-        await page.keyboard.press("Escape");
-        await expect(options).not.toBeVisible();
-        await expect(page.getByRole("button", {name: "옵션", exact: true})).toBeFocused();
+        await expect(page.getByRole("dialog")).toHaveCount(0);
         const actual = await page.locator("[data-source-line]").evaluateAll((rows) => rows.map((row) => ({
           line: row.getAttribute("data-source-line"),
           segments: Array.from(row.children).map((segment) => ({
@@ -110,14 +109,13 @@ for (const width of [360, 390, 768, 1440]) {
         expect((await sheet.boundingBox())!.width).toBeLessThanOrEqual(832);
         await sheet.focus();
         await page.keyboard.press("ArrowRight");
-        const controls = page.getByRole("region", {name: "악보 조작"});
+        const controls = page.getByRole("complementary", {name: "악보 설정"});
         await expect(controls.getByRole("button", {name: "자동 스크롤 시작 / 재개"})).toHaveCount(1);
         if (width < 720) {
-          expect(await controls.evaluate((node) => getComputedStyle(node).position)).toBe("fixed");
+          expect(await controls.evaluate((node) => getComputedStyle(node).position)).not.toBe("fixed");
           await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
           const footer = await page.locator("footer").boundingBox();
-          const toolbar = await controls.boundingBox();
-          expect(footer!.y + footer!.height).toBeLessThanOrEqual(toolbar!.y);
+          expect(footer!.y + footer!.height).toBeLessThanOrEqual(900);
         }
         await page.evaluate(() => window.scrollTo(0, 0));
         await sheet.evaluate((node) => {node.scrollLeft = 0;});
@@ -126,20 +124,20 @@ for (const width of [360, 390, 768, 1440]) {
       await page.locator("h1").evaluate((title) => {title.textContent = "매우 긴 한국어 제목과 日本語の長い曲名이 함께 있는 악보 제목 줄바꿈 검사";});
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
       const h1 = await page.locator("h1").boundingBox();
-      const artist = await page.locator("article > header > p").first().boundingBox();
+      const artist = await page.locator("article header > p").first().boundingBox();
       expect(h1!.y + h1!.height).toBeLessThanOrEqual(artist!.y);
     });
   }
 }
 
-test("retains manual playback in reduced motion and closes options with keyboard focus", async ({page}) => {
+test("retains manual playback in reduced motion with inline keyboard settings", async ({page}) => {
+  await page.setViewportSize({width:390,height:900});
   await page.emulateMedia({reducedMotion: "reduce"});
   await page.goto("/songs/vaundy--shiawase");
-  const optionsButton = page.getByRole("button", {name: "옵션", exact: true});
+  const optionsButton = page.getByRole("button", {name: "악보 설정 열기", exact: true});
   await optionsButton.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("dialog", {name: "악보 설정"})).toBeVisible();
-  await page.keyboard.press("Escape");
+  await expect(optionsButton).toHaveAttribute("aria-expanded", "true");
   await expect(optionsButton).toBeFocused();
   await page.getByRole("button", {name: "자동 스크롤 시작 / 재개"}).click();
   await expect(page.getByRole("button", {name: "자동 스크롤 일시정지"})).toBeVisible();

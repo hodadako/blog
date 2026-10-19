@@ -100,10 +100,85 @@ function buildVoicings(): Map<string, ChordVoicing> {
 
 const VOICINGS = buildVoicings();
 
+// Standard-tuning shapes used by the current score. Frets are relative to capo.
+const SCORE_SLASH_FORMS: Record<string, Array<number | null>> = {
+  "5:/9": [null, 0, 3, 2, 1, 1],
+  "5:/0": [null, 3, 3, 2, 1, 1],
+  "10:/2": [null, null, 0, 3, 3, 1],
+  "0:/4": [0, 3, 2, 0, 1, 0],
+  "9:/1": [null, 4, 2, 2, 2, 0],
+  "2:m/1": [null, 4, 3, 2, 3, null],
+};
+
+const EXTENDED_INTERVALS: Record<string, number[]> = {
+  ...QUALITY_INTERVALS, "5": [0, 7], "6": [0, 4, 7, 9], m6: [0, 3, 7, 9],
+  "6/9": [0, 4, 7, 9, 2], mMaj7: [0, 3, 7, 11], "9": [0, 4, 7, 10, 2],
+  maj9: [0, 4, 7, 11, 2], m9: [0, 3, 7, 10, 2], "11": [0, 4, 7, 10, 2, 5],
+  m11: [0, 3, 7, 10, 2, 5], "13": [0, 4, 7, 10, 2, 9], m13: [0, 3, 7, 10, 2, 9],
+  sus: [0, 5, 7], sus2: [0, 2, 7], sus4: [0, 5, 7], "7sus2": [0, 2, 7, 10], "7sus4": [0, 5, 7, 10],
+  add2: [0, 2, 4, 7], add4: [0, 4, 5, 7], add9: [0, 4, 7, 2], madd9: [0, 3, 7, 2],
+  dim: [0, 3, 6], dim7: [0, 3, 6, 9], aug: [0, 4, 8], "+": [0, 4, 8],
+  m7b5: [0, 3, 6, 10], "7b5": [0, 4, 6, 10], "7#5": [0, 4, 8, 10],
+  "7b9": [0, 4, 7, 10, 1], "7(b9)": [0, 4, 7, 10, 1], "7#9": [0, 4, 7, 10, 3], "7(#9)": [0, 4, 7, 10, 3],
+};
+
+const generated = new Map<string, ChordVoicing | undefined>();
+const TUNING_MIDI = [40, 45, 50, 55, 59, 64];
+
+function voicingKey(chord: ParsedChord): string {
+  return `${chord.root}:${chord.suffix}${chord.bass === undefined ? "" : `/bass:${chord.bass}`}`;
+}
+
+function createVoicing(chord: ParsedChord): ChordVoicing | undefined {
+  const intervals = EXTENDED_INTERVALS[chord.suffix];
+  if (!intervals) return undefined;
+  const required = new Set(intervals.map(i => mod12(chord.root + i)));
+  const allowed = new Set([...required, ...(chord.bass === undefined ? [] : [chord.bass])]);
+  const curated = SCORE_SLASH_FORMS[`${chord.root}:${chord.suffix}/${chord.bass}`];
+  if (curated) return {
+    id: `score-${voicingKey(chord)}`, chordKey: voicingKey(chord), frets: curated,
+    baseFret: Math.min(...curated.filter((n): n is number => n !== null && n > 0)),
+  };
+  let best: ChordVoicing | undefined;
+  let bestCost = Infinity;
+  // Bounded search for a compact, four-finger form. Every named tone must occur;
+  // no missing-tone or slash-bass substitutions are presented as exact matches.
+  for (let base = 1; base <= 12; base++) {
+    const choices = TUNING_PITCHES.map(tuning => [null, ...Array.from({length: 16}, (_, n) => n)
+      .filter(fret => (fret === 0 || (fret >= base && fret < base + 4)) && allowed.has(mod12(tuning + fret)))]);
+    const visit = (frets: Array<number | null>, notes: number[], fingers: number): void => {
+      if (fingers > 4) return;
+      const index = frets.length;
+      if (index === 6) {
+        if (notes.length < Math.max(3, allowed.size)) return;
+        if ([...required].some(note => !notes.some(midi => mod12(midi) === note))) return;
+        if (mod12(Math.min(...notes)) !== (chord.bass ?? chord.root)) return;
+        const positive = frets.filter((n): n is number => n !== null && n > 0);
+        const cost = (positive.length ? Math.max(...positive) : 0) * 3 + (6-notes.length) * 4 + fingers;
+        if (cost >= bestCost) return;
+        bestCost = cost;
+        best = { id: `generated-${voicingKey(chord)}`, chordKey: voicingKey(chord), frets: [...frets], baseFret: positive.length ? Math.min(...positive) : 1 };
+        return;
+      }
+      for (const fret of choices[index]) {
+        visit([...frets, fret], fret === null ? notes : [...notes, TUNING_MIDI[index] + fret], fingers + Number(fret !== null && fret > 0));
+      }
+    };
+    visit([], [], 0);
+  }
+  return best;
+}
+
 export function getChordVoicing(chord: ParsedChord): ChordVoicing | undefined {
-  if (chord.bass !== undefined) return chord.suffix === "" ? VOICINGS.get(`${chord.root}/${chord.bass}`) : undefined;
-  if (!(QUALITIES as readonly string[]).includes(chord.suffix)) return undefined;
-  return VOICINGS.get(`${chord.root}:${chord.suffix}`);
+  const existing = chord.bass === undefined ? VOICINGS.get(`${chord.root}:${chord.suffix}`)
+    : chord.suffix === "" ? VOICINGS.get(`${chord.root}/${chord.bass}`) : undefined;
+  if (existing) return existing;
+  const key = voicingKey(chord);
+  if (!generated.has(key)) {
+    const candidate = createVoicing(chord);
+    generated.set(key, candidate && validateVoicing(candidate).valid ? candidate : undefined);
+  }
+  return generated.get(key);
 }
 
 export interface VoicingValidation {
@@ -132,27 +207,25 @@ export function validateVoicing(voicing: ChordVoicing, capo = 0): VoicingValidat
   }
   if (errors.length) return { valid: false, errors };
 
-  const [, bassText] = voicing.chordKey.split("/");
-  const quality = bassText === undefined ? voicing.chordKey.slice(voicing.chordKey.indexOf(":") + 1) : "";
-  const expected = QUALITY_INTERVALS[quality as (typeof QUALITIES)[number]];
+  const legacySlash = voicing.chordKey.match(/^\d+\/(\d+)$/);
+  const bassText = legacySlash?.[1] ?? voicing.chordKey.split("/bass:")[1];
+  const quality = legacySlash ? "" : voicing.chordKey.slice(voicing.chordKey.indexOf(":") + 1).split("/bass:")[0];
+  const expected = EXTENDED_INTERVALS[quality];
   if (bassText === undefined && !expected) errors.push("chord quality is not verifiable");
   const notes = voicing.frets.flatMap((fret, index) => fret === null ? [] : [mod12(TUNING_PITCHES[index] + fret + capo)]);
   const noteSet = new Set(notes);
   if (expected && expected.some((interval) => !noteSet.has(mod12(root + interval + capo)))) {
     errors.push("voicing omits a required chord tone");
   }
-  if (expected && notes.some((note) => !expected.some((interval) => mod12(root + interval + capo) === note))) {
+  if (expected && notes.some((note) => !expected.some((interval) => mod12(root + interval + capo) === note) && (bassText === undefined || note !== mod12(Number(bassText) + capo)))) {
     errors.push("voicing contains a non-chord tone");
   }
   if (bassText !== undefined) {
     const expectedBass = Number(bassText);
-    const lowest = voicing.frets.findIndex((fret) => fret !== null);
-    if (lowest < 0 || mod12(TUNING_PITCHES[lowest] + voicing.frets[lowest]! + capo) !== mod12(expectedBass + capo)) {
+    const midi = voicing.frets.flatMap((fret,index) => fret === null ? [] : [TUNING_MIDI[index] + fret + capo]);
+    if (!midi.length || mod12(Math.min(...midi)) !== mod12(expectedBass + capo)) {
       errors.push("lowest sounding string does not match slash bass");
     }
-    const majorTones = [root, mod12(root + 4), mod12(root + 7)];
-    if (majorTones.some((tone) => !noteSet.has(mod12(tone + capo)))) errors.push("slash voicing omits a required major-triad tone");
-    if (notes.some((note) => !majorTones.some((tone) => mod12(tone + capo) === note))) errors.push("slash voicing contains a non-major-triad tone");
   }
   return { valid: errors.length === 0, errors };
 }

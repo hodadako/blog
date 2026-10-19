@@ -32,13 +32,13 @@ describe("Chord voicings", () => {
     expect(fMajor && validateVoicing(fMajor).valid).toBe(true);
   });
 
-  it("provides exact D/F# and E/G# bass voicings and an explicit fallback for other slash chords", () => {
+  it("provides exact bass voicings including compact generated slash forms", () => {
     const dOverFSharp = getChordVoicing(parseSingleChord("D/F#"));
     const eOverGSharp = getChordVoicing(parseSingleChord("E/G#"));
     expect(dOverFSharp && validateVoicing(dOverFSharp).valid).toBe(true);
     expect(eOverGSharp && validateVoicing(eOverGSharp).valid).toBe(true);
-    expect(getChordVoicing(parseSingleChord("C/G"))).toBeUndefined();
-    expect(getChordVoicing(parseSingleChord("Dmaj7/F#"))).toBeUndefined();
+    expect(getChordVoicing(parseSingleChord("C/G"))).toBeDefined();
+    expect(getChordVoicing(parseSingleChord("Dmaj7/F#"))).toBeDefined();
   });
 
   it("rejects malformed fret arrays and barre definitions", () => {

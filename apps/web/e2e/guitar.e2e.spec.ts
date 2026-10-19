@@ -1,4 +1,9 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function openSettings(page: Page) {
+  const toggle = page.getByRole("button", {name: "악보 설정 열기", exact: true});
+  if (await toggle.isVisible()) await toggle.click();
+}
 
 const blogOrigin = `http://blog.localhost:${new URL(process.env.PLAYWRIGHT_BASE_URL ?? "http://guitar.localhost:4317").port}`;
 
@@ -15,13 +20,13 @@ test("serves the song and initial chord lyrics in static HTML", async ({ browser
   await context.close();
 });
 
-test("shows verified chord fingering and restores focus when the dialog closes", async ({ page }) => {
+test("shows non-modal fingering and returns focus to the score on close", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/songs/vaundy--shiawase");
 
   const chordButton = page.getByRole("button", { name: "F 운지법 보기" }).first();
   await chordButton.click();
-  const dialog = page.getByRole("dialog", { name: "F" });
+  const dialog = page.getByRole("complementary", { name: "코드 운지법" });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("img", { name: "F 운지법" })).toBeVisible();
   await page.keyboard.press("Escape");
@@ -31,24 +36,24 @@ test("shows verified chord fingering and restores focus when the dialog closes",
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "운지법 닫기" }).click();
   await expect(dialog).not.toBeVisible();
-  await expect(chordButton).toBeFocused();
+  await expect(page.getByRole("region", {name: /코드 악보, 긴 행/})).toBeFocused();
 });
 
 test("transposes and changes capo while keeping the original song model", async ({ page }) => {
   await page.goto("/songs/vaundy--shiawase");
-  const status = page.locator("[aria-live='polite']");
+  await openSettings(page);
+  const status = page.locator("p[aria-live='polite']");
   await expect(status).toContainText("운지 조성 F · 실음 조성 F");
 
   await page.getByRole("button", { name: "한 음 높이기" }).click();
   await expect(status).toContainText("조옮김 +1");
-  await page.getByRole("button", {name: "옵션", exact: true}).click();
   await page.getByLabel("카포 위치").selectOption("2");
   await expect(status).toContainText("실음 조성 F#");
 
   await page.reload();
-  const restoredStatus = page.locator("[aria-live='polite']");
+  await openSettings(page);
+  const restoredStatus = page.locator("p[aria-live='polite']");
   await expect(restoredStatus).toContainText("조옮김 +1");
-  await page.getByRole("button", {name: "옵션", exact: true}).click();
   await expect(page.getByLabel("카포 위치")).toHaveValue("2");
 
   await page.getByRole("button", { name: "곡 설정 초기화" }).click();
@@ -59,7 +64,7 @@ test("transposes and changes capo while keeping the original song model", async 
 test("pauses time-based scrolling on manual input and stays within mobile width", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto("/songs/vaundy--shiawase");
-  await page.getByRole("button", {name: "옵션", exact: true}).click();
+  await openSettings(page);
   await page.getByLabel("자동 스크롤 속도").selectOption("10");
   await page.keyboard.press("Escape");
   const scrollButton = page.getByRole("button", { name: "자동 스크롤 시작 / 재개" });
@@ -138,10 +143,11 @@ test("keeps system theme, preferences, and reading controls usable when storage 
   });
   const page = await context.newPage();
   await page.goto("/songs/vaundy--shiawase");
+  await openSettings(page);
   await expect(page.getByLabel("테마")).toHaveValue("light");
   await page.getByLabel("테마").selectOption("system");
   await page.getByRole("button", { name: "한 음 낮추기" }).click();
-  await expect(page.locator("[aria-live='polite']")).toContainText("조옮김 -1");
+  await expect(page.locator("p[aria-live='polite']")).toContainText("조옮김 -1");
   await context.close();
 });
 
