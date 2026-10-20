@@ -200,3 +200,7 @@ pnpm --dir infra/cloudflare-worker exec wrangler deploy --dry-run PASS
 - Worker를 `quiz.hodako.dev`에 배포했다. 배포 버전은 `7b3a00ca-24a3-489b-bcb2-77ab323ba51a`다.
 - Supabase 프로젝트 재개 후 GitHub Supabase Migrations 실행 `35421565833`이 성공했고 `0008_post_view_tracking.sql`이 원격에 적용됐다.
 - 운영 E2E에서 POST `/post-views/2025-retrospective`가 `200`과 `viewCount: 5`를 반환했고, 직후 GET도 `200`과 `viewCount: 5`를 반환했다. 이 검증으로 테스트 방문 1건이 기록됐다.
+
+## 13. 2026-10-20 사용하지 않는 조회수 기능 제거
+
+게시물 조회수 표시와 방문 데이터 수집을 제거했다. 웹의 조회수 컴포넌트/API와 Worker의 `/post-views/*` endpoint를 삭제했으며, `0009_remove_post_view_tracking.sql`은 기존 이벤트 행과 집계 컬럼을 제거한다. 이 마이그레이션은 운영 데이터 삭제를 포함하므로 배포 전에 변경 대상을 확인한다.

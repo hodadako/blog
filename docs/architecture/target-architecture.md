@@ -15,7 +15,7 @@ Supabase
 - `apps/web`: Markdown 게시물 렌더링, 문제·선택지 UI, 댓글 UI, 관리자 세션과 Worker 관리자 API 프록시
 - `content/posts/{slug}/{locale}.md`: 게시물과 `commentQuizCategory` 메타데이터의 원본
 - `infra/cloudflare-worker`: 댓글/퀴즈의 신뢰 경계. Service Role Secret은 이 Worker에서만 사용
-- `infra/supabase`: 문제은행, 게시물-카테고리 매핑, Challenge, 권한, 댓글, Idempotency, Rate Limit, Blacklist와 게시물 방문 이벤트
+- `infra/supabase`: 문제은행, 게시물-카테고리 매핑, Challenge, 권한, 댓글, Idempotency, Rate Limit, Blacklist
 - `infra/pulumi`: 기존 DNS·배포 인프라 코드. 별도 D1/KV/DO/R2는 사용하지 않음
 
 ## 2단계 인증 흐름
@@ -41,9 +41,6 @@ Supabase
 - `GET /comments?canonicalSlug=...`
 - `POST /comments`
 - `PATCH|DELETE /comments/{id}`
-- `GET|POST /post-views/{canonicalSlug}`
-
-`POST /post-views/{canonicalSlug}`는 브라우저가 Worker를 직접 호출해 실제 방문자의 Cloudflare 요청 메타데이터를 수집한다. 누적 조회수와 `post_view_events` 기록은 하나의 Supabase RPC에서 원자적으로 처리한다.
 
 ### 관리자
 
@@ -60,7 +57,6 @@ Supabase
 - `quiz_options.is_correct`, Challenge의 `correct_option_id`, `allowed_option_ids`, 비밀번호 해시는 공개 View/API 응답에서 제외한다.
 - 익명 역할은 문제은행·Challenge·권한·댓글 쓰기 테이블에 직접 권한이 없다. 공개 댓글 조회도 Worker View를 통해서만 수행한다.
 - Client IP는 Cloudflare가 설정한 `CF-Connecting-IP`만 사용하고 `X-Forwarded-For`는 신뢰하지 않는다. `IP_HASH_SECRET` HMAC 결과만 저장한다.
-- 게시물 방문 이벤트에는 Cloudflare가 제공한 원본 `CF-Connecting-IP`, 국가·지역·도시(가능한 경우), 방문 시각을 저장한다. `X-Forwarded-For`는 신뢰하지 않는다.
 - 초대 토큰은 `INVITE_TOKEN_PEPPER` HMAC 결과만 저장하고 원문은 발급 응답에서 한 번만 보여준다.
 - 댓글 비밀번호는 Worker Web Crypto PBKDF2(`pbkdf2-sha256`, 100,000회) 형식으로 저장한다. Cloudflare Workers Web Crypto가 100,000회를 초과하는 반복 횟수를 거부하므로 이 값을 고정한다. 기존 `scrypt$` 행은 Worker 수정/삭제 경로에서 호환되지 않으므로 별도 마이그레이션 대상이다.
 
@@ -77,4 +73,6 @@ Supabase
 - Worker 전역 변수·인메모리 Map·로컬 파일·D1/KV/DO/R2를 상태 저장에 사용하지 않는다.
 - Rate Limit은 Supabase의 원자적 `consume_comment_rate_limit` RPC를 사용한다.
 - `wrangler.jsonc`는 `nodejs_compat`, Observability와 `quiz.hodako.dev` Custom Domain을 선언한다. Secret 값은 `wrangler secret put`으로 주입한다.
-- `apps/web/.env.example`에는 Service Role Key를 두지 않는다. Next.js의 기존 `lib/comments.ts`/`lib/supabase.ts`는 레거시 호환 코드이며 공개 댓글·조회·관리 운영 경로에서는 사용하지 않는다.
+- `apps/web/.env.example`에는 Service Role Key를 두지 않는다. Next.js의 기존 `lib/comments.ts`/`lib/supabase.ts`는 레거시 호환 코드이며 공개 댓글·관리 운영 경로에서는 사용하지 않는다. 게시물 방문 수집 기능은 제거했다.
+
+게시물 방문 이벤트와 공개 조회수 기능은 사용하지 않아 제거했다. `0009_remove_post_view_tracking.sql`을 적용하면 기존 이벤트 테이블과 누적 조회수 컬럼도 삭제된다.

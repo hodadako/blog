@@ -56,6 +56,6 @@ Guitar `/`는 `/songs`로 영구 리디렉션합니다. 목록은 블로그의 4
 2. DNS 레코드가 없을 때만 Pulumi에 기존 블로그와 일관된 Guitar CNAME을 선언합니다. 이미 있으면 소유권과 현재 설정을 대조한 다음 Pulumi 관리 상태를 맞춥니다.
 3. `infra/pulumi` 타입 검사와 `pulumi preview`에서 변경 대상이 Guitar 레코드로 한정됐는지 확인한 후 적용합니다. 기존 레코드 삭제·교체가 계획에 나타나면 진행을 멈추고 상태를 먼저 정리합니다.
 4. Vercel 도메인 검증을 마치고 DNS 전파와 TLS 인증서를 확인합니다. 두 호스트가 올바른 사이트를 반환하는지, 응답 Host가 유지되는지, 블로그와 Guitar 응답이 캐시에서 교차 노출되지 않는지 점검합니다.
-5. Guitar 홈·목록·상세·canonical·robots·sitemap과 블로그 ko/en·글·Records·관리자·댓글·조회수 경로를 smoke test합니다. 모바일 Safari/Chrome, 터치·회전·dialog·스크롤과 실사용 성능 목표도 별도로 측정합니다.
+5. Guitar 홈·목록·상세·canonical·robots·sitemap과 블로그 ko/en·글·Records·관리자·댓글 경로를 smoke test합니다. 모바일 Safari/Chrome, 터치·회전·dialog·스크롤과 실사용 성능 목표도 별도로 측정합니다.
 
 운영 도메인 인증과 Cloudflare/Pulumi 자격 증명이 제공되지 않은 작업 환경에서는 위 단계를 실행하지 않습니다. 확인 전에는 DNS 선언을 추가하거나 운영 배포를 적용하지 않습니다.

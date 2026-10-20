@@ -39,7 +39,7 @@
 | E7 | `typedRoutes`가 활성화되어 있고 파일 추적 루트가 저장소까지 확장되어 있다. 정적 export 전용 앱은 아니다. README는 Vercel을 명시하며 Pulumi에는 블로그 CNAME → Vercel, Cloudflare proxy 설정이 있다. Guitar DNS와 Vercel 프로젝트 도메인 연결은 코드에 없다. | [next.config.mjs](../apps/web/next.config.mjs), [README](../README.md), [Pulumi](../infra/pulumi/index.ts) |
 | E8 | Quality CI는 웹·Worker 테스트, 웹 타입 검사·빌드, Worker 타입 생성·검사·배포 dry-run을 수행한다. 별도 Supabase migration workflow가 있다. Vercel Git 연동의 실제 프로젝트 설정은 이 파일들만으로 확인할 수 없다. | [quality.yml](../.github/workflows/quality.yml), [supabase-migrations.yml](../.github/workflows/supabase-migrations.yml) |
 | E9 | Vitest Node 환경과 `*.spec.ts` 패턴을 사용한다. 기존 테스트는 보안 helper·Worker 중심이다. 브라우저/E2E 테스트 기반은 없고 ESLint/Prettier 전용 명령도 없다. lint-staged는 웹 TS/JS 변경 시 타입 검사를 수행한다. | [vitest.config.mts](../apps/web/vitest.config.mts), [테스트 예시](../apps/web/src/lib/request-security.spec.ts), [.lintstagedrc.cjs](../.lintstagedrc.cjs), [pre-commit](../.husky/pre-commit) |
-| E10 | 댓글·퀴즈·조회수는 Worker → Supabase 경로다. Guitar에서 재사용할 동적 서비스가 아니다. 블로그 상세는 Worker의 `no-store` 조회 경로도 포함하므로 전체 블로그를 순수 정적 사이트라고 일반화하지 않는다. | [아키텍처](architecture/target-architecture.md), [worker-client.ts](../apps/web/src/lib/worker-client.ts) |
+| E10 | 댓글·퀴즈는 Worker → Supabase 경로다. Guitar에서 재사용할 동적 서비스가 아니다. | [아키텍처](architecture/target-architecture.md), [worker-client.ts](../apps/web/src/lib/worker-client.ts) |
 | E11 | 최신 원격에는 Records 목록·분류·상세·프로필 화면과 native dialog 이미지 확대/포커스 복귀 패턴이 있다. locale 홈은 블로그 목록으로 redirect하며, next.config에 Inspirations → Records 영구 redirect가 있다. Guitar의 일반 UI 패턴 참고 대상이며 음악 기능은 아니다. | [Records 상세 UI](../apps/web/src/app/[locale]/records/record-view.tsx), [Records 필터](../apps/web/src/app/[locale]/records/records-filter.tsx), [records.ts](../apps/web/src/lib/records.ts), [locale 홈](../apps/web/src/app/[locale]/page.tsx), [next.config.mjs](../apps/web/next.config.mjs) |
 
 ### 조사 시 검증 결과
@@ -53,7 +53,7 @@
 
 이는 당시 로컬 `.env.local` 및 미추적 콘텐츠가 포함된 작업 트리의 기준선이며, 운영 환경 또는 깨끗한 checkout의 검증 결과를 의미하지 않는다. 실제 DNS, TLS, Vercel Git 연동, Cloudflare 캐시 규칙, 운영 CWV는 미확인이다.
 
-문서 커밋 준비 중 원격 `main`이 14개 커밋 앞선 것을 확인했다. `4e94fd0`까지의 변경과 최신 아키텍처 문서를 대조하고 로컬 main을 fast-forward했다. Records·랜딩·redirect 및 조회수 추적 변경을 이 계획에 반영했다. 위 테스트 개수와 빌드 결과를 최신 커밋에 대한 재검증 결과로 해석하지 않는다.
+문서 커밋 준비 중 원격 `main`이 14개 커밋 앞선 것을 확인했다. `4e94fd0`까지의 변경과 최신 아키텍처 문서를 대조하고 로컬 main을 fast-forward했다. Records·랜딩·redirect 변경을 이 계획에 반영했다. 위 테스트 개수와 빌드 결과를 최신 커밋에 대한 재검증 결과로 해석하지 않는다.
 
 ## 3. PRD Coverage Matrix
 
@@ -348,7 +348,7 @@ Vite는 TSX를 기본 지원하며 개발 서버 `configureServer`에서 로컬 
 | 에디터 | 실제 임시 파일 read/write, 원문 보존, 충돌 거부, 잘못된 경로·symlink·Host·Origin 거부 |
 | 배포 격리 | production routes와 추적 파일에 에디터/쓰기 모듈 없음; 로컬 endpoint는 공개 앱에서 404 |
 | 라우팅/SEO | 각 Host의 홈/목록/상세, 내부 prefix·블로그 경로 교차 접근, 미등록 곡 404, canonical·robots·sitemap·RSC/prefetch |
-| 기존 블로그 | ko/en 진입→블로그 목록·언어 쿠키·글 이동·Records 목록/상세·이전 Inspirations redirect·테마·폰트·자산·sitemap·관리자·댓글·조회수 동작 보존 |
+| 기존 블로그 | ko/en 진입→블로그 목록·언어 쿠키·글 이동·Records 목록/상세·이전 Inspirations redirect·테마·폰트·자산·sitemap·관리자·댓글 동작 보존 |
 
 웹 변경의 최종 검증 순서는 `pnpm --filter web typecheck` → `pnpm --filter web build`를 유지한다. 여기에 `pnpm test`, 에디터 별도 타입 검사, 신규 `pnpm --filter web test:e2e`를 결합한다. E2E는 production 서버와 명시적으로 구성한 테스트 Host에서 실행하며 실제 브라우저 검증은 Chromium과 WebKit을 포함한다.
 

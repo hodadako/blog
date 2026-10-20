@@ -32,7 +32,7 @@ export default function GuitarLayout({ children }: { children: ReactNode }) {
           <ThemePreferenceSelect />
         </header>
         <main className={styles.main}>{children}</main>
-        <div className={styles.footer}><SiteFooter locale="ko" postsHref={guitarHref("/songs")} postsLabel="Songs" /></div>
+        <div className={styles.footer}><SiteFooter locale="ko" postsHref={guitarHref("/songs")} postsLabel="Songs" privacyHref="https://www.hodako.dev/ko/privacy" /></div>
       </div>
     </ThemeProvider>
     </SiteDocument>

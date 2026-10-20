@@ -231,7 +231,7 @@ CommentList의 edit/delete link
 
 ### 실제 데이터베이스 스키마
 
-`infra/supabase/migrations/0001_baseline.sql` 기준이며 모든 object는 schema를 명시하지 않아 `public`에 생성된다.
+기초 스키마는 `infra/supabase/migrations/0001_baseline.sql`에서 생성되며, `0009_remove_post_view_tracking.sql` 적용 후 방문 집계 컬럼과 이벤트 테이블은 삭제된다. 모든 object는 schema를 명시하지 않아 `public`에 생성된다.
 
 #### `post_threads`
 
@@ -240,7 +240,6 @@ CommentList의 edit/delete link
 | `id` | UUID PK | comments FK |
 | `canonical_slug` | text NOT NULL UNIQUE | thread key |
 | `comments_open` | boolean default true | 코드에서 미사용 |
-| `view_count` | integer default 0 | 조회수 |
 | `created_at` | timestamptz | 생성 시각 |
 
 #### `comments`
