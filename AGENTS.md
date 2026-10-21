@@ -104,9 +104,9 @@ From `docs/git-rules.md`:
 
 ## 12) Design System
 - UI 변경 전에 `docs/design-system/README.md`, `audit.md`, `components.md`, `workflow.md`와 `design/hodako.lib.pen`을 확인한다.
-- 시각 SSOT는 pen.dev 라이브러리다. 대응 component와 Variables를 먼저 확인하고 승인된 디자인 사양을 구현한다.
+- 운영 UI의 SSOT는 `tokens.css`와 공통 컴포넌트 코드다. Tailwind `@theme inline`은 기존 semantic token을 참조하고 CVA는 variant/size를 관리한다. Pen.dev는 디자인 검토와 시안에 사용한다.
 - 기존 토큰/컴포넌트를 우선 재사용한다. 기존 토큰으로 해결할 수 있는 스타일에 임의 Hex/Magic Number를 추가하지 않는다.
-- 시각 사양은 원칙적으로 `.lib.pen`을 먼저 수정한다. 코드에서 의도적으로 변경했다면 기존 origin/Variables에 반영한다.
+- 코드의 의도된 시각 변경을 실제 페이지에서 검증하고 Pen 검토 자료와의 차이를 기록한다. Pen 파일은 코드에 자동 동기화되지 않는다.
 - UI를 대량 재생성하거나 유사 컴포넌트를 중복 구현하지 않는다. Variant와 준비 컴포넌트의 실제 목적을 registry에 기록한다.
 - 목적 없는 Card/Badge/Icon/Glow/Gradient/Shadow를 추가하지 않는다. 콘텐츠 가독성과 의도된 개인적 정체성을 함께 유지한다.
 - 기본 서체는 경기천년제목 Medium (`design/fonts/gyeonggi/Title_Medium.otf`). 웹의 기존 Blog Korean Title alias와 Light/Bold/font toggle를 임의 교체하지 않는다.
@@ -117,4 +117,4 @@ From `docs/git-rules.md`:
 - 자체 Design Lab/별도 비주얼 편집기/중복 토큰 원본을 추가하지 않는다. Storybook은 필요 시 구현 검증 도구로만 검토한다.
 - 새 UI 전에 `@/components/ui`와 `docs/design-system/components.md`의 실제 사용처를 검색한다. 같은 의미/디자인이면 기존 구현을 재사용하고 이름만 바꾼 복제는 만들지 않는다.
 - Action은 Button, 탐색은 UiLink/TextLink를 쓴다. native props/ref/events를 유지하고 도메인 전용 조작을 억지로 Button variant로 통합하지 않는다.
-- 공통 컴포넌트는 실제 소비자와 함께 추가한다. `primitives.css`와 Pen origin을 함께 확인하고 영향 페이지·키보드·테마·반응형 검증을 남긴다.
+- 공통 컴포넌트는 실제 소비자와 함께 추가한다. `control-variants.ts`/`tailwind.css`/`primitives.css`와 Pen 참고 origin을 확인하고 영향 페이지·키보드·테마·반응형 검증을 남긴다.

@@ -1,5 +1,7 @@
 # Shared components — production consolidation
 
+이 문서는 Tailwind 전환 이전의 공통화 이력이다. 현재 API/토큰/검증은 [Tailwind 통합 기록](tailwind-ui-integration.md)을 따른다.
+
 ## 기준과 범위
 
 기준 HEAD `4d31116`, branch `main`. 시작 시 tracked 변경은 없었고 `.playwright-mcp/`, `supabase/`는 기존 untracked였다. 이전 감사의 단계별 추출 계획을 실제 제품에 적용한다. 기존 문서의 Lab/P3 제안은 역사 기록이며 실행 계획이 아니다.

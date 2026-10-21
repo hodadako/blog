@@ -22,10 +22,11 @@
           "type": "text",
           "id": "z7LArb",
           "name": "Library title",
+          "context": "Runtime SSOT: tokens.css + control-variants.ts + shared component code. Pen.dev is a review reference, not an automatic code source.",
           "fill": "$--color-text",
           "textGrowth": "fixed-width",
           "width": "fill_container",
-          "content": "HODAKO · Design System",
+          "content": "HODAKO · Design Review",
           "fontFamily": "$--font-primary",
           "fontSize": 32,
           "fontWeight": "$--font-default-weight"
@@ -546,7 +547,7 @@
           "type": "frame",
           "id": "d1lHVe",
           "name": "ActionButton / Neutral Solid",
-          "context": "Button primary default. Default native action type=button; explicit type=submit on forms. Existing token --button-height materialized48. Hover/Focus/Disabled use native states.",
+          "context": "Button primary/md: code SSOT. 48px, 8px radius, existing font. Review reference only.",
           "reusable": true,
           "height": 48,
           "fill": "$--button-background",
@@ -566,6 +567,7 @@
               "name": "Button label",
               "fill": "$--button-text",
               "content": "댓글 등록",
+              "lineHeight": 1.5,
               "fontFamily": "$--font-primary",
               "fontSize": "$--button-font-size",
               "fontWeight": "$--button-weight"
@@ -578,7 +580,7 @@
           "reusable": true,
           "ref": "d1lHVe",
           "name": "ActionButton / Neutral Weak",
-          "fill": "$--color-surface-muted",
+          "fill": "$--button-secondary-background",
           "stroke": "$--color-transparent",
           "context": "Neutral weak secondary action. Pair with one primary action.",
           "descendants": {
@@ -934,7 +936,7 @@
           "name": "ActionButton / Brand Solid",
           "fill": "$--button-brand-background",
           "stroke": "$--button-brand-background",
-          "context": "Brand solid for a clearly identified main action. Do not repeat throughout a page.",
+          "context": "Legacy prepared Pen brand example. No runtime brand variant or current product consumer.",
           "descendants": {
             "NCp7V": {
               "fill": "$--button-brand-text",
@@ -2317,14 +2319,17 @@
           "type": "ref",
           "reusable": true,
           "ref": "u4dfxn",
-          "name": "ActionButton / Neutral Weak / Compact",
+          "name": "Button / Secondary / Sm",
           "height": 44,
-          "padding": "$--control-padding",
-          "context": "Button secondary size=compact. 44px materialized from --control-size. Guitar settings; native disabled/focus/pressed states. No lift.",
+          "padding": [
+            "$--button-padding-y",
+            "$--control-padding-x-sm"
+          ],
+          "context": "Button secondary/sm. 44px target. Runtime control-variants.ts.",
           "descendants": {
             "NCp7V": {
               "content": "스크롤 시작",
-              "fontSize": "$--button-font-size"
+              "fontSize": "$--text-caption"
             }
           }
         },
@@ -2333,17 +2338,20 @@
           "type": "ref",
           "reusable": true,
           "ref": "d1lHVe",
-          "name": "ActionButton / Quiet / Compact",
+          "name": "Button / Ghost / Sm",
           "height": 44,
-          "padding": "$--control-padding",
+          "padding": [
+            "$--button-padding-y",
+            "$--control-padding-x-sm"
+          ],
           "fill": "$--color-transparent",
           "stroke": "$--color-transparent",
-          "context": "Button quiet size=compact: search clear and secondary inline actions. Native button; not a link.",
+          "context": "Button ghost/sm. Header and quiet action, 44px. Code SSOT.",
           "descendants": {
             "NCp7V": {
               "content": "지우기",
               "fill": "$--color-text-muted",
-              "fontSize": "$--button-font-size"
+              "fontSize": "$--text-caption"
             }
           }
         },
@@ -2413,7 +2421,7 @@
           "type": "ref",
           "ref": "A5i6wJ",
           "name": "Disabled",
-          "opacity": 55
+          "opacity": "$--button-disabled-opacity"
         },
         {
           "id": "Ho1Dz",
@@ -2484,7 +2492,7 @@
           "type": "ref",
           "ref": "zas8N",
           "name": "Input disabled",
-          "opacity": 55
+          "opacity": "$--button-disabled-opacity"
         },
         {
           "id": "D8S94",
@@ -2563,7 +2571,7 @@
           "type": "ref",
           "ref": "A5i6wJ",
           "name": "Disabled",
-          "opacity": 55
+          "opacity": "$--button-disabled-opacity"
         },
         {
           "id": "E1Y0B",
@@ -2643,6 +2651,322 @@
           "width": "fill_container"
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "EvZPZ",
+      "x": 7750,
+      "y": 0,
+      "name": "13 Tailwind controls · Code review · Light",
+      "context": "Review fixture only. Runtime source: tokens.css + control-variants.ts. Shared preview, not a product component.",
+      "theme": {
+        "mode": "light"
+      },
+      "reusable": true,
+      "width": 1100,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "text",
+          "id": "B16Oud",
+          "name": "Runtime source heading",
+          "fill": "$--color-text",
+          "content": "공통 UI · 코드 기준 검토",
+          "fontFamily": "$--font-primary",
+          "fontSize": 20,
+          "fontWeight": "$--font-default-weight"
+        },
+        {
+          "type": "text",
+          "id": "G7jxgR",
+          "name": "Runtime source note",
+          "fill": "$--color-text-muted",
+          "content": "tokens.css → Tailwind @theme → CVA → Button / IconButton / ToggleButton / SegmentedControl",
+          "fontFamily": "$--font-primary",
+          "fontSize": 13,
+          "fontWeight": "$--font-default-weight"
+        },
+        {
+          "type": "frame",
+          "id": "y4Kf43",
+          "name": "Variants",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "e9yC8v",
+              "type": "ref",
+              "ref": "d1lHVe",
+              "name": "ActionButton / Neutral Solid"
+            },
+            {
+              "id": "CJMQw",
+              "type": "ref",
+              "ref": "u4dfxn",
+              "name": "ActionButton / Neutral Weak"
+            },
+            {
+              "id": "yDsir",
+              "type": "ref",
+              "reusable": true,
+              "ref": "d1lHVe",
+              "name": "Button / Outline",
+              "fill": "$--color-transparent",
+              "stroke": "$--field-border",
+              "descendants": {
+                "NCp7V": {
+                  "content": "테두리",
+                  "fill": "$--color-text"
+                }
+              }
+            },
+            {
+              "id": "HGEwe",
+              "type": "ref",
+              "ref": "eKufu",
+              "name": "Ghost"
+            },
+            {
+              "id": "Teapy",
+              "type": "ref",
+              "reusable": true,
+              "ref": "d1lHVe",
+              "name": "Button / Destructive",
+              "fill": "$--color-danger-soft",
+              "stroke": "$--color-transparent",
+              "descendants": {
+                "NCp7V": {
+                  "content": "삭제",
+                  "fill": "$--color-danger"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "grM0o",
+          "name": "Size heading",
+          "fill": "$--color-text",
+          "content": "크기 · 44 / 48 / 56px · icon 44px",
+          "fontFamily": "$--font-primary",
+          "fontSize": 20,
+          "fontWeight": "$--font-default-weight"
+        },
+        {
+          "type": "frame",
+          "id": "LbsGS",
+          "name": "Sizes",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "K1nWfI",
+              "type": "ref",
+              "ref": "A5i6wJ",
+              "name": "Sm 44px"
+            },
+            {
+              "id": "sNIum",
+              "type": "ref",
+              "ref": "d1lHVe",
+              "name": "Md 48px"
+            },
+            {
+              "id": "QXCVB",
+              "type": "ref",
+              "ref": "d1lHVe",
+              "name": "Lg 56px",
+              "height": 56,
+              "padding": [
+                8,
+                24
+              ],
+              "descendants": {
+                "NCp7V": {
+                  "content": "큰 조작 영역"
+                }
+              }
+            },
+            {
+              "id": "r4VmLv",
+              "type": "ref",
+              "ref": "yDsir",
+              "name": "IconButton 44px",
+              "width": 44,
+              "height": 44,
+              "padding": 0,
+              "descendants": {
+                "NCp7V": {
+                  "content": "＋"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "jeeIi",
+          "name": "State heading",
+          "fill": "$--color-text",
+          "content": "상태 · hover / active / focus / disabled",
+          "fontFamily": "$--font-primary",
+          "fontSize": 20,
+          "fontWeight": "$--font-default-weight"
+        },
+        {
+          "type": "frame",
+          "id": "Bn4eY",
+          "name": "States",
+          "gap": 12,
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "EB1I8",
+              "type": "ref",
+              "ref": "yDsir",
+              "name": "Default",
+              "descendants": {
+                "NCp7V": {
+                  "content": "Default"
+                }
+              }
+            },
+            {
+              "id": "Z26MB",
+              "type": "ref",
+              "ref": "yDsir",
+              "name": "Hover",
+              "fill": "$--color-accent-soft",
+              "descendants": {
+                "NCp7V": {
+                  "content": "Hover"
+                }
+              }
+            },
+            {
+              "id": "Bd60t",
+              "type": "ref",
+              "ref": "yDsir",
+              "name": "Active",
+              "fill": "$--color-accent-soft",
+              "stroke": "$--color-border",
+              "descendants": {
+                "NCp7V": {
+                  "content": "Active"
+                }
+              }
+            },
+            {
+              "id": "b8juu",
+              "type": "ref",
+              "ref": "yDsir",
+              "name": "Focus",
+              "stroke": "$--color-accent",
+              "strokeWidth": 2,
+              "descendants": {
+                "NCp7V": {
+                  "content": "Focus"
+                }
+              }
+            },
+            {
+              "id": "RzomL",
+              "type": "ref",
+              "ref": "yDsir",
+              "name": "Disabled",
+              "opacity": "$--button-disabled-opacity",
+              "descendants": {
+                "NCp7V": {
+                  "content": "Disabled"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "PyJTY",
+          "name": "Selection heading",
+          "fill": "$--color-text",
+          "content": "선택 · 동일한 배경과 경계, 각자의 aria 의미",
+          "fontFamily": "$--font-primary",
+          "fontSize": 20,
+          "fontWeight": "$--font-default-weight"
+        },
+        {
+          "type": "frame",
+          "id": "cD39r",
+          "name": "Toggle and segmented examples",
+          "gap": 12,
+          "children": [
+            {
+              "id": "f1mQ7",
+              "type": "ref",
+              "ref": "eKufu",
+              "name": "Toggle pressed",
+              "fill": "$--color-accent-soft",
+              "stroke": "$--color-border",
+              "descendants": {
+                "NCp7V": {
+                  "content": "효과 정지",
+                  "fill": "$--color-text"
+                }
+              }
+            },
+            {
+              "id": "SS3t5",
+              "type": "ref",
+              "ref": "eKufu",
+              "name": "Segment 모든 곡",
+              "fill": "$--color-accent-soft",
+              "stroke": "$--color-border",
+              "descendants": {
+                "NCp7V": {
+                  "content": "모든 곡",
+                  "fill": "$--color-text"
+                }
+              }
+            },
+            {
+              "id": "RczJ3",
+              "type": "ref",
+              "ref": "eKufu",
+              "name": "Segment J-Pop",
+              "descendants": {
+                "NCp7V": {
+                  "content": "J-Pop"
+                }
+              }
+            },
+            {
+              "id": "s8QqHS",
+              "type": "ref",
+              "ref": "eKufu",
+              "name": "Segment K-Pop",
+              "descendants": {
+                "NCp7V": {
+                  "content": "K-Pop"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "y7sA97",
+      "type": "ref",
+      "ref": "EvZPZ",
+      "name": "14 Tailwind controls · Code review · Dark",
+      "x": 7750,
+      "y": 625,
+      "theme": {
+        "mode": "dark"
+      }
     }
   ],
   "themes": {
@@ -3463,7 +3787,7 @@
     },
     "--button-padding-y": {
       "type": "number",
-      "value": "$--space-3"
+      "value": "$--space-2"
     },
     "--button-background": {
       "type": "color",
@@ -3475,7 +3799,20 @@
     },
     "--button-secondary-hover": {
       "type": "color",
-      "value": "$--color-surface-muted"
+      "value": [
+        {
+          "value": "$--color-accent-soft",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--color-surface-muted",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
     },
     "--button-disabled-opacity": {
       "type": "number",
@@ -3483,7 +3820,7 @@
     },
     "--field-radius": {
       "type": "number",
-      "value": "$--radius-sm"
+      "value": "$--button-radius"
     },
     "--field-padding-x": {
       "type": "number",
@@ -3781,6 +4118,31 @@
     "--control-padding": {
       "type": "number",
       "value": "$--space-2"
+    },
+    "--button-secondary-background": {
+      "type": "color",
+      "value": [
+        {
+          "value": "$--color-surface-muted",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "$--color-surface-panel",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "--control-padding-x-sm": {
+      "type": "number",
+      "value": "$--space-3"
+    },
+    "--control-height-lg": {
+      "type": "number",
+      "value": 56
     }
   },
   "fileToken": "c4430149-e7d0-4d2f-941a-81fcf8896828",
