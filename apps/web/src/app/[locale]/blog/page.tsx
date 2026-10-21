@@ -1,4 +1,5 @@
 import {PostCard} from "@/components/post-card";
+import {redirect} from "next/navigation";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 import {getBlogIndexPageData} from "@/lib/server/blog";
 
@@ -26,6 +27,10 @@ export default async function BlogIndexPage({params}: BlogIndexProps) {
   const locale = resolveLocale(routeParams.locale);
   const dictionary = getDictionary(locale);
   const data = await getBlogIndexPageData(locale);
+
+  if (locale === "en" && data.posts.length === 0) {
+    redirect("/ko/blog");
+  }
 
   return (
     <div className="page-main blog-index-page">

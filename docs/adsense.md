@@ -1,5 +1,11 @@
 # 수동 AdSense 운영
 
+## 사이트 검토 메모 (2026-10-21)
+
+AdSense의 `hodako.dev`는 「게시자 콘텐츠가 없는 화면에 Google 게재 광고」 사유로 주의 필요 상태다. 정책 센터에는 별도 게재 제한 항목이 없고 ads.txt는 승인됨으로 표시된다. 공개 `/en/blog`는 게시글이 0개였으므로 영문 게시글이 생기기 전에는 `/ko/blog`로 임시 이동한다. 배포 빌드의 canonical·사이트맵·robots 기준 주소는 `https://www.hodako.dev`로 고정한다. 기존 공개 사이트에서는 글 canonical과 사이트맵에 `http://localhost:3000`이 노출되었다.
+
+일반 서브도메인인 `guitar.hodako.dev`는 AdSense 사이트 목록에 별도로 추가·심사할 수 없다. [Google의 사이트 관리 안내](https://support.google.com/adsense/answer/12170421?hl=ko)에 따라 루트 도메인 심사를 먼저 해결한다. 코드 수정만으로 사이트 승인이나 기타 콘텐츠의 심사 포함을 보장하지 않는다. 글의 추가 게시와 지급 정보 완료 여부를 확인한 뒤 재검토를 요청한다.
+
 ## 구조와 현재 상태
 
 Next.js App Router의 한 앱에서 locale Blog와 host rewrite Guitar를 제공한다. 별도 광고 SDK/의존성을 추가하지 않았다.
