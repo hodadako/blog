@@ -2,6 +2,7 @@
 
 import {useTheme} from "@/components/theme-context";
 import type {AppLocale} from "@/lib/site";
+import {ToggleButton} from "@/components/ui";
 
 export function ThemeToggle({locale = "en"}: {locale?: AppLocale}) {
   const {theme, toggleTheme} = useTheme();
@@ -11,14 +12,16 @@ export function ThemeToggle({locale = "en"}: {locale?: AppLocale}) {
   const switchLabel = locale === "ko" ? `${isDark ? "눈" : "별"} 테마로 전환` : `Switch to ${nextThemeLabel} theme`;
 
   return (
-    <button
+    <ToggleButton
+      pressed={isDark}
+      size="sm"
       aria-label={switchLabel}
-      className="theme-toggle__trigger theme-toggle__trigger--current"
+      className="theme-toggle__trigger"
       onClick={toggleTheme}
       title={switchLabel}
       type="button"
     >
       <span className="theme-toggle__label">{locale === "ko" ? isDark ? "별" : "눈" : themeLabel}</span>
-    </button>
+    </ToggleButton>
   );
 }

@@ -63,6 +63,8 @@ test("mobile navigation: Escape restores focus, locale and theme persist", async
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  // Records exists in both locales; an empty English blog intentionally falls back to Korean.
+  await page.goto("/ko/records");
   await menu.click();
   await locale.focus();
   await page.keyboard.press("ArrowDown");
@@ -70,7 +72,7 @@ test("mobile navigation: Escape restores focus, locale and theme persist", async
   await page.keyboard.press("End");
   await expect(page.getByRole("menuitemradio").last()).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/en\/blog$/);
+  await expect(page).toHaveURL(/\/en\/records$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });
 
@@ -122,68 +124,55 @@ test("blocked storage preserves the header and its theme/font controls", async (
 
 for (const width of [390, 1440]) {
   for (const theme of ["light", "dark"]) {
-    test(`${width}px ${theme}: background pause survives focus changes, reload and locale`, async ({page}) => {
+    test(`${width}px ${theme}: background runs despite a legacy pause preference`, async ({page}) => {
       await page.setViewportSize({width, height: 900});
       await page.emulateMedia({reducedMotion: "no-preference"});
-      await page.addInitScript((theme) => localStorage.setItem("site-theme", theme), theme);
+      await page.addInitScript((theme) => {
+        localStorage.setItem("site-theme", theme);
+        localStorage.setItem("site-motion", "paused");
+      }, theme);
+      const expectRunning = async (): Promise<void> => {
+        await expect(page.locator("html")).not.toHaveAttribute("data-motion", "paused");
+        await expect(page.locator(".motion-toggle__trigger")).toHaveCount(0);
+        if (theme === "light") {
+          const canvas = page.locator(".site-shell__snowfall canvas");
+          await expect(canvas).toBeVisible();
+          const first = await canvas.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
+          await expect.poll(() => canvas.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL())).not.toBe(first);
+        } else {
+          await expect(page.locator(".site-shell__meteor").first()).toHaveCSS("animation-play-state", "running");
+          await expect(page.locator(".site-shell__meteor").first()).toHaveCSS("animation-name", "meteor-fall");
+        }
+      };
       await page.goto("/ko/blog");
       if (width === 390) await page.locator(".mobile-header-shell__toggle").click();
-      const pause = page.getByRole("button", {name: "배경 효과 일시정지", exact: true});
-      await pause.focus();
-      await page.keyboard.press("Space");
-      await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
-      await expect(page.locator(".motion-toggle__trigger")).toBeFocused();
-      await expect(page.locator(".motion-toggle__trigger")).toHaveCSS("outline-style", "solid");
-      if (theme === "light") {
-        const canvas = page.locator(".site-shell__snowfall canvas");
-        const first = await canvas.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
-        await page.waitForTimeout(200);
-        expect(await canvas.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL())).toBe(first);
-      } else {
-        await expect(page.locator(".site-shell__meteor").first()).toHaveCSS("animation-play-state", "paused");
-      }
-      await page.locator("footer a").first().focus();
-      await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+      await expectRunning();
       await page.reload();
-      await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
+      await expectRunning();
+      await page.goto("/ko/records");
       if (width === 390) await page.locator(".mobile-header-shell__toggle").click();
       await page.locator(".locale-switcher__trigger").click();
       await page.getByRole("menuitemradio", {name: "English", exact: true}).click();
-      await page.waitForURL("**/en/blog");
-      await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
-      if (width === 390) await page.locator(".mobile-header-shell__toggle").click();
-      await page.getByRole("button", {name: "Resume background effects", exact: true}).click();
-      await expect(page.locator("html")).toHaveAttribute("data-motion", "running");
-      await expect(page.locator(".site-shell__meteor").first()).toHaveCSS("animation-play-state", "running");
+      await page.waitForURL("**/en/records");
+      await expectRunning();
     });
   }
 }
 
-test("device reduced motion takes precedence over manual resume", async ({page}) => {
-  await page.emulateMedia({reducedMotion: "reduce"});
-  await page.goto("/ko/blog");
-  const control = page.locator(".motion-toggle__trigger");
-  await expect(control).toBeDisabled();
-  await expect(control).toHaveText("움직임 줄임");
+test("background runs when persistent storage is blocked", async ({page}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
   await page.emulateMedia({reducedMotion: "no-preference"});
-  await expect(control).toBeEnabled();
-  await control.click();
-  await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
-  await page.emulateMedia({reducedMotion: "reduce"});
-  await expect(control).toBeDisabled();
-  await page.emulateMedia({reducedMotion: "no-preference"});
-  await expect(control).toHaveAccessibleName("배경 효과 재생");
-});
-
-test("background pause works when persistent storage is blocked", async ({page}) => {
   await page.addInitScript(() => Object.defineProperty(window, "localStorage", {
     get() { throw new DOMException("Storage denied", "SecurityError"); },
   }));
   await page.goto("/ko/blog");
-  await page.locator(".motion-toggle__trigger").click();
-  await expect(page.locator("html")).toHaveAttribute("data-motion", "paused");
-  await page.locator(".motion-toggle__trigger").click();
-  await expect(page.locator("html")).toHaveAttribute("data-motion", "running");
+  await expect(page.locator(".motion-toggle__trigger")).toHaveCount(0);
+  const canvas = page.locator(".site-shell__snowfall canvas");
+  await expect(canvas).toBeVisible();
+  const first = await canvas.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL());
+  await expect.poll(() => canvas.evaluate((canvas: HTMLCanvasElement) => canvas.toDataURL())).not.toBe(first);
+  expect(errors).toEqual([]);
 });
 
 test("skip link closes an expanded mobile menu and reveals the article", async ({page}) => {

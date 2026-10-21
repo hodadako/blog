@@ -1,4 +1,5 @@
 import "@/design-system/tokens.css";
+import "@/design-system/tailwind.css";
 import "@/design-system/primitives.css";
 import "@/app/globals.css";
 import Script from "next/script";
@@ -31,9 +32,6 @@ export function SiteDocument({children, locale}: SiteDocumentProps) {
         {publisherId && <meta name="google-adsense-account" content={publisherId} />}
       </head>
       <body>
-        <Script id="motion-bootstrap" strategy="beforeInteractive">
-          {`(function(){try{if(window.localStorage.getItem("site-motion")==="paused"){document.documentElement.dataset.motion="paused";}}catch(error){}})();`}
-        </Script>
         <Script id="theme-bootstrap" strategy="beforeInteractive">
           {`(function(){var root=document.documentElement;var theme="light";try{var preference=window.localStorage.getItem("site-theme");if(preference==="dark"){theme="dark";}else if(preference==="system"){theme=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";}var fontPreference=window.localStorage.getItem("site-font");if(fontPreference==="pretendard"){root.dataset.font=fontPreference;}else{delete root.dataset.font;}}catch(error){delete root.dataset.font;}root.dataset.theme=theme;root.style.colorScheme=theme;})();`}
         </Script>

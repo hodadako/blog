@@ -5,7 +5,6 @@ import {LocaleSwitcher} from "@/components/locale-switcher";
 import {MobileHeaderShell} from "@/components/mobile-header-shell";
 import {SiteNavLinks} from "@/components/site-nav-links";
 import {ThemeToggle} from "@/components/theme-toggle";
-import {MotionToggle} from "@/components/motion-toggle";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
 const SHOW_PROJECTS_NAV = false;
@@ -40,7 +39,6 @@ export function SiteHeader({locale}: SiteHeaderProps) {
               </Suspense>
               <FontToggle locale={locale} />
               <ThemeToggle locale={locale} />
-              <MotionToggle locale={locale} />
             </div>
           </div>
         </div>

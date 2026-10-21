@@ -1,0 +1,37 @@
+/* Utilities only: the existing reset, typography and page CSS remain in place. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "../components";
+@source "../design-system";
+@source "../../tools/guitar-editor";
+
+@theme inline {
+  --color-ui-text: var(--color-text);
+  --color-ui-muted: var(--color-text-muted);
+  --color-ui-primary: var(--button-background);
+  --color-ui-primary-foreground: var(--button-text);
+  --color-ui-primary-hover: var(--button-neutral-hover);
+  --color-ui-secondary: var(--button-secondary-background);
+  --color-ui-secondary-hover: var(--button-secondary-hover);
+  --color-ui-border: var(--field-border);
+  --color-ui-hover: var(--color-accent-soft);
+  --color-ui-selected: var(--control-selected-background);
+  --color-ui-selected-border: var(--control-selected-border);
+  --color-ui-focus: var(--color-accent);
+  --color-ui-danger: var(--color-danger);
+  --color-ui-danger-soft: var(--color-danger-soft);
+  --font-interface: var(--font-ui);
+  --font-weight-control: var(--button-weight);
+  --text-control: var(--button-font-size);
+  --text-control-sm: var(--text-caption);
+  --radius-control: var(--button-radius);
+  --spacing-control-sm: var(--control-height-sm);
+  --spacing-control-md: var(--button-height);
+  --spacing-control-lg: var(--control-height-lg);
+  --spacing-control-x-sm: var(--space-3);
+  --spacing-control-x: var(--button-padding-x);
+  --spacing-control-x-lg: var(--space-5);
+  --spacing-control-y: var(--button-padding-y);
+  --spacing-control-gap: var(--space-2);
+}

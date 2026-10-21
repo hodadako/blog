@@ -1,5 +1,17 @@
 # Design ↔ Code Workflow
 
+## 현재 절차 — 코드 SSOT (2026-10-21)
+
+1. `tokens.css` → `tailwind.css` @theme inline → `control-variants.ts` CVA → `ui.tsx`/`segmented-control.tsx`의 실제 소비자를 조사한다.
+2. 토큰/공통 API와 사용처를 함께 수정한다. native props/ref/form/Next route와 도메인 상태를 보존한다. 페이지에는 variant 클래스 조합을 복제하지 않는다.
+3. Tailwind Preflight 없이 기존 reset을 base layer에서 유지한다. 전역 reset은 utilities를 덮어쓰지 않게 하고 CSS module에는 배치/도메인 규칙만 남긴다.
+4. Pen은 디자인 검토에 사용한다. 활성 파일과 기존 origin을 확인하고 필요 시 검토 자료를 갱신한다. 코드와 Pen의 자동 동기화는 없다.
+5. 격리 build에만 `e2e/fixtures/control-gallery.tsx`를 임시 route로 연결한다. 운영 앱에는 Lab/preview/editor route를 추가하지 않는다.
+6. Disabled opacity는 CSS fraction 0.55와 Pen percent 55를 대응시킨다. 단위가 다르므로 숫자를 그대로 복사하지 않고 렌더링을 확인한다.
+7. [현재 통합 기록](tailwind-ui-integration.md)의 타입/회귀/상태/viewport 검사와 실제 화면 검토 후 결과를 기록한다.
+
+아래는 이전 Pen-first 작업의 이력이며 현재 코드 SSOT 정책보다 우선하지 않는다.
+
 ## Production shared component workflow (2026-10-21)
 
 현재 API·계층별 inventory·사용처·이번 검증 결과는 [production review](production-review.md), origin/token 대응은 [registry](components.md)를 따른다. 이전 검증 기록은 당시 스냅샷에 대한 이력이다.

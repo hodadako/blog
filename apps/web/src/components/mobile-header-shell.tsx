@@ -3,6 +3,7 @@
 import {useEffect, useId, useRef, useState} from "react";
 import {usePathname} from "next/navigation";
 import type {ReactNode} from "react";
+import {Button} from "@/components/ui";
 
 interface MobileHeaderShellProps {
   children: ReactNode;
@@ -30,7 +31,7 @@ export function MobileHeaderShell({children, menuLabel}: MobileHeaderShellProps)
         if ((event.target as Element).closest("a")) setIsExpanded(false);
       }}
     >
-      <button
+      <Button variant="outline" size="sm"
         aria-expanded={isExpanded}
         aria-controls={contentId}
         ref={toggleRef}
@@ -44,7 +45,7 @@ export function MobileHeaderShell({children, menuLabel}: MobileHeaderShellProps)
         <span aria-hidden="true" className="mobile-header-shell__toggle-icon">
           {isExpanded ? "−" : "+"}
         </span>
-      </button>
+      </Button>
       <div className="mobile-header-shell__content" id={contentId}>{children}</div>
     </div>
   );

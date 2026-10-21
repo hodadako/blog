@@ -1,4 +1,4 @@
-/* Implementation projection of design/hodako.lib.pen. Change the approved library first. */
+/* Runtime token source of truth. Pen.dev is a design review reference. */
 :root {
   --primitive-ink: #0a1128;
   --primitive-navy: #001f54;
@@ -91,13 +91,18 @@
   --control-size: calc(var(--space-6) + var(--space-3));
   --control-padding: var(--space-2);
   --button-padding-x: var(--space-4);
-  --button-padding-y: var(--space-3);
+  --button-padding-y: var(--space-2);
   --button-background: var(--color-text);
   --button-text: var(--color-surface-strong);
+  --button-secondary-background: var(--color-surface-panel);
   --button-secondary-hover: var(--color-surface-muted);
+  --control-selected-background: var(--color-accent-soft);
+  --control-selected-border: var(--color-border);
+  --control-height-sm: var(--control-size);
+  --control-height-lg: calc(var(--space-6) + var(--space-5));
   --button-weight: var(--font-default-weight);
   --button-disabled-opacity: 0.55;
-  --field-radius: var(--radius-sm);
+  --field-radius: var(--button-radius);
   --field-padding-x: var(--space-4);
   --field-padding-y: var(--space-3);
   --field-background: var(--color-surface-muted);
@@ -109,8 +114,6 @@
   --font-default-weight: 500;
   --button-font-size: 0.875rem;
   --button-height: 3rem;
-  --button-brand-background: var(--primitive-blue);
-  --button-brand-text: var(--primitive-paper);
   --wheel-item-height: 2.75rem;
   --wheel-font-size: 1.25rem;
   --field-border: var(--color-border-strong);
@@ -141,10 +144,11 @@
   --primitive-transparent: #00000000;
   --color-transparent: var(--primitive-transparent);
   --button-neutral-hover: var(--primitive-paper-muted);
-  --button-brand-hover: var(--primitive-navy);
 }
 
 [data-theme="light"] {
+  --button-secondary-background: var(--color-surface-muted);
+  --button-secondary-hover: var(--color-accent-soft);
   --button-neutral-hover: var(--primitive-blue);
   --color-page-bg: var(--primitive-paper);
   --color-sky-background:

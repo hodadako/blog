@@ -145,7 +145,7 @@ test("serves host-specific robots and sitemaps", async ({ request }) => {
   expect(await blogRobots.text()).toContain("/ko/admin");
 });
 
-test("keeps system theme, preferences, and reading controls usable when storage is blocked", async ({ browser }) => {
+test("keeps the default theme and reading controls usable when storage is blocked", async ({ browser }) => {
   const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
   await context.addInitScript(() => {
     Object.defineProperty(window, "localStorage", {
@@ -156,22 +156,25 @@ test("keeps system theme, preferences, and reading controls usable when storage 
   const page = await context.newPage();
   await page.goto("/songs/vaundy--shiawase");
   await openSettings(page);
-  await expect(page.getByLabel("테마")).toHaveValue("light");
-  await page.getByLabel("테마").selectOption("system");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.getByLabel("테마", {exact: true})).toHaveCount(0);
   await page.getByRole("button", { name: "한 음 낮추기" }).click();
   await expect(page.locator("p[aria-live='polite']")).toContainText("조옮김 -1");
   await context.close();
 });
 
-test("follows OS theme changes only while the System preference is selected", async ({ page }) => {
+test("follows OS theme changes only with a stored system preference", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (!localStorage.getItem("site-theme")) localStorage.setItem("site-theme", "system");
+  });
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/songs/vaundy--shiawase");
-  await page.getByLabel("테마").selectOption("system");
   await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("dark");
 
   await page.emulateMedia({ colorScheme: "light" });
   await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("light");
-  await page.getByLabel("테마").selectOption("dark");
+  await page.evaluate(() => localStorage.setItem("site-theme", "dark"));
+  await page.reload();
   await page.emulateMedia({ colorScheme: "light" });
   await expect.poll(() => page.locator("html").getAttribute("data-theme")).toBe("dark");
 });

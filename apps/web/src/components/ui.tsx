@@ -1,7 +1,8 @@
 import type {ComponentPropsWithRef} from "react";
+import {buttonVariants, selectedControlClasses, type ButtonVariant, type ButtonSize} from "@/design-system/control-variants";
+import {cn} from "@/lib/cn";
 
-export type ButtonVariant = "primary" | "secondary" | "brand" | "quiet";
-export type ButtonSize = "default" | "compact";
+export type {ButtonVariant, ButtonSize} from "@/design-system/control-variants";
 
 export interface ButtonAppearance {
   variant?: ButtonVariant;
@@ -10,14 +11,27 @@ export interface ButtonAppearance {
 }
 
 /** Also used by navigation links without changing their anchor semantics. */
-export function buttonClassName({variant = "primary", size = "default", className = ""}: ButtonAppearance = {}): string {
-  return ["button", variant !== "primary" && `button--${variant}`, size !== "default" && `button--${size}`, className].filter(Boolean).join(" ");
+export function buttonClassName({variant = "primary", size = "md", className}: ButtonAppearance = {}): string {
+  return cn(buttonVariants({variant, size}), selectedControlClasses, className);
 }
 
 export type ButtonProps = ComponentPropsWithRef<"button"> & ButtonAppearance;
 
-export function Button({variant, size, className, type = "button", ...props}: ButtonProps) {
-  return <button {...props} type={type} className={buttonClassName({variant, size, className})} />;
+export function Button({variant = "primary", size = "md", className, type = "button", ...props}: ButtonProps) {
+  return <button data-slot="button" data-variant={variant} data-size={size} {...props} type={type} className={buttonClassName({variant, size, className})} />;
+}
+
+export type IconButtonProps = Omit<ButtonProps, "size"> & {"aria-label": string};
+
+export function IconButton(props: IconButtonProps) {
+  return <Button {...props} size="icon" />;
+}
+
+export type ToggleButtonProps = Omit<ButtonProps, "aria-pressed"> & {pressed: boolean};
+
+/** Controlled state; callers retain their native click handlers and storage policy. */
+export function ToggleButton({pressed, variant = "ghost", ...props}: ToggleButtonProps) {
+  return <Button {...props} variant={variant} aria-pressed={pressed} />;
 }
 
 interface FieldAppearance {
