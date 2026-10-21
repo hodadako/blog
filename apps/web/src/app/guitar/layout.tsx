@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import {UiLink} from "@/components/ui-link";
 import type { ReactNode } from "react";
 import {SiteDocument} from "@/components/site-document";
 import styles from "./guitar.module.css";
@@ -26,7 +26,7 @@ export default function GuitarLayout({ children }: { children: ReactNode }) {
               <strong className="brand-lockup__title">{getDictionary("ko").siteName}</strong>
             </a>
             <nav aria-label="주요 탐색">
-              <Link aria-current="location" className={styles.sectionLink} href={guitarHref("/songs")}>악보</Link>
+              <UiLink aria-current="page" className={styles.sectionLink} href={guitarHref("/songs")}>악보</UiLink>
             </nav>
           </div>
           <ThemePreferenceSelect />

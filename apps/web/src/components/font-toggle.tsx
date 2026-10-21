@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from "react";
 import type {AppLocale} from "@/lib/site";
+import {ToggleButton} from "@/components/ui";
 
 type FontPreference = "default" | "pretendard";
 
@@ -57,9 +58,10 @@ export function FontToggle({locale = "en"}: {locale?: AppLocale}) {
     : `Switch to ${isPretendard ? "default" : "Pretendard"} font`;
 
   return (
-    <button
+    <ToggleButton
+      size="sm"
       aria-label={switchLabel}
-      aria-pressed={isPretendard}
+      pressed={isPretendard}
       className="font-toggle__trigger"
       onClick={() => {
         setFontPreference((currentValue) => (currentValue === "pretendard" ? "default" : "pretendard"));
@@ -71,6 +73,6 @@ export function FontToggle({locale = "en"}: {locale?: AppLocale}) {
         Ag
       </span>
       <span className="font-toggle__label">{isPretendard ? "Pretendard" : locale === "ko" ? "기본" : "Default"}</span>
-    </button>
+    </ToggleButton>
   );
 }

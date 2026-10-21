@@ -6,5 +6,5 @@ import {buttonClassName, type ButtonAppearance} from "@/components/ui";
 export type UiLinkProps<T extends string = string> = ComponentPropsWithRef<typeof NextLink<T>> & ButtonAppearance & {appearance?: "text" | "button"};
 
 export function UiLink<T extends string>({appearance = "text", variant, size, className = "", ...props}: UiLinkProps<T>) {
-  return <NextLink {...props} className={appearance === "button" ? buttonClassName({variant, size, className}) : `text-link ${className}`.trim()} />;
+  return <NextLink data-slot={appearance === "button" ? "button" : "link"} data-variant={appearance === "button" ? variant ?? "primary" : undefined} data-size={appearance === "button" ? size ?? "md" : undefined} {...props} className={appearance === "button" ? buttonClassName({variant, size, className}) : `text-link ${className}`.trim()} />;
 }

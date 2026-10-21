@@ -58,10 +58,6 @@
 
 .themeControl select {
   appearance: none;
-  min-width: calc(var(--space-7) + var(--space-1));
-  min-height: 2.25rem;
-  padding: var(--space-1) var(--space-3);
-  font: inherit;
   text-align: center;
   text-align-last: center;
 }
@@ -106,27 +102,7 @@
 }
 
 .categoryFilters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
   margin-bottom: var(--space-2);
-}
-
-.categoryFilters button {
-  min-height: var(--control-size);
-  padding: var(--space-2) 0;
-  border: 0;
-  border-bottom: var(--border-width) solid transparent;
-  background: transparent;
-  color: var(--color-text-muted);
-  font: inherit;
-  font-size: var(--text-caption);
-  cursor: pointer;
-}
-
-.categoryFilters button[aria-pressed="true"] {
-  color: var(--color-accent);
-  border-bottom-color: var(--color-accent);
 }
 
 .searchClear {
@@ -209,20 +185,8 @@
 .settingsToggle {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   width: 100%;
-  min-height: var(--control-size);
-  padding: var(--space-3) 0;
-  border: 0;
-  border-bottom: var(--border-width) solid var(--color-border);
-  color: var(--color-text);
-  background: var(--color-bg);
-  font: inherit;
-  font-size: var(--text-caption);
-  cursor: pointer;
 }
-
-.settingsToggle span { color: var(--color-text-muted); }
 
 .settingsFields {
   display: none;
@@ -277,20 +241,14 @@
   font-size: var(--text-caption);
   text-align: start;
   overflow-wrap: anywhere;
+  white-space: normal;
 }
 .presetApply small { color: var(--color-text-muted); }
 .presetActions { display: flex; gap: var(--space-4); align-items: center; }
-.presetActions :is(a,button) {
+.presetActions a {
   display: inline-flex;
   align-items: center;
   min-height: var(--control-size);
-  border: 0;
-  background: transparent;
-  padding: 0;
-  font: inherit;
-  font-size: var(--text-caption);
-  color: var(--color-text-muted);
-  cursor: pointer;
 }
 
 .songHeader {
@@ -491,7 +449,6 @@
   .main {
     padding-top: var(--space-6);
   }
-  .themeControl select { min-height: var(--control-size); }
   .chordInspector[data-active="true"] { bottom: max(var(--space-4), env(safe-area-inset-bottom)); }
 }
 

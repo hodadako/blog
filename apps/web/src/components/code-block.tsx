@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {codeToHtml} from "shiki";
 import styles from "./code-block.module.css";
 import type {AppLocale} from "@/lib/site";
+import {Button} from "@/components/ui";
 
 interface CodeBlockProps {
   code: string;
@@ -64,9 +65,9 @@ export function CodeBlock({code, language, locale = "en"}: CodeBlockProps) {
     <div className={styles.root}>
       <div className={styles.header}>
         <span className={styles.language}>{language}</span>
-        <button className={styles.copyButton} onClick={() => { void handleCopy(); }} type="button">
+        <Button variant="outline" size="sm" onClick={() => { void handleCopy(); }} type="button">
           {copyStatus === "copied" ? copyMessage : copyLabel}
-        </button>
+        </Button>
       </div>
       <p className={copyStatus === "failed" ? styles.message : "sr-only"} role="status">{copyMessage}</p>
       <div className={styles.body} tabIndex={0} role="region" aria-label={locale === "ko" ? `${language} 코드` : `${language} code`}>

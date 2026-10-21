@@ -1,7 +1,8 @@
 "use client";
 
 import type {Route} from "next";
-import Link from "next/link";
+import {UiLink} from "@/components/ui-link";
+import {Button, IconButton, ToggleButton} from "@/components/ui";
 import {useRouter} from "next/navigation";
 import {useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent} from "react";
 import type {RecordItem} from "@/lib/records";
@@ -152,7 +153,7 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
   return (
     <article className="page-main record-view">
       <div className="record-view__topline">
-        <Link className="record-view__back" href={backHref} replace scroll={false}>{labels.backLabel}</Link>
+        <UiLink className="record-view__back" href={backHref} replace scroll={false}>{labels.backLabel}</UiLink>
         <span className="record-view__index">{position}</span>
       </div>
 
@@ -176,14 +177,14 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
               </span>
             </button>
             {orientation.available && item.imageUrl && (orientation.requiresPermission || orientation.hasSensorSignal) ? (
-              <button
-                aria-pressed={orientation.enabled}
+              <ToggleButton variant="ghost" size="sm"
+                pressed={orientation.enabled}
                 className="record-view__orientation"
                 onClick={() => void orientation.toggle()}
                 type="button"
               >
                 {orientation.denied ? labels.tiltDeniedLabel : orientation.enabled ? labels.tiltOffLabel : labels.tiltOnLabel}
-              </button>
+              </ToggleButton>
             ) : null}
           </div>
         ) : (
@@ -196,7 +197,7 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
               <span aria-hidden="true" className="record-profile__note record-profile__note--one">♪</span>
               <span aria-hidden="true" className="record-profile__note record-profile__note--two">♫</span>
               <span aria-hidden="true" className="record-profile__note record-profile__note--three">♪</span>
-              <button
+              <IconButton variant="outline"
                 aria-label={spinning ? labels.stopDiscLabel : labels.spinDiscLabel}
                 aria-pressed={spinning}
                 className="record-profile__play"
@@ -204,7 +205,7 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
                 type="button"
               >
                 <span aria-hidden="true">{spinning ? "Ⅱ" : "▶"}</span>
-              </button>
+              </IconButton>
             </div>
           </div>
         )}
@@ -240,10 +241,10 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
 
       <nav aria-label={labels.recordNavigationLabel} className="record-view__navigation">
         {previousHref ? (
-          <Link href={hrefForTab(previousHref, tab, spinning)} onClick={(event) => handleNavigationClick(event, "previous", previousHref)} scroll={false}>{labels.previousLabel}</Link>
+          <UiLink href={hrefForTab(previousHref, tab, spinning)} onClick={(event) => handleNavigationClick(event, "previous", previousHref)} scroll={false}>{labels.previousLabel}</UiLink>
         ) : <span aria-disabled="true">{labels.previousLabel}</span>}
         <div aria-label={labels.tabNavigationLabel} className="record-view__tabs" role="tablist">
-          <button
+          <Button variant="ghost" size="sm"
             aria-controls={`${tabId}-panel`}
             aria-selected={tab === "detail"}
             id={`${tabId}-detail`}
@@ -253,8 +254,8 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
             role="tab"
             tabIndex={tab === "detail" ? 0 : -1}
             type="button"
-          >{labels.detailTabLabel}</button>
-          <button
+          >{labels.detailTabLabel}</Button>
+          <Button variant="ghost" size="sm"
             aria-controls={`${tabId}-panel`}
             aria-selected={tab === "profile"}
             id={`${tabId}-profile`}
@@ -264,10 +265,10 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
             role="tab"
             tabIndex={tab === "profile" ? 0 : -1}
             type="button"
-          >{labels.profileTabLabel}</button>
+          >{labels.profileTabLabel}</Button>
         </div>
         {nextHref ? (
-          <Link href={hrefForTab(nextHref, tab, spinning)} onClick={(event) => handleNavigationClick(event, "next", nextHref)} scroll={false}>{labels.nextLabel}</Link>
+          <UiLink href={hrefForTab(nextHref, tab, spinning)} onClick={(event) => handleNavigationClick(event, "next", nextHref)} scroll={false}>{labels.nextLabel}</UiLink>
         ) : <span aria-disabled="true">{labels.nextLabel}</span>}
       </nav>
 
@@ -278,7 +279,7 @@ export function RecordView({item, index, total, initialTab, initialPlaying, back
         onClose={() => { setZoomed(false); artworkButtonRef.current?.focus(); }}
         ref={zoomRef}
       >
-        <button aria-label={labels.closeLabel} className="record-zoom__close" onClick={closeZoom} type="button">×</button>
+        <IconButton variant="outline" aria-label={labels.closeLabel} className="record-zoom__close" onClick={closeZoom} type="button">×</IconButton>
         {item.imageUrl ? <img alt={item.title} className="record-zoom__image" src={item.imageUrl} /> : null}
       </dialog>
     </article>

@@ -111,7 +111,7 @@ function CommentNode({
             <Input name="password" required type="password" />
           </label>
           <div className="button-row">
-            <Button type="submit">{submitDeleteLabel}</Button>
+            <Button variant="destructive" type="submit">{submitDeleteLabel}</Button>
           </div>
         </form>
       ) : null}

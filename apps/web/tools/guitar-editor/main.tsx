@@ -4,6 +4,7 @@ import { hasPublishErrors, parseChordPro } from "../../src/features/guitar/chord
 import { SongReader } from "../../src/features/guitar/components/song-reader";
 import type { ChordProDocument } from "../../src/features/guitar/chordpro/types";
 import "../../src/design-system/tokens.css";
+import "../../src/design-system/tailwind.css";
 import "../../src/design-system/primitives.css";
 import "./editor.css";
 

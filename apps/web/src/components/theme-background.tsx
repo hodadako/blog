@@ -17,7 +17,6 @@ export function ThemeBackground() {
     const color = getComputedStyle(canvas).getPropertyValue("--color-snowfall-flake").trim();
     const snowflakeCount = (): number => mobile.matches ? 32 : 80;
     let snowfall: SnowfallCanvas | undefined;
-    const isPaused = (): boolean => motion.matches || document.documentElement.dataset.motion === "paused";
     const drawStaticSnow = (): void => {
       const context = canvas.getContext("2d");
       if (!context) return;
@@ -38,15 +37,15 @@ export function ThemeBackground() {
       snowfall?.pause();
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
-      // Recreate only on settings/size changes so resuming never advances by the paused time.
+      // Recreate on viewport or device motion changes to reset the animation clock.
       snowfall = new SnowfallCanvas(canvas, {color, snowflakeCount: snowflakeCount()});
-      if (isPaused() || document.hidden) snowfall.pause();
-      if (isPaused()) drawStaticSnow();
+      if (motion.matches || document.hidden) snowfall.pause();
+      if (motion.matches) drawStaticSnow();
     };
     const syncMotion = (): void => {
-      if (isPaused() || document.hidden) {
+      if (motion.matches || document.hidden) {
         snowfall?.pause();
-        if (isPaused()) drawStaticSnow();
+        if (motion.matches) drawStaticSnow();
       } else redraw();
     };
     const resize = (): void => {
@@ -55,15 +54,12 @@ export function ThemeBackground() {
     redraw();
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
-    const preferenceObserver = new MutationObserver(syncMotion);
-    preferenceObserver.observe(document.documentElement, {attributes: true, attributeFilter: ["data-motion"]});
     motion.addEventListener("change", syncMotion);
     mobile.addEventListener("change", redraw);
     document.addEventListener("visibilitychange", syncMotion);
     return () => {
       snowfall?.pause();
       observer.disconnect();
-      preferenceObserver.disconnect();
       motion.removeEventListener("change", syncMotion);
       mobile.removeEventListener("change", redraw);
       document.removeEventListener("visibilitychange", syncMotion);

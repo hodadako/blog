@@ -4,6 +4,7 @@ import {useEffect, useId, useRef, useState} from "react";
 import type {KeyboardEvent as ReactKeyboardEvent} from "react";
 import {usePathname} from "next/navigation";
 import {getDictionary, SUPPORTED_LOCALES, type AppLocale} from "@/lib/site";
+import {Button} from "@/components/ui";
 
 interface LocaleSwitcherProps {
   currentLocale: AppLocale;
@@ -146,7 +147,7 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
         {dictionary.navigation.languageLabel}
       </span>
 
-      <button
+      <Button variant="ghost" size="sm"
         aria-controls={menuId}
         aria-expanded={isOpen}
         aria-haspopup="menu"
@@ -162,10 +163,7 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
         <span className="locale-switcher__trigger-label" id={triggerLabelId}>
           {dictionary.navigation.localeNames[currentLocale]}
         </span>
-        <span aria-hidden="true" className="locale-switcher__chevron">
-          ⌄
-        </span>
-      </button>
+      </Button>
 
       {isOpen ? (
         <div aria-labelledby={labelId} className="locale-switcher__menu" id={menuId} role="menu">
@@ -175,10 +173,10 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
 
               return (
                 <li key={locale}>
-                  <button
+                  <Button variant="ghost" size="sm"
                     aria-checked={isCurrent}
                     aria-current={isCurrent ? "true" : undefined}
-                    className={`locale-switcher__option${isCurrent ? " locale-switcher__option--current" : ""}`}
+                    className="locale-switcher__option"
                     onClick={() => {
                       handleLocaleSelect(locale);
                     }}
@@ -197,7 +195,7 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
                         •
                       </span>
                     ) : null}
-                  </button>
+                  </Button>
                 </li>
               );
             })}

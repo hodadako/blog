@@ -1,7 +1,7 @@
 "use client";
 
 import type {Route} from "next";
-import Link from "next/link";
+import {UiLink} from "@/components/ui-link";
 import {usePathname} from "next/navigation";
 import type {AppLocale} from "@/lib/site";
 
@@ -22,9 +22,9 @@ export function SiteNavLinks({locale, label, blogLabel, recordsLabel, projectsLa
     const active = pathname === href || pathname.startsWith(`${href}/`);
 
     return (
-      <Link aria-current={active ? "page" : undefined} className="site-nav__link" href={href}>
+      <UiLink appearance="button" variant="ghost" size="sm" aria-current={active ? "page" : undefined} className="site-nav__link" href={href}>
         {text}
-      </Link>
+      </UiLink>
     );
   }
 
