@@ -160,8 +160,8 @@ const dictionaries: Record<AppLocale, SiteDictionary> = {
       label: "주요 탐색",
       home: "홈",
       projects: "Projects",
-      blog: "글",
-      records: "기록",
+      blog: "Posts",
+      records: "Records",
       admin: "관리",
       languageLabel: "언어",
       localeNames: {

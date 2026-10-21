@@ -60,6 +60,14 @@ test("header controls and guitar controls share geometry and keyboard focus", as
   await page.goto("/ko/blog");
   await page.getByRole("button", {name: "메뉴", exact: true}).click();
   const header = page.locator("header");
+  await expect(header.getByRole("link", {name: "Posts", exact: true})).toBeVisible();
+  await expect(header.getByRole("link", {name: "Records", exact: true})).toBeVisible();
+  const theme = header.locator(".theme-toggle__trigger");
+  await expect(theme).toHaveText("Snowy");
+  await theme.click();
+  await expect(theme).toHaveText("Starry");
+  await theme.click();
+  await expect(theme).toHaveText("Snowy");
   for (const control of await header.locator(".button:visible").all()) {
     expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     await expect(control).toHaveCSS("border-radius", "8px");

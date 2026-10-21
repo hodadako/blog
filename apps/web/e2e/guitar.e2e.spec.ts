@@ -189,7 +189,7 @@ test("keeps blog locale pages, theme preference, Records, and admin login availa
   await page.goto(`${blogOrigin}/ko/blog`);
   await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
   const theme = page.locator("html");
-  const toggle = page.getByRole("button", { name: "별 테마로 전환" });
+  const toggle = page.getByRole("button", { name: "Starry 테마로 전환" });
   await toggle.click();
   await expect(theme).toHaveAttribute("data-theme", "dark");
   await page.reload();

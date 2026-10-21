@@ -49,6 +49,7 @@ Pen 검토 보드는 Light `EvZPZ` / Dark `y7sA97`이며 Dark는 같은 Light �
 
 ## 현재 인터랙티브 API
 
+- Blog 탐색 문구는 locale과 관계없이 `Posts` / `Records`, 현재 테마 이름은 `Snowy` / `Starry`를 사용한다. 언어·콘텐츠·라우팅·테마 저장 동작은 기존대로 유지한다. Pen의 이전 한글 문구는 과거 검토 자료다.
 - Guitar 헤더는 ‘악보’ 링크만 표시한다. 테마 선택기와 ‘호다코’ wordmark는 Guitar 헤더에서만 제거했으며 블로그 wordmark는 유지한다. 기존 정렬/테마 선택 기록과 Pen 헤더는 이전 검토 이력이다. 저장된 테마와 기본 Light 동작은 유지한다.
   - 검증: web typecheck, Chromium 10개(360/390/768/1440px Light/Dark, 헤더 요소 제거, 원문/설정 조작, 저장소 차단·기존 테마 설정) 통과. 실제 Guitar 미리보기에서 헤더 확인. 전체 build는 재실행하지 않았다.
 - 배경 효과 정지/재생 버튼과 `site-motion` 저장값 복원은 제거했다. 눈·별·유성은 항상 재생하며 OS reduced-motion과 숨겨진 탭의 canvas 일시정지는 유지한다. Pen의 기존 헤더 참고 시안과 이 제어 유무가 다르며 운영 코드를 기준으로 한다.
