@@ -1428,6 +1428,7 @@
           "type": "frame",
           "id": "l89K6m",
           "name": "Guitar / Header",
+          "context": "Wordmark/navigation and current theme control are vertically centered. Source header align-items:center; native select text-align and text-align-last:center.",
           "reusable": true,
           "width": 832,
           "stroke": "$--color-border",
@@ -1477,12 +1478,18 @@
               "type": "frame",
               "id": "vOUtV",
               "name": "Current theme preference",
-              "height": 44,
+              "context": "Native theme preference select: system/light/dark retained, no caret. Centered text, shared trigger padding. Min width = space-7 + space-1; desktop36px and mobile44px touch height are runtime rules.",
+              "width": 52,
+              "height": 36,
               "fill": "$--color-accent-soft",
               "cornerRadius": "$--radius-md",
               "stroke": "$--color-border",
               "strokeWidth": 1,
-              "padding": "$--space-2",
+              "padding": [
+                "$--space-1",
+                "$--space-3"
+              ],
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
                 {

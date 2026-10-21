@@ -32,6 +32,8 @@
 
 테마 제어는 glyph/caret 없이 현재 선택 배경과 텍스트만 표시한다. Guitar의 native select/키보드 선택은 유지하고 목록 행·Songs 복귀 링크의 장식 화살표만 제거했다. 원장 `J4X2a`의 눈/별 문구는 text renderer의 string-variable literal 표시를 피하려 대표 light 문구로 materialize했다. 실제 테마·locale별 문구는 코드가 결정한다. 390/1440px Light/Dark에서 Blog/Guitar 전환과 overflow를 확인했다.
 
+Guitar 테마 선택기의 글자 쏠림과 로고 대비 세로 위치를 보정했다. 헤더는 원장과 같은 center 정렬, select는 공통 trigger padding과 `text-align`/`text-align-last: center`를 사용한다. 최소 폭은 space-7 + space-1이며 데스크톱 높이36px, 모바일44px을 유지한다. 로컬 브라우저에서 중앙 위치 일치, 390px 가로 overflow 없음, 자동/눈/별 선택 유지 확인. 새로운 dropdown 또는 theme 저장 정책을 만들지 않는다.
+
 Guitar reading workspace는 `O4NtM1`/`qYzsl` Light/Dark 보드에 기록한다. 기존 header/sheet/settings origin을 재사용했다. 왼쪽/오른쪽 rail은 공통 space-8의 세 배 폭이며, CSS breakpoint와 sticky/overflow/개인 저장은 런타임 사양이다. 카테고리는 기존 태그의 실제 값이며 탭 같은 조용한 텍스트 필터를 사용한다. 새 팔레트/폰트/버튼 라이브러리를 추가하지 않았다.
 
 ## 구성 방식

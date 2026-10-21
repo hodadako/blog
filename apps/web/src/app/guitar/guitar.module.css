@@ -13,7 +13,7 @@
 
 .header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
   padding-block: var(--space-5);
@@ -58,9 +58,12 @@
 
 .themeControl select {
   appearance: none;
+  min-width: calc(var(--space-7) + var(--space-1));
   min-height: 2.25rem;
-  padding: var(--space-2);
+  padding: var(--space-1) var(--space-3);
   font: inherit;
+  text-align: center;
+  text-align-last: center;
 }
 
 .main {
