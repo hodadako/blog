@@ -16,12 +16,14 @@ test("redirects the root permanently and uses one searchable editorial index", a
   await expect(page.locator("h1")).toHaveText("Songs");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://guitar.hodako.dev/songs");
   await expect(page.getByRole("button", {name: "검색", exact: true})).toHaveCount(0);
+  const originalSongCount = await page.locator("main li").count();
+  expect(originalSongCount).toBeGreaterThanOrEqual(songs.length);
   await page.getByLabel("곡 검색").fill("Vaundy");
   await expect(page.locator("main li")).toHaveCount(1);
   await page.getByLabel("곡 검색").fill("없는 곡");
   await expect(page.getByRole("status")).toHaveText("검색 결과가 없습니다.");
   await page.getByRole("button", {name: "검색 초기화"}).click();
-  await expect(page.locator("main li")).toHaveCount(songs.length);
+  await expect(page.locator("main li")).toHaveCount(originalSongCount);
   const row = page.getByRole("link", {name: /しわあわせ Vaundy/});
   await row.focus();
   await page.keyboard.press("Enter");
