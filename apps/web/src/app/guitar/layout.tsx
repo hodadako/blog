@@ -5,9 +5,7 @@ import {SiteDocument} from "@/components/site-document";
 import styles from "./guitar.module.css";
 import { guitarHref } from "@/lib/guitar-links";
 import { ThemeProvider } from "@/components/theme-context";
-import { ThemePreferenceSelect } from "@/features/guitar/components/theme-preference";
 import {SiteFooter} from "@/components/site-footer";
-import {getDictionary} from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://guitar.hodako.dev"),
@@ -21,15 +19,9 @@ export default function GuitarLayout({ children }: { children: ReactNode }) {
     <ThemeProvider>
       <div className={styles.shell}>
         <header className={styles.header}>
-          <div className={styles.identity}>
-            <a className="brand-lockup" href="https://www.hodako.dev/ko/blog">
-              <strong className="brand-lockup__title">{getDictionary("ko").siteName}</strong>
-            </a>
-            <nav aria-label="주요 탐색">
-              <UiLink aria-current="page" className={styles.sectionLink} href={guitarHref("/songs")}>악보</UiLink>
-            </nav>
-          </div>
-          <ThemePreferenceSelect />
+          <nav aria-label="주요 탐색">
+            <UiLink aria-current="page" className={styles.sectionLink} href={guitarHref("/songs")}>악보</UiLink>
+          </nav>
         </header>
         <main className={styles.main}>{children}</main>
         <div className={styles.footer}><SiteFooter locale="ko" postsHref={guitarHref("/songs")} postsLabel="Songs" privacyHref="https://www.hodako.dev/ko/privacy" /></div>

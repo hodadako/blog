@@ -23,7 +23,7 @@
 | Article Header `wNfKB` | Blog slug page의 article-header | 제목 길이별 font clamp는 코드. 원장의 대표 예시는 medium 제목 |
 | Article Body `QPR6q` | `lib/markdown.tsx` MarkdownArticle | 실제 Markdown과 읽기 폭. 페이지 시안은 대표 발췌 |
 | CodeBlock `N1tZX` | `code-block.tsx`, `code-block.module.css` | 캔버스 정적 코드 예시. 실제 Shiki syntax 색상, 복사 및 language는 구현 사양 |
-| Guitar Header `l89K6m` | `app/guitar/layout.tsx`, `theme-preference.tsx`, guitar.module.css | 기존 wordmark·악보 링크·공통 current theme trigger. 자동/눈/별 선택 |
+| Guitar Header `l89K6m` | `app/guitar/layout.tsx`, guitar.module.css | 악보 텍스트 링크만 표시. 사용자 후속 요청으로 wordmark와 자동/눈/별 테마 선택기 제거 |
 | Guitar Search `AI7qw` / SongRow `yySqV` | `features/guitar/components/song-search.tsx` | 검색 하나와 전체 행 링크. 44rem 목록 폭, 검색 결과·초기화는 runtime |
 | Guitar SongSheet `koSj9` | `features/guitar/components/song-reader.tsx` | 원문 행·코드 시작 문자·공백 보존. 52rem 상한, 긴 행 내부 스크롤 및 14–28px 사용자 설정은 기술 사양 |
 | Guitar Settings rail `jhOA4` | 같은 SongReader | 조옮김/카포/가사 표기/폰트/속도/개인 커버 프리셋. Desktop sticky left, mobile inline collapse. 기존 toolbar origin ID 보존, native modal/bottom-fixed bar 제거 |
@@ -49,6 +49,8 @@ Pen 검토 보드는 Light `EvZPZ` / Dark `y7sA97`이며 Dark는 같은 Light �
 
 ## 현재 인터랙티브 API
 
+- Guitar 헤더는 ‘악보’ 링크만 표시한다. 테마 선택기와 ‘호다코’ wordmark는 Guitar 헤더에서만 제거했으며 블로그 wordmark는 유지한다. 기존 정렬/테마 선택 기록과 Pen 헤더는 이전 검토 이력이다. 저장된 테마와 기본 Light 동작은 유지한다.
+  - 검증: web typecheck, Chromium 10개(360/390/768/1440px Light/Dark, 헤더 요소 제거, 원문/설정 조작, 저장소 차단·기존 테마 설정) 통과. 실제 Guitar 미리보기에서 헤더 확인. 전체 build는 재실행하지 않았다.
 - 배경 효과 정지/재생 버튼과 `site-motion` 저장값 복원은 제거했다. 눈·별·유성은 항상 재생하며 OS reduced-motion과 숨겨진 탭의 canvas 일시정지는 유지한다. Pen의 기존 헤더 참고 시안과 이 제어 유무가 다르며 운영 코드를 기준으로 한다.
   - 검증: web typecheck와 배경 관련 Playwright 6개 통과(390/1440px, Light/Dark, 기존 정지 저장값·새로고침·언어 전환·저장소 차단·기기 reduced-motion). 실제 미리보기에서 버튼 제거 확인. 전체 build는 이 후속 수정에서 재실행하지 않았다.
 - Language trigger는 현재 언어 텍스트만 표시하며 장식 화살표를 사용하지 않는다. 메뉴 ARIA와 키보드 제어는 유지한다. Guitar 헤더의 ‘악보’는 Button 외형을 적용하지 않는 텍스트 탐색 링크다.
