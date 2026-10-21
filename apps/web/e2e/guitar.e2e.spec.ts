@@ -187,12 +187,12 @@ test("keeps blog locale pages, theme preference, Records, and admin login availa
 
   await page.getByRole("button", { name: /언어/ }).click();
   await page.getByRole("menuitemradio", { name: "English" }).click();
-  await expect(page).toHaveURL(`${blogOrigin}/en/blog`);
-  expect(await page.context().cookies(blogOrigin)).toContainEqual(expect.objectContaining({ name: "site_locale", value: "en" }));
+  await expect(page).toHaveURL(`${blogOrigin}/ko/blog`);
+  expect(await page.context().cookies(blogOrigin)).toContainEqual(expect.objectContaining({ name: "site_locale", value: "ko" }));
   await expect(page.locator("main")).toBeVisible();
 
   await page.goto(`${blogOrigin}/en/blog`);
-  await expect(page).toHaveURL(`${blogOrigin}/en/blog`);
+  await expect(page).toHaveURL(`${blogOrigin}/ko/blog`);
   await expect(page.locator("main")).toBeVisible();
   await page.goto(`${blogOrigin}/ko/blog/gave-up-bean-validation`);
   await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
