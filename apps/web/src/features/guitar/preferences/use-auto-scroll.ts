@@ -29,6 +29,7 @@ export function useAutoScroll(speed: number, enabled: boolean) {
   useEffect(() => {
     if (!running || !enabled) return;
     let previousTime: number | undefined;
+    let targetPosition = window.scrollY;
     const scrollFrame = (timestamp: number): void => {
       if (document.visibilityState === "hidden") {
         setRunning(false);
@@ -37,9 +38,9 @@ export function useAutoScroll(speed: number, enabled: boolean) {
       if (previousTime !== undefined) {
         const distance = getAutoScrollDistance(speed, timestamp - previousTime);
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const nextPosition = Math.min(maxScroll, window.scrollY + distance);
-        window.scrollTo(0, nextPosition);
-        if (nextPosition >= maxScroll) {
+        targetPosition = Math.min(maxScroll, targetPosition + distance);
+        window.scrollTo(0, targetPosition);
+        if (targetPosition >= maxScroll) {
           setRunning(false);
           return;
         }

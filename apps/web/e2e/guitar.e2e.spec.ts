@@ -84,6 +84,17 @@ test("pauses time-based scrolling on manual input and stays within mobile width"
   }
 });
 
+test("accumulates slow automatic scrolling between frames", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/songs/vaundy--shiawase");
+  await openSettings(page);
+  await page.getByLabel("자동 스크롤 속도").selectOption("1");
+
+  await page.getByRole("button", { name: "자동 스크롤 시작 / 재개" }).click();
+  const start = await page.evaluate(() => window.scrollY);
+  await expect.poll(() => page.evaluate((startPosition) => window.scrollY - startPosition, start), { timeout: 2000 }).toBeGreaterThan(0);
+});
+
 test("returns 404 for Guitar locale prefixes and internal route paths", async ({ request }) => {
   for (const path of ["/ko", "/guitar", "/api/comments", "/__editor/songs"]) {
     const response = await request.get(path);
