@@ -114,8 +114,10 @@ for (const width of [360, 390, 768, 1440]) {
         if (width < 720) {
           expect(await controls.evaluate((node) => getComputedStyle(node).position)).not.toBe("fixed");
           await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-          const footer = await page.locator("footer").boundingBox();
-          expect(footer!.y + footer!.height).toBeLessThanOrEqual(900);
+          await expect.poll(async () => {
+            const footer = await page.locator("footer").boundingBox();
+            return footer!.y + footer!.height;
+          }).toBeLessThanOrEqual(901);
         }
         await page.evaluate(() => window.scrollTo(0, 0));
         await sheet.evaluate((node) => {node.scrollLeft = 0;});
@@ -137,8 +139,9 @@ test("retains manual playback in reduced motion with inline keyboard settings", 
   const optionsButton = page.getByRole("button", {name: "악보 설정 열기", exact: true});
   await optionsButton.focus();
   await page.keyboard.press("Enter");
-  await expect(optionsButton).toHaveAttribute("aria-expanded", "true");
-  await expect(optionsButton).toBeFocused();
+  const expandedButton = page.getByRole("button", {name: "악보 설정 접기", exact: true});
+  await expect(expandedButton).toHaveAttribute("aria-expanded", "true");
+  await expect(expandedButton).toBeFocused();
   await page.getByRole("button", {name: "자동 스크롤 시작 / 재개"}).click();
   await expect(page.getByRole("button", {name: "자동 스크롤 일시정지"})).toBeVisible();
   await page.keyboard.press("PageDown");

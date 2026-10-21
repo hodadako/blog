@@ -1,5 +1,7 @@
 "use client";
 
+import {Button, Input, Textarea} from "@/components/ui";
+
 import { useState } from "react";
 import type { AppLocale } from "@/lib/site";
 import type { CommentQuizItem } from "@/lib/types";
@@ -67,19 +69,19 @@ export function AdminCommentQuizzes({ initialItems, locale }: AdminCommentQuizze
       <div className="form-grid">
         <label className="field">
           <span className="field__label">canonicalSlug</span>
-          <input className="field__input" onChange={(event) => setCanonicalSlug(event.target.value)} value={canonicalSlug} />
+          <Input onChange={(event) => setCanonicalSlug(event.target.value)} value={canonicalSlug} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "문제" : "Prompt"}</span>
-          <input className="field__input" maxLength={500} onChange={(event) => setPrompt(event.target.value)} value={prompt} />
+          <Input maxLength={500} onChange={(event) => setPrompt(event.target.value)} value={prompt} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "허용 정답" : "Accepted answers"}</span>
-          <textarea className="field__textarea" onChange={(event) => setAnswers(event.target.value)} value={answers} />
+          <Textarea onChange={(event) => setAnswers(event.target.value)} value={answers} />
         </label>
-        <button className="button button--secondary" disabled={!canonicalSlug.trim() || !prompt.trim() || !answers.trim()} onClick={() => void saveQuiz()} type="button">
+        <Button variant="secondary" disabled={!canonicalSlug.trim() || !prompt.trim() || !answers.trim()} onClick={() => void saveQuiz()} type="button">
           {ko ? "퀴즈 저장" : "Save quiz"}
-        </button>
+        </Button>
       </div>
       {message ? <p className="status-text">{message}</p> : null}
       <div className="stack-sm">
@@ -89,9 +91,9 @@ export function AdminCommentQuizzes({ initialItems, locale }: AdminCommentQuizze
             <span className="table-copy">{item.prompt}</span>
             <span className="meta-row">{item.updatedAt} · {item.isActive ? "active" : "disabled"}</span>
             {item.isActive ? (
-              <button className="button button--secondary" onClick={() => void disableQuiz(item.canonicalSlug)} type="button">
+              <Button variant="secondary" onClick={() => void disableQuiz(item.canonicalSlug)} type="button">
                 {ko ? "비활성화" : "Disable"}
-              </button>
+              </Button>
             ) : null}
           </div>
         ))}

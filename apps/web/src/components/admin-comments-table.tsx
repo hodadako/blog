@@ -1,3 +1,4 @@
+import {Button, Tag} from "@/components/ui";
 import type {AdminCommentsCopy, AppLocale} from "@/lib/site";
 import type {CommentModerationItem} from "@/lib/types";
 
@@ -28,7 +29,7 @@ export function AdminCommentsTable({copy, items, locale}: AdminCommentsTableProp
               </div>
               <div className="tag-list">
                 <span className={`status-pill status-pill--${item.status}`}>{item.status}</span>
-                <span className="pill">{locale.toUpperCase()}</span>
+                <Tag>{locale.toUpperCase()}</Tag>
               </div>
             </div>
 
@@ -37,16 +38,16 @@ export function AdminCommentsTable({copy, items, locale}: AdminCommentsTableProp
              <form action={`/api/admin/comments/${item.id}`} className="button-row" method="post">
                <input name="locale" type="hidden" value={locale} />
 
-               <button className="button button--secondary" name="decision" type="submit" value="published">
+               <Button variant="secondary" name="decision" type="submit" value="published">
                  {copy.approveLabel}
-               </button>
-               <button className="button" name="decision" type="submit" value="hidden">
+               </Button>
+               <Button name="decision" type="submit" value="hidden">
                  {copy.hideLabel}
-                </button>
+                </Button>
                {item.ipHashPreview ? (
-                 <button className="button button--secondary" name="decision" type="submit" value="blacklist_ip">
+                 <Button variant="secondary" name="decision" type="submit" value="blacklist_ip">
                    {copy.blacklistIpLabel}
-                 </button>
+                 </Button>
                ) : null}
               </form>
           </article>

@@ -1,4 +1,5 @@
-import Link from "next/link";
+import {TextLink} from "@/components/ui";
+import {UiLink} from "@/components/ui-link";
 import type {Route} from "next";
 import {getDictionary, type AppLocale} from "@/lib/site";
 
@@ -9,13 +10,13 @@ export function SiteFooter({locale, postsHref, postsLabel, privacyHref}: {locale
     <footer className="publication-footer" role="contentinfo">
       <span>{dictionary.siteName}</span>
       <nav aria-label={locale === "ko" ? "하단 탐색" : "Footer navigation"}>
-        <Link className="text-link" href={postsHref ?? `/${locale}/blog`}>{postsLabel ?? dictionary.navigation.blog}</Link>
+        <UiLink href={postsHref ?? `/${locale}/blog`}>{postsLabel ?? dictionary.navigation.blog}</UiLink>
         {privacyHref ? (
-          <a className="text-link" href={privacyHref}>{locale === "ko" ? "개인정보 처리방침" : "Privacy"}</a>
+          <TextLink href={privacyHref}>{locale === "ko" ? "개인정보 처리방침" : "Privacy"}</TextLink>
         ) : (
-          <a className="text-link" href={`/${locale}/privacy`}>{locale === "ko" ? "개인정보 처리방침" : "Privacy"}</a>
+          <UiLink href={(`/${locale}/privacy`) as Route}>{locale === "ko" ? "개인정보 처리방침" : "Privacy"}</UiLink>
         )}
-        <a className="text-link" href="https://github.com/hodadako">GitHub</a>
+        <TextLink href="https://github.com/hodadako">GitHub</TextLink>
       </nav>
     </footer>
   );

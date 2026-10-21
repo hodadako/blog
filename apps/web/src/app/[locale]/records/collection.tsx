@@ -1,3 +1,4 @@
+import {EmptyState} from "@/components/ui";
 import {RECORD_TYPES, type RecordItem} from "@/lib/records";
 import {buildPageTitle, getDictionary, type AppLocale, type RecordType} from "@/lib/site";
 import {RecordsFilter, type RecordsFilterItem} from "./records-filter";
@@ -44,7 +45,7 @@ export function RecordsCollection({locale, collection, activeType}: RecordsColle
           typeLabels={dictionary.recordsPage.types}
         />
       ) : (
-        <p className="records-empty">{dictionary.recordsPage.emptyLabel}</p>
+        <EmptyState className="records-empty">{dictionary.recordsPage.emptyLabel}</EmptyState>
       )}
     </div>
   );

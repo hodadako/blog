@@ -25,7 +25,8 @@ test("shows non-modal fingering and returns focus to the score on close", async 
   await page.goto("/songs/vaundy--shiawase");
 
   const chordButton = page.getByRole("button", { name: "F 운지법 보기" }).first();
-  await chordButton.click();
+  await chordButton.focus();
+  await page.keyboard.press("Enter");
   const dialog = page.getByRole("complementary", { name: "코드 운지법" });
   await expect(dialog).toBeVisible();
   await expect(dialog.getByRole("img", { name: "F 운지법" })).toBeVisible();

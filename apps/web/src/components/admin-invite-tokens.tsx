@@ -1,5 +1,7 @@
 "use client";
 
+import {Button, Input} from "@/components/ui";
+
 import { useState } from "react";
 import type { AppLocale } from "@/lib/site";
 import type { InviteTokenItem } from "@/lib/types";
@@ -59,11 +61,11 @@ export function AdminInviteTokens({ initialItems, locale }: AdminInviteTokensPro
       <div className="form-grid">
         <label className="field">
           <span className="field__label">{ko ? "식별 이름" : "Label"}</span>
-          <input className="field__input" maxLength={80} onChange={(event) => setLabel(event.target.value)} value={label} />
+          <Input maxLength={80} onChange={(event) => setLabel(event.target.value)} value={label} />
         </label>
-        <button className="button button--secondary" disabled={!label.trim()} onClick={() => void createToken()} type="button">
+        <Button variant="secondary" disabled={!label.trim()} onClick={() => void createToken()} type="button">
           {ko ? "토큰 발급" : "Issue token"}
-        </button>
+        </Button>
       </div>
       {issuedToken ? <code className="card-copy">{issuedToken}</code> : null}
       {message ? <p className="status-text">{message}</p> : null}
@@ -73,9 +75,9 @@ export function AdminInviteTokens({ initialItems, locale }: AdminInviteTokensPro
             <strong>{item.label}</strong>
             <span className="meta-row">{item.createdAt} · {item.isActive ? "active" : "revoked"}</span>
             {item.isActive ? (
-              <button className="button button--secondary" onClick={() => void revokeToken(item.id)} type="button">
+              <Button variant="secondary" onClick={() => void revokeToken(item.id)} type="button">
                 {ko ? "폐기" : "Revoke"}
-              </button>
+              </Button>
             ) : null}
           </div>
         ))}

@@ -1,5 +1,7 @@
 "use client";
 
+import {Button, EmptyState, Select} from "@/components/ui";
+
 import { useState } from "react";
 import type { AppLocale } from "@/lib/site";
 import type { AdminPostMetadata } from "@/lib/content";
@@ -86,8 +88,7 @@ export function AdminPostQuizMappings({ categories, initialMappings, initialPost
               </div>
               <label className="field">
                 <span className="field__label">{ko ? "저장할 카테고리" : "Category to save"}</span>
-                <select
-                  className="field__input"
+                <Select
                   onChange={(event) => setSelectedCategoryBySlug((current) => ({ ...current, [post.canonicalSlug]: event.target.value }))}
                   value={selectedCategoryId}
                 >
@@ -97,21 +98,21 @@ export function AdminPostQuizMappings({ categories, initialMappings, initialPost
                       {category.code} · {category.name}{!category.active ? (ko ? " (비활성)" : " (disabled)") : ""}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
-              <button
-                className="button button--secondary"
+              <Button
+                variant="secondary"
                 disabled={!dirty || savingSlug === post.canonicalSlug}
                 onClick={() => void saveMapping(post)}
                 type="button"
               >
                 {savingSlug === post.canonicalSlug ? (ko ? "저장 중..." : "Saving...") : (ko ? "매핑 저장" : "Save mapping")}
-              </button>
+              </Button>
             </div>
           );
         })}
       </div>
-      {initialPosts.length === 0 ? <p className="empty-state">{ko ? "게시물이 없습니다." : "No posts found."}</p> : null}
+      {initialPosts.length === 0 ? <EmptyState appearance="panel">{ko ? "게시물이 없습니다." : "No posts found."}</EmptyState> : null}
       {message ? <p className="status-text">{message}</p> : null}
     </section>
   );

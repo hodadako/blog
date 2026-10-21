@@ -1,3 +1,4 @@
+import {Button, Input} from "@/components/ui";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 
 interface AdminLoginParams {
@@ -45,13 +46,13 @@ export default async function AdminLoginPage({params, searchParams}: AdminLoginP
 
             <label className="field">
               <span className="field__label">{dictionary.adminLogin.passwordLabel}</span>
-              <input className="field__input" name="password" required type="password" />
+              <Input name="password" required type="password" />
             </label>
 
             <div className="button-row">
-              <button className="button" type="submit">
+              <Button type="submit">
                 {dictionary.adminLogin.submitLabel}
-              </button>
+              </Button>
             </div>
           </form>
 

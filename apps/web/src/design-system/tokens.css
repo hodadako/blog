@@ -88,6 +88,8 @@
   --motion-ui: 160ms;
   --snow-static-radius: 1.5px;
   --button-radius: var(--radius-md);
+  --control-size: calc(var(--space-6) + var(--space-3));
+  --control-padding: var(--space-2);
   --button-padding-x: var(--space-4);
   --button-padding-y: var(--space-3);
   --button-background: var(--color-text);

@@ -1,5 +1,7 @@
 "use client";
 
+import {Button, Input, Textarea} from "@/components/ui";
+
 import { useState } from "react";
 import type { AppLocale } from "@/lib/site";
 import type { WorkerQuizBank } from "@/lib/worker-admin";
@@ -40,18 +42,18 @@ export function AdminQuizBank({ initialBank, locale }: AdminQuizBankProps) {
       <div className="form-grid">
         <label className="field">
           <span className="field__label">{ko ? "새 카테고리 코드" : "New category code"}</span>
-          <input className="field__input" maxLength={32} onChange={(event) => setCategoryCode(event.target.value.toUpperCase())} value={categoryCode} />
+          <Input maxLength={32} onChange={(event) => setCategoryCode(event.target.value.toUpperCase())} value={categoryCode} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "카테고리 이름" : "Category name"}</span>
-          <input className="field__input" maxLength={80} onChange={(event) => setCategoryName(event.target.value)} value={categoryName} />
+          <Input maxLength={80} onChange={(event) => setCategoryName(event.target.value)} value={categoryName} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "설명" : "Description"}</span>
-          <input className="field__input" maxLength={500} onChange={(event) => setCategoryDescription(event.target.value)} value={categoryDescription} />
+          <Input maxLength={500} onChange={(event) => setCategoryDescription(event.target.value)} value={categoryDescription} />
         </label>
-        <button
-          className="button button--secondary"
+        <Button
+          variant="secondary"
           disabled={!categoryCode.trim() || !categoryName.trim()}
           onClick={() => void (async () => {
             const response = await fetch("/api/admin/quiz/categories", {
@@ -72,7 +74,7 @@ export function AdminQuizBank({ initialBank, locale }: AdminQuizBankProps) {
           type="button"
         >
           {ko ? "카테고리 저장" : "Save category"}
-        </button>
+        </Button>
       </div>
       <div className="stack-sm">
         {categories.map((category) => (
@@ -80,8 +82,8 @@ export function AdminQuizBank({ initialBank, locale }: AdminQuizBankProps) {
             <strong>{category.code}</strong>
             <span className="table-copy">{category.name}</span>
             <span className="meta-row">{category.active ? "active" : "disabled"}</span>
-            <button
-              className="button button--secondary"
+            <Button
+              variant="secondary"
               onClick={() => void (async () => {
                 const response = await fetch(`/api/admin/quiz/categories/${category.id}`, {
                   method: "PATCH",
@@ -93,29 +95,29 @@ export function AdminQuizBank({ initialBank, locale }: AdminQuizBankProps) {
               type="button"
             >
               {category.active ? (ko ? "비활성화" : "Disable") : (ko ? "활성화" : "Enable")}
-            </button>
+            </Button>
           </div>
         ))}
       </div>
       <div className="form-grid">
         <label className="field">
           <span className="field__label">{ko ? "카테고리 코드" : "Category code"}</span>
-          <input className="field__input" onChange={(event) => setCategoryCode(event.target.value.toUpperCase())} value={categoryCode} />
+          <Input onChange={(event) => setCategoryCode(event.target.value.toUpperCase())} value={categoryCode} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "새 텍스트 문제" : "New text question"}</span>
-          <input className="field__input" maxLength={1000} onChange={(event) => setPrompt(event.target.value)} value={prompt} />
+          <Input maxLength={1000} onChange={(event) => setPrompt(event.target.value)} value={prompt} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "선택지 5개 (한 줄씩)" : "Five options (one per line)"}</span>
-          <textarea className="field__textarea" maxLength={2500} onChange={(event) => setOptionText(event.target.value)} value={optionText} />
+          <Textarea maxLength={2500} onChange={(event) => setOptionText(event.target.value)} value={optionText} />
         </label>
         <label className="field">
           <span className="field__label">{ko ? "정답 번호 (1~5)" : "Correct option (1-5)"}</span>
-          <input className="field__input" max={5} min={1} onChange={(event) => setCorrectIndex(event.target.value)} type="number" value={correctIndex} />
+          <Input max={5} min={1} onChange={(event) => setCorrectIndex(event.target.value)} type="number" value={correctIndex} />
         </label>
-        <button
-          className="button button--secondary"
+        <Button
+          variant="secondary"
           disabled={!prompt.trim() || optionText.split("\n").filter((item) => item.trim()).length !== 5}
           onClick={() => void (async () => {
             setMessage("");
@@ -142,7 +144,7 @@ export function AdminQuizBank({ initialBank, locale }: AdminQuizBankProps) {
           type="button"
         >
           {ko ? "텍스트 문제 저장" : "Save text question"}
-        </button>
+        </Button>
       </div>
       {message ? <p className="status-text">{message}</p> : null}
       <div className="stack-sm">

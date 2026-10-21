@@ -1,5 +1,39 @@
 # Design ↔ Code Workflow
 
+## Production shared component workflow (2026-10-21)
+
+현재 API·계층별 inventory·사용처·이번 검증 결과는 [production review](production-review.md), origin/token 대응은 [registry](components.md)를 따른다. 이전 검증 기록은 당시 스냅샷에 대한 이력이다.
+
+1. `pen interactive --in design/hodako.lib.pen --out design/hodako.lib.pen`에서 get_app_state로 파일 확인, GetVariables/Get(origin) 후 공식 Update/SetVariables로 편집한다.
+2. `ui.tsx`/`ui-link.tsx`/`primitives.css`/`tokens.css` 중 대응 구현만 수정한다. semantic alias는 보존하고 origin의 실제 소비자를 registry로 확인한다.
+3. 기존 사용처를 함께 마이그레이션한다. React 19 native props/ref, form submit, Next route generic과 도메인 상태를 유지한다. Vite에서도 쓰는 primitive는 Next 의존성을 갖지 않는다.
+4. 라이브러리를 저장한 뒤 blog.pen(1:)/guitar.pen(z:)을 재오픈한다. local token 복제 없이 import status=ok, resolved geometry/색/label을 확인한다. state·locale·size override와 실수로 common radius/fill을 가리는 override를 구분한다.
+5. 아래 기존 검사 및 신규 design-system suite를 실행한다. Playwright 서버는 기존 앱을 덮어쓰지 않는 격리 build를 사용한다.
+
+```sh
+pnpm --filter web typecheck
+pnpm --filter web test
+pnpm --filter web guitar:editor:typecheck
+pnpm --filter web build
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:4341 pnpm --filter web exec playwright test -c design-system.playwright.config.ts
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:4341 pnpm --filter web exec playwright test -c p2.playwright.config.ts
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:4341 pnpm --filter web exec playwright test -c locale.playwright.config.ts
+PLAYWRIGHT_BASE_URL=http://guitar.localhost:4341 pnpm --filter web exec playwright test --workers=2
+pnpm --filter web test:editor:e2e
+git diff --check
+```
+
+4341은 이번 격리 검증 포트 예시이며 다음 실행 전 소유자/빈 포트를 확인한다. Node 24.18.0을 사용했다. 같은 `.next`에서 build/dev/typegen을 동시에 실행하지 않는다. 개발 서버의 stale chunk를 디자인 결함으로 분류하지 않는다.
+
+### 이번 검증 결과
+
+- 56 unit, typecheck/editor typecheck, production build 68 pages 통과.
+- Design-system 10 E2E(36 page combinations 포함), P2 19, locale/font 4, Guitar 42(Chromium/WebKit), editor 2 통과. 실행마다 outputDir를 `/tmp/hodako-ds-*`로 분리했다.
+- `--button-radius`를 테스트 페이지에서 한 번 override했을 때 실제 Blog form과 Guitar action 모두 같은 값으로 바뀌는 것을 확인했다. 테스트 context 종료로 사라지며 제품 토큰은 원래 승인 값이다.
+- Filled/outline field 경계와 page/surface 간 3:1 이상, 기존 핵심 글자/버튼 AA token 대비 테스트 통과. 전체 WCAG 준수 인증은 아니다.
+- Pen library 기존 origin 보존 + ref variants 8개 추가. Guitar rail의 action/fields는 같은 origin을 재사용하며 page import 정상. Article line-height 원장의 오래된 1.72만 실제 P0 1.78에 동기화했다.
+- 공통 visual 값이 없는 단순 wrapper를 대량 생성하거나 runtime ↔ canvas 자동 watcher를 만들지 않았다. 기존 PostCard/Wheel round trip 이력과 이번 cross-site Button token 검사는 서로 다른 검증이다.
+
 ## Open / Inspect
 
 pen.dev 앱에서 `design/hodako.lib.pen`을 연다. Libraries로 변환된 공식 원장이며 Components/Variables에서 개별 외형과 Theme를 편집할 수 있다. `blog.pen`은 이 원장을 Import한다. 저장한 원장 변경은 참조 문서를 다시 열어 불러온다. Instance override가 원본 변경을 가릴 수 있으므로 override부터 확인한다.

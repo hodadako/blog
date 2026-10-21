@@ -115,3 +115,6 @@ From `docs/git-rules.md`:
 - MCP 실행 전 활성 파일을 확인한다. `.pen` 내부를 일반 parser로 읽거나 serialized IDs/references를 수동 수정하지 않는다.
 - 디자인과 코드가 자동 동기화된다고 가정하지 않는다. 최소 Diff, 브라우저 rendering, 타입/테스트/빌드로 검증하고 기술적 예외를 문서화한다.
 - 자체 Design Lab/별도 비주얼 편집기/중복 토큰 원본을 추가하지 않는다. Storybook은 필요 시 구현 검증 도구로만 검토한다.
+- 새 UI 전에 `@/components/ui`와 `docs/design-system/components.md`의 실제 사용처를 검색한다. 같은 의미/디자인이면 기존 구현을 재사용하고 이름만 바꾼 복제는 만들지 않는다.
+- Action은 Button, 탐색은 UiLink/TextLink를 쓴다. native props/ref/events를 유지하고 도메인 전용 조작을 억지로 Button variant로 통합하지 않는다.
+- 공통 컴포넌트는 실제 소비자와 함께 추가한다. `primitives.css`와 Pen origin을 함께 확인하고 영향 페이지·키보드·테마·반응형 검증을 남긴다.

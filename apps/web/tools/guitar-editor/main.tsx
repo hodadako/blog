@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { hasPublishErrors, parseChordPro } from "../../src/features/guitar/chordpro/parser";
 import { SongReader } from "../../src/features/guitar/components/song-reader";
 import type { ChordProDocument } from "../../src/features/guitar/chordpro/types";
+import "../../src/design-system/tokens.css";
+import "../../src/design-system/primitives.css";
 import "./editor.css";
 
 interface SongItem { path: string; slug: string; title: string; artist: string; revision: string }
@@ -117,7 +119,7 @@ function Editor() {
             <div className="diagnostics" role="status">{document.diagnostics.map((item, index) => <p className={item.severity} key={index}>줄 {item.location.line}:{item.location.column} · {item.severity === "error" ? "오류" : "경고"} · {item.message}</p>)}</div>
             <footer><span>{message || (invalid ? "오류를 해결해야 저장할 수 있습니다." : "미리보기를 확인한 뒤 저장하세요.")}</span><button disabled={busy || invalid} onClick={() => void save()} type="button">파일 저장</button></footer>
           </div>
-          <div className="previewPane"><h2>실시간 미리보기</h2><SongReader artist={metadata.artist ?? "아티스트"} document={document} keyName={metadata.key ?? "C"} slug={slug} sourceCapo={metadata.capo} title={metadata.title ?? "새 곡"} /></div>
+          <div className="previewPane" data-theme="light"><h2>실시간 미리보기</h2><SongReader artist={metadata.artist ?? "아티스트"} document={document} keyName={metadata.key ?? "C"} slug={slug} sourceCapo={metadata.capo} title={metadata.title ?? "새 곡"} /></div>
         </section>
       </div>
     </main>

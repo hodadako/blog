@@ -1,0 +1,208 @@
+{
+  "version": "2.21",
+  "children": [
+    {
+      "type": "frame",
+      "id": "ddSvK",
+      "x": 0,
+      "y": 0,
+      "name": "Guitar · Shared library · Light",
+      "theme": {
+        "z:mode": "light",
+        "z:device": "desktop"
+      },
+      "width": 1440,
+      "fill": "$z:--color-bg",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 32,
+      "children": [
+        {
+          "id": "o7HkKk",
+          "type": "ref",
+          "ref": "z:l89K6m",
+          "name": "Guitar header",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "qa7lI",
+          "name": "Reading layout",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "id": "U6vHO",
+              "type": "ref",
+              "ref": "z:jhOA4",
+              "name": "Settings rail",
+              "width": 192
+            },
+            {
+              "type": "frame",
+              "id": "Nr8bB",
+              "name": "Song reading column",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$z:--space-3",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "v6hItY",
+                  "name": "Song title",
+                  "fill": "$z:--color-text",
+                  "content": "しわあわせ",
+                  "fontFamily": "$z:--font-primary",
+                  "fontSize": "$z:--text-article",
+                  "fontWeight": "$z:--heading-weight"
+                },
+                {
+                  "type": "text",
+                  "id": "vGLAB",
+                  "name": "Artist and key",
+                  "fill": "$z:--color-text-muted",
+                  "content": "Vaundy · F · 카포 없음",
+                  "fontFamily": "$z:--font-primary",
+                  "fontSize": "$z:--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "VbiNZ",
+                  "type": "ref",
+                  "ref": "z:koSj9",
+                  "name": "Song sheet",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "id": "RwKBG",
+              "type": "ref",
+              "ref": "z:BVZyH",
+              "name": "Chord inspector",
+              "width": 192
+            }
+          ]
+        },
+        {
+          "id": "bl8fn",
+          "type": "ref",
+          "ref": "z:QLjAQ",
+          "name": "Footer",
+          "width": "fill_container",
+          "descendants": {
+            "z:ugbR8": {
+              "content": "Songs · 개인정보 처리방침 · GitHub"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "mWnHr",
+      "x": 1500,
+      "y": 0,
+      "name": "Guitar · Shared library · Dark",
+      "theme": {
+        "z:mode": "dark",
+        "z:device": "desktop"
+      },
+      "width": 1440,
+      "fill": "$z:--color-bg",
+      "layout": "vertical",
+      "gap": 32,
+      "padding": 32,
+      "children": [
+        {
+          "id": "RarE4",
+          "type": "ref",
+          "ref": "z:l89K6m",
+          "name": "Guitar header",
+          "width": "fill_container",
+          "descendants": {
+            "z:VySAL": {
+              "content": "별"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "ey603",
+          "name": "Reading layout",
+          "width": "fill_container",
+          "gap": 24,
+          "children": [
+            {
+              "id": "YkF8d",
+              "type": "ref",
+              "ref": "z:jhOA4",
+              "name": "Settings rail",
+              "width": 192
+            },
+            {
+              "type": "frame",
+              "id": "ILWRv",
+              "name": "Song reading column",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$z:--space-3",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "f3btde",
+                  "name": "Song title",
+                  "fill": "$z:--color-text",
+                  "content": "しわあわせ",
+                  "fontFamily": "$z:--font-primary",
+                  "fontSize": "$z:--text-article",
+                  "fontWeight": "$z:--heading-weight"
+                },
+                {
+                  "type": "text",
+                  "id": "Hri6H",
+                  "name": "Artist and key",
+                  "fill": "$z:--color-text-muted",
+                  "content": "Vaundy · F · 카포 없음",
+                  "fontFamily": "$z:--font-primary",
+                  "fontSize": "$z:--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "xBm5P",
+                  "type": "ref",
+                  "ref": "z:koSj9",
+                  "name": "Song sheet",
+                  "width": "fill_container"
+                }
+              ]
+            },
+            {
+              "id": "iEZNI",
+              "type": "ref",
+              "ref": "z:BVZyH",
+              "name": "Chord inspector",
+              "width": 192
+            }
+          ]
+        },
+        {
+          "id": "K2qmE",
+          "type": "ref",
+          "ref": "z:QLjAQ",
+          "name": "Footer",
+          "width": "fill_container",
+          "descendants": {
+            "z:ugbR8": {
+              "content": "Songs · 개인정보 처리방침 · GitHub"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "imports": {
+    "z": "hodako.lib.pen"
+  },
+  "fileToken": "8a24d2ad-3e43-4491-b4dc-534a44cd80d3"
+}

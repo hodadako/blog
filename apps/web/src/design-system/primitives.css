@@ -1,0 +1,128 @@
+/* Shared primitive implementation of design/hodako.lib.pen. */
+.button, .text-link, .pill, .empty-state {
+  font-family: var(--font-ui);
+  letter-spacing: 0;
+}
+.text-link, .empty-state { font-size: var(--text-caption); color: var(--color-text-muted); }
+.text-link:hover { color: var(--color-text); }
+:is(.button, .text-link, .field__input, .field__textarea, .field__select):focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.pill { display: inline-flex; align-items: center; font-size: var(--tag-size); }
+.field__input,
+.field__textarea,
+.field__select {
+  font: inherit;
+  width: 100%;
+  padding: var(--field-padding-y) var(--field-padding-x);
+  border: var(--border-width) solid var(--field-border);
+  border-radius: var(--field-radius);
+  background: var(--field-background);
+  color: var(--color-text);
+}
+
+.field__textarea {
+  min-height: 14rem;
+  resize: vertical;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--button-height);
+  padding: var(--button-padding-y) var(--button-padding-x);
+  border: var(--border-width) solid var(--color-text);
+  border-radius: var(--button-radius);
+  background: var(--button-background);
+  color: var(--button-text);
+  font-weight: var(--button-weight);
+  font-size: var(--button-font-size);
+  cursor: pointer;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: var(--button-disabled-opacity);
+}
+
+.button--secondary {
+  border-color: transparent;
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.button--secondary:hover {
+  background: var(--button-secondary-hover);
+}
+
+.button--brand {
+  border-color: var(--button-brand-background);
+  background: var(--button-brand-background);
+  color: var(--button-brand-text);
+}
+
+.button {
+  transition: background-color var(--motion-ui) ease, color var(--motion-ui) ease;
+}
+
+.text-link {
+  text-underline-offset: 0.18em;
+}
+
+.pill {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--tag-text);
+}
+
+.tag-list .pill {
+  text-transform: none;
+}
+
+.empty-state {
+  padding: var(--space-5);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-panel);
+}
+
+.button:not(.button--secondary):not(.button--brand):not(.button--quiet):hover:not(:disabled) { background: var(--button-neutral-hover); }
+
+.button--secondary:hover:not(:disabled) { border-color: var(--color-border-strong); }
+
+.button--brand:hover:not(:disabled) { background: var(--button-brand-hover); border-color: var(--button-brand-hover); }
+
+@media (prefers-reduced-motion: reduce) { .button { transition: none; } }
+
+.field--outline { background: transparent; }
+.field--compact {
+  min-width: 0;
+  min-height: var(--control-size);
+  padding: var(--control-padding);
+  border-radius: var(--radius-md);
+  font-size: var(--button-font-size);
+}
+:is(.field__input, .field__textarea, .field__select):disabled {
+  opacity: var(--button-disabled-opacity);
+  cursor: not-allowed;
+}
+.button--quiet { border-color: transparent; background: transparent; color: var(--color-text-muted); }
+.button--quiet:hover:not(:disabled) { color: var(--color-text); }
+.button--compact {
+  min-width: var(--control-size);
+  min-height: var(--control-size);
+  padding: var(--control-padding);
+  font-size: var(--button-font-size);
+}
+.button[aria-pressed="true"] {
+  background: var(--color-accent-soft);
+  border-color: var(--color-border);
+  color: var(--color-accent);
+}
+.empty-message { color: var(--color-text-muted); }
+.empty-state { margin: 0; }

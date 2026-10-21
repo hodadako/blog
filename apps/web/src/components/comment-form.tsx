@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AppLocale } from "@/lib/site";
 import { WorkerApiError, workerRequest } from "@/lib/worker-client";
-import {Button, Input} from "@/components/ui";
+import {Button, Input, Textarea} from "@/components/ui";
 import { QuizGate } from "@/components/quiz-gate";
 
 interface CommentFormProps {
@@ -171,7 +171,7 @@ export function CommentForm({
 
             <label className="field">
               <span className="field__label">{contentLabel}</span>
-              <textarea className="field__textarea comment-form__textarea" maxLength={5000} name="content" onChange={(event) => setContent(event.target.value)} required value={content} />
+              <Textarea className="comment-form__textarea" maxLength={5000} name="content" onChange={(event) => setContent(event.target.value)} required value={content} />
             </label>
 
             <div className="button-row">

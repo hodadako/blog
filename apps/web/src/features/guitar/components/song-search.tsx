@@ -1,5 +1,7 @@
 "use client";
 
+import {Button, Input, EmptyState} from "@/components/ui";
+
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
 import type { GuitarSongSummary } from "../server/catalog";
@@ -28,13 +30,13 @@ export function SongSearch({ songs, emptyMessage }: SongSearchProps) {
     <>
       <form className={styles.search} onSubmit={preventSubmit} role="search">
         <label className="sr-only" htmlFor="guitar-song-query">곡 검색</label>
-        <input className={styles.searchInput} id="guitar-song-query" onChange={(event) => setQuery(event.target.value)} placeholder="Search songs…" type="search" value={query} />
-        {query && <button aria-label="검색 초기화" className={styles.searchClear} onClick={() => setQuery("")} type="button">지우기</button>}
+        <Input className={styles.searchInput} id="guitar-song-query" onChange={(event) => setQuery(event.target.value)} placeholder="Search songs…" type="search" value={query} />
+        {query && <Button variant="quiet" size="compact" aria-label="검색 초기화" className={styles.searchClear} onClick={() => setQuery("")} type="button">지우기</Button>}
       </form>
       {categories.length > 0 && <div aria-label="곡 카테고리" className={styles.categoryFilters} role="group">
         {["", ...categories].map(tag => <button aria-pressed={category === tag} key={tag} onClick={() => setCategory(tag)} type="button">{tag || "모든 곡"}</button>)}
       </div>}
-      {results.length === 0 ? <p className={styles.empty} role="status">{songs.length === 0 ? emptyMessage : "검색 결과가 없습니다."}</p> : (
+      {results.length === 0 ? <EmptyState role="status">{songs.length === 0 ? emptyMessage : "검색 결과가 없습니다."}</EmptyState> : (
         <ul className={styles.songList}>{results.map((song) => (
           <li key={song.slug}>
             <Link className={styles.songRow} href={guitarHref(("/songs/" + song.slug) as Parameters<typeof guitarHref>[0])}>

@@ -1,5 +1,7 @@
 "use client";
 
+import {Button, Input, Tag} from "@/components/ui";
+
 import { useEffect, useMemo, useState } from "react";
 import { type AppLocale } from "@/lib/site";
 import type { QuizChallenge, QuizVerificationResult } from "@/lib/types";
@@ -133,7 +135,7 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
         <fieldset className="quiz-challenge stack-sm" disabled={submitting}>
           <legend className="field__label">{labels.question}</legend>
           <div className="quiz-challenge__header">
-            <span className="pill" aria-label={challenge.category.name}>{challenge.category.name}</span>
+            <Tag aria-label={challenge.category.name}>{challenge.category.name}</Tag>
             <p className="quiz-challenge__prompt">{challenge.question.prompt}</p>
           </div>
           <div className={challenge.question.type === "IMAGE_MULTIPLE_CHOICE" ? "quiz-options quiz-options--image" : "quiz-options"} role="radiogroup" aria-label={labels.answer}>
@@ -178,9 +180,9 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
             })}
           </div>
           <div className="button-row">
-            <button className="button button--secondary" disabled={!canVerify} onClick={() => void verifySelectedOption()} type="button">
+            <Button variant="secondary" disabled={!canVerify} onClick={() => void verifySelectedOption()} type="button">
               {isAuthorized ? labels.verified : labels.verify}
-            </button>
+            </Button>
           </div>
         </fieldset>
       ) : null}
@@ -188,9 +190,9 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
         <div className="quiz-invite">
           <label className="field">
             <span className="field__label">{locale === "ko" ? "초대 토큰" : "Invite token"}</span>
-            <input
+            <Input
               autoComplete="off"
-              className="field__input"
+
               disabled={submitting}
               onChange={(event) => setInviteToken(event.target.value)}
               type="password"
@@ -198,9 +200,9 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
             />
           </label>
           <div className="button-row">
-            <button className="button button--secondary" disabled={!canUseInvite} onClick={() => void useInviteToken()} type="button">
+            <Button variant="secondary" disabled={!canUseInvite} onClick={() => void useInviteToken()} type="button">
               {locale === "ko" ? "초대 토큰 사용" : "Use invite token"}
-            </button>
+            </Button>
           </div>
         </div>
       ) : null}

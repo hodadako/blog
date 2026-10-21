@@ -40,6 +40,8 @@ Typography/Spacing/Radius/Border/Layout/Motion은 현재 코드의 값을 복원
 
 ## Components
 
+현재 프로덕션 공통화 결과와 계층별 inventory는 [production review](production-review.md)를 따른다. 공통 API는 `@/components/ui`, Next.js 탐색 어댑터는 `@/components/ui-link`, 기본 스타일은 `src/design-system/primitives.css`다. SiteDocument에서 토큰 → 기본 컴포넌트 → 페이지/도메인 CSS 순서로 로드한다. Vite 악보 편집기도 같은 토큰과 기본 스타일을 사용한다.
+
 각 컴포넌트는 Purpose → Anatomy → Variables → Variants → States → Usage → Implementation → Validation을 유지한다. SEED의 정리 방식을 참고하되 자체 palette와 서체를 적용한다.
 
 [ActionButton](components/action-button.md)은 Neutral Solid/Neutral Weak/Brand Solid와 native states를 갖는다. 기존 Button과 같은 구현을 export alias로 제공한다. [WheelPicker](components/wheel-picker.md)는 순서 있는 값 선택용으로 미리 준비한 재사용 컴포넌트이며, 실제 제품 페이지에는 아직 배치하지 않았다.

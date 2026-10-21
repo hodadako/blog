@@ -35,6 +35,7 @@ describe("approved design implementation", () => {
       const pairs = [["--color-text", "--color-bg"], ["--color-text-muted", "--color-surface"], ["--color-accent", "--color-surface"], ["--button-text", "--button-background"], ["--button-brand-text", "--button-brand-background"], ["--button-text", "--button-neutral-hover"]];
       for (const [text, background] of pairs) expect(contrast(resolve(tokens, text), resolve(tokens, background)), `${text} on ${background}`).toBeGreaterThanOrEqual(4.5);
       expect(contrast(resolve(tokens, "--field-border"), resolve(tokens, "--color-surface"))).toBeGreaterThanOrEqual(3);
+      expect(contrast(resolve(tokens, "--field-border"), resolve(tokens, "--color-bg"))).toBeGreaterThanOrEqual(3);
     });
   }
 });

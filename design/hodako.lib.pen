@@ -546,7 +546,7 @@
           "type": "frame",
           "id": "d1lHVe",
           "name": "ActionButton / Neutral Solid",
-          "context": "Height is materialized from --button-height: pen 0.3.11 dimension variable setter treats it as sizing behavior. Re-materialize after token edits.",
+          "context": "Button primary default. Default native action type=button; explicit type=submit on forms. Existing token --button-height materialized48. Hover/Focus/Disabled use native states.",
           "reusable": true,
           "height": 48,
           "fill": "$--button-background",
@@ -758,6 +758,7 @@
           "type": "frame",
           "id": "QLjAQ",
           "name": "SiteFooter",
+          "context": "Shared publication footer. Blog/Guitar posts link and privacy link are locale/site-aware; Records intentionally has no footer. Strings/routes are code-owned.",
           "reusable": true,
           "width": "fill_container",
           "stroke": "$--color-border",
@@ -786,7 +787,7 @@
               "id": "ugbR8",
               "name": "글 · GitHub",
               "fill": "$--color-text-muted",
-              "content": "글 · GitHub",
+              "content": "글 · 개인정보 처리방침 · GitHub",
               "fontFamily": "$--font-primary",
               "fontSize": "$--text-meta",
               "fontWeight": "normal"
@@ -1716,8 +1717,6 @@
           "stroke": "$--color-border",
           "layout": "vertical",
           "gap": "$--space-4",
-          "justifyContent": "center",
-          "alignItems": "center",
           "children": [
             {
               "type": "frame",
@@ -1727,105 +1726,53 @@
               "alignItems": "center",
               "children": [
                 {
-                  "type": "frame",
-                  "id": "Asf9g",
-                  "name": "Playback −",
+                  "id": "NC4HK",
+                  "type": "ref",
+                  "ref": "A5i6wJ",
+                  "name": "Transpose −",
                   "width": 44,
-                  "height": 44,
-                  "fill": "$--color-surface-muted",
-                  "cornerRadius": "$--radius-md",
-                  "stroke": "$--field-border",
-                  "padding": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "FYDiU",
-                      "name": "Label −",
-                      "fill": "$--color-text",
-                      "content": "−",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": "$--button-font-size",
-                      "fontWeight": "$--font-default-weight"
+                  "descendants": {
+                    "NCp7V": {
+                      "content": "−"
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "frame",
-                  "id": "lsBwK",
-                  "name": "Playback 0",
+                  "id": "PRCt8",
+                  "type": "ref",
+                  "ref": "A5i6wJ",
+                  "name": "Transpose 0",
                   "width": 44,
-                  "height": 44,
-                  "fill": "$--color-surface-muted",
-                  "cornerRadius": "$--radius-md",
-                  "stroke": "$--field-border",
-                  "padding": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "g3qDuw",
-                      "name": "Label 0",
-                      "fill": "$--color-text",
-                      "content": "0",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": "$--button-font-size",
-                      "fontWeight": "$--font-default-weight"
+                  "descendants": {
+                    "NCp7V": {
+                      "content": "0"
                     }
-                  ]
+                  }
                 },
                 {
-                  "type": "frame",
-                  "id": "WhcRV",
-                  "name": "Playback ＋",
+                  "id": "xo4Vj",
+                  "type": "ref",
+                  "ref": "A5i6wJ",
+                  "name": "Transpose ＋",
                   "width": 44,
-                  "height": 44,
-                  "fill": "$--color-surface-muted",
-                  "cornerRadius": "$--radius-md",
-                  "stroke": "$--field-border",
-                  "padding": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "YvNiS",
-                      "name": "Label ＋",
-                      "fill": "$--color-text",
-                      "content": "＋",
-                      "fontFamily": "$--font-primary",
-                      "fontSize": "$--button-font-size",
-                      "fontWeight": "$--font-default-weight"
+                  "descendants": {
+                    "NCp7V": {
+                      "content": "＋"
                     }
-                  ]
+                  }
                 }
               ]
             },
             {
-              "type": "frame",
-              "id": "x0Ac1Z",
-              "name": "Playback 스크롤 시작",
-              "height": 44,
-              "fill": "$--color-surface-muted",
-              "cornerRadius": "$--radius-md",
-              "stroke": "$--field-border",
-              "padding": 8,
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "text",
-                  "id": "Tkyit",
-                  "name": "Label 스크롤 시작",
-                  "fill": "$--color-text",
-                  "content": "스크롤 시작",
-                  "fontFamily": "$--font-primary",
-                  "fontSize": "$--button-font-size",
-                  "fontWeight": "$--font-default-weight"
+              "id": "atFqF",
+              "type": "ref",
+              "ref": "A5i6wJ",
+              "name": "Scroll action",
+              "descendants": {
+                "NCp7V": {
+                  "content": "스크롤 시작"
                 }
-              ]
+              }
             },
             {
               "type": "frame",
@@ -1856,38 +1803,144 @@
               ]
             },
             {
-              "type": "text",
-              "id": "hYoio",
-              "name": "Capo setting",
-              "fill": "$--color-text",
-              "content": "카포     0프렛",
-              "fontFamily": "$--font-primary",
-              "fontSize": "$--text-caption",
-              "fontWeight": "normal"
-            },
-            {
-              "type": "text",
-              "id": "k0hZoD",
-              "name": "Lyrics setting",
-              "fill": "$--color-text-muted",
-              "textGrowth": "fixed-width",
+              "type": "frame",
+              "id": "cPN07",
+              "name": "카포 위치",
               "width": "fill_container",
-              "content": "가사 표기\n원문 · Romaji\nEnglish · 한글 발음",
-              "lineHeight": 1.7,
-              "fontFamily": "$--font-primary",
-              "fontSize": "$--text-caption",
-              "fontWeight": "normal"
+              "layout": "vertical",
+              "gap": "$--space-2",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bigqU",
+                  "name": "카포 위치 label",
+                  "fill": "$--color-text",
+                  "content": "카포 위치",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "rteuY",
+                  "type": "ref",
+                  "ref": "sqztr",
+                  "name": "카포 위치 control",
+                  "width": "fill_container",
+                  "descendants": {
+                    "OkJZz": {
+                      "content": "카포 없음"
+                    }
+                  }
+                }
+              ]
             },
             {
-              "type": "text",
-              "id": "AivMw",
-              "name": "Cover preset setting",
-              "fill": "$--color-text-muted",
-              "content": "내 커버 프리셋\n이름 · 링크 · 키 · 카포\n현재 설정 저장",
-              "lineHeight": 1.7,
-              "fontFamily": "$--font-primary",
-              "fontSize": "$--text-caption",
-              "fontWeight": "normal"
+              "type": "frame",
+              "id": "sKBQp",
+              "name": "가사 표기",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$--space-2",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "KKIup",
+                  "name": "가사 표기 label",
+                  "fill": "$--color-text",
+                  "content": "가사 표기",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "uLX0O",
+                  "type": "ref",
+                  "ref": "sqztr",
+                  "name": "가사 표기 control",
+                  "width": "fill_container",
+                  "descendants": {
+                    "OkJZz": {
+                      "content": "원문"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "uuA43",
+              "name": "Cover presets",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": "$--space-3",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "w3K02H",
+                  "name": "Preset heading",
+                  "fill": "$--color-text",
+                  "content": "내 커버 프리셋",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "N6VPX",
+                  "name": "커버 이름 label",
+                  "fill": "$--color-text",
+                  "content": "커버 이름",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "HWKQP",
+                  "type": "ref",
+                  "ref": "zas8N",
+                  "name": "커버 이름 input",
+                  "width": "fill_container",
+                  "descendants": {
+                    "OkJZz": {
+                      "content": "어쿠스틱 커버"
+                    }
+                  }
+                },
+                {
+                  "type": "text",
+                  "id": "vUhbt",
+                  "name": "커버 URL · 선택 label",
+                  "fill": "$--color-text",
+                  "content": "커버 URL · 선택",
+                  "fontFamily": "$--font-primary",
+                  "fontSize": "$--text-caption",
+                  "fontWeight": "normal"
+                },
+                {
+                  "id": "qjnD2",
+                  "type": "ref",
+                  "ref": "zas8N",
+                  "name": "커버 URL · 선택 input",
+                  "width": "fill_container",
+                  "descendants": {
+                    "OkJZz": {
+                      "content": "https://…"
+                    }
+                  }
+                },
+                {
+                  "id": "r5GLu",
+                  "type": "ref",
+                  "ref": "A5i6wJ",
+                  "name": "Save cover settings",
+                  "width": "fill_container",
+                  "descendants": {
+                    "NCp7V": {
+                      "content": "현재 키·카포 저장"
+                    }
+                  }
+                }
+              ]
             }
           ]
         }
@@ -2224,6 +2277,363 @@
           "fontFamily": "$--font-primary",
           "fontSize": 13,
           "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hEhAz",
+      "x": 5120,
+      "y": 0,
+      "name": "10 Shared production controls · Light",
+      "theme": {
+        "mode": "light"
+      },
+      "width": 1000,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "text",
+          "id": "M2qWs",
+          "name": "Shared controls heading",
+          "fill": "$--color-text",
+          "content": "공통 컴포넌트 · 실제 제품 사용",
+          "fontFamily": "$--font-primary",
+          "fontSize": 24,
+          "fontWeight": "normal"
+        },
+        {
+          "id": "A5i6wJ",
+          "type": "ref",
+          "reusable": true,
+          "ref": "u4dfxn",
+          "name": "ActionButton / Neutral Weak / Compact",
+          "height": 44,
+          "padding": "$--control-padding",
+          "context": "Button secondary size=compact. 44px materialized from --control-size. Guitar settings; native disabled/focus/pressed states. No lift.",
+          "descendants": {
+            "NCp7V": {
+              "content": "스크롤 시작",
+              "fontSize": "$--button-font-size"
+            }
+          }
+        },
+        {
+          "id": "eKufu",
+          "type": "ref",
+          "reusable": true,
+          "ref": "d1lHVe",
+          "name": "ActionButton / Quiet / Compact",
+          "height": 44,
+          "padding": "$--control-padding",
+          "fill": "$--color-transparent",
+          "stroke": "$--color-transparent",
+          "context": "Button quiet size=compact: search clear and secondary inline actions. Native button; not a link.",
+          "descendants": {
+            "NCp7V": {
+              "content": "지우기",
+              "fill": "$--color-text-muted",
+              "fontSize": "$--button-font-size"
+            }
+          }
+        },
+        {
+          "id": "zas8N",
+          "type": "ref",
+          "reusable": true,
+          "ref": "P6lfV",
+          "name": "Input / Outline / Compact",
+          "height": 44,
+          "width": 260,
+          "padding": "$--control-padding",
+          "fill": "$--color-transparent",
+          "stroke": "$--field-border",
+          "cornerRadius": "$--radius-md",
+          "context": "Input outline compact shares the same field-border token as filled fields; no weak border override. Height44 materialized from --control-size. Guitar preset fields.",
+          "descendants": {
+            "OkJZz": {
+              "content": "어쿠스틱 커버",
+              "fontSize": "$--button-font-size"
+            }
+          }
+        },
+        {
+          "id": "sqztr",
+          "type": "ref",
+          "reusable": true,
+          "ref": "zas8N",
+          "name": "Select / Outline / Compact",
+          "context": "Native select. Options and keyboard behavior remain browser-owned. Guitar capo, lyric mode, scroll speed.",
+          "descendants": {
+            "OkJZz": {
+              "content": "카포 없음"
+            }
+          }
+        },
+        {
+          "id": "zDBwx",
+          "type": "ref",
+          "reusable": true,
+          "ref": "P6lfV",
+          "name": "Textarea",
+          "height": 224,
+          "width": 360,
+          "alignItems": "start",
+          "context": "Textarea: field tokens; min-height 14rem, vertical resize. Comment forms and admin.",
+          "descendants": {
+            "OkJZz": {
+              "content": "댓글을 작성해 주세요."
+            }
+          }
+        },
+        {
+          "type": "text",
+          "id": "FLAIU",
+          "name": "EmptyState / Plain",
+          "context": "EmptyState plain: Guitar search and Records collection. No new wrapper/card. Panel variant reuses existing .empty-state in comments/admin.",
+          "reusable": true,
+          "fill": "$--color-text-muted",
+          "content": "검색 결과가 없습니다.",
+          "fontFamily": "$--font-primary",
+          "fontSize": "$--text-body",
+          "fontWeight": "normal"
+        },
+        {
+          "id": "RIQHd",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Disabled",
+          "opacity": 55
+        },
+        {
+          "id": "Ho1Dz",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Focus",
+          "stroke": "$--color-accent",
+          "strokeWidth": 2
+        },
+        {
+          "id": "G7O3zs",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Long label",
+          "descendants": {
+            "NCp7V": {
+              "content": "현재 키·카포를 이 브라우저에 저장"
+            }
+          }
+        },
+        {
+          "id": "wwCgl",
+          "type": "ref",
+          "reusable": true,
+          "ref": "P6lfV",
+          "name": "Select / Filled",
+          "context": "Native select with default field tokens. Admin category mappings.",
+          "descendants": {
+            "OkJZz": {
+              "content": "카테고리 선택"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Qu9OY",
+          "name": "EmptyState / Panel",
+          "reusable": true,
+          "width": 360,
+          "fill": "$--color-surface-panel",
+          "cornerRadius": "$--radius-md",
+          "stroke": "$--color-border",
+          "strokeWidth": "$--border-width",
+          "layout": "vertical",
+          "padding": "$--space-5",
+          "children": [
+            {
+              "id": "WsWC8",
+              "type": "ref",
+              "ref": "FLAIU",
+              "name": "Empty panel message",
+              "fontSize": "$--text-caption",
+              "width": "fill_container",
+              "textGrowth": "fixed-width"
+            }
+          ]
+        },
+        {
+          "id": "iieir",
+          "type": "ref",
+          "ref": "zas8N",
+          "name": "Input focus",
+          "stroke": "$--color-accent",
+          "strokeWidth": 2
+        },
+        {
+          "id": "YaFye",
+          "type": "ref",
+          "ref": "zas8N",
+          "name": "Input disabled",
+          "opacity": 55
+        },
+        {
+          "id": "D8S94",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Button hover",
+          "stroke": "$--color-border-strong"
+        },
+        {
+          "id": "NvEuc",
+          "type": "ref",
+          "ref": "zDBwx",
+          "name": "Textarea focus",
+          "stroke": "$--color-accent",
+          "strokeWidth": 2
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "uztw8",
+      "x": 6200,
+      "y": 0,
+      "name": "11 Shared production controls · Dark",
+      "theme": {
+        "mode": "dark"
+      },
+      "width": 1000,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 32,
+      "children": [
+        {
+          "type": "text",
+          "id": "Ti4kk",
+          "name": "Shared controls heading",
+          "fill": "$--color-text",
+          "content": "공통 컴포넌트 · 실제 제품 사용",
+          "fontFamily": "$--font-primary",
+          "fontSize": 24,
+          "fontWeight": "normal"
+        },
+        {
+          "id": "DoA2v",
+          "type": "ref",
+          "ref": "A5i6wJ"
+        },
+        {
+          "id": "GiWcB",
+          "type": "ref",
+          "ref": "eKufu"
+        },
+        {
+          "id": "wfJ0o",
+          "type": "ref",
+          "ref": "zas8N"
+        },
+        {
+          "id": "w0ckNL",
+          "type": "ref",
+          "ref": "sqztr"
+        },
+        {
+          "id": "o5i3hA",
+          "type": "ref",
+          "ref": "zDBwx"
+        },
+        {
+          "id": "f1Cl2",
+          "type": "ref",
+          "ref": "FLAIU"
+        },
+        {
+          "id": "w3lFQ9",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Disabled",
+          "opacity": 55
+        },
+        {
+          "id": "E1Y0B",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Focus",
+          "stroke": "$--color-accent",
+          "strokeWidth": 2
+        },
+        {
+          "id": "C9oBr",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Long label",
+          "descendants": {
+            "NCp7V": {
+              "content": "현재 키·카포를 이 브라우저에 저장"
+            }
+          }
+        },
+        {
+          "id": "g67gLG",
+          "type": "ref",
+          "ref": "wwCgl",
+          "name": "Select default dark"
+        },
+        {
+          "id": "Mn7JW",
+          "type": "ref",
+          "ref": "Qu9OY",
+          "name": "Empty panel dark"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "M7mAla",
+      "x": 7280,
+      "y": 0,
+      "name": "12 Shared controls · Mobile",
+      "theme": {
+        "mode": "light",
+        "device": "mobile"
+      },
+      "width": 390,
+      "fill": "$--color-bg",
+      "layout": "vertical",
+      "gap": 24,
+      "padding": 24,
+      "children": [
+        {
+          "id": "H8xdpv",
+          "type": "ref",
+          "ref": "A5i6wJ",
+          "name": "Compact action",
+          "width": "fill_container"
+        },
+        {
+          "id": "Zoj4e",
+          "type": "ref",
+          "ref": "zas8N",
+          "name": "Preset input",
+          "width": "fill_container"
+        },
+        {
+          "id": "hE1fh",
+          "type": "ref",
+          "ref": "sqztr",
+          "name": "Native select",
+          "width": "fill_container"
+        },
+        {
+          "id": "uGPXV",
+          "type": "ref",
+          "ref": "zDBwx",
+          "name": "Comment",
+          "width": "fill_container"
         }
       ]
     }
@@ -3160,7 +3570,7 @@
     },
     "--leading-article": {
       "type": "number",
-      "value": 1.72
+      "value": 1.78
     },
     "--tracking-card": {
       "type": "number",
@@ -3356,6 +3766,14 @@
     "--button-weight": {
       "type": "string",
       "value": "$--font-default-weight"
+    },
+    "--control-size": {
+      "type": "number",
+      "value": 44
+    },
+    "--control-padding": {
+      "type": "number",
+      "value": "$--space-2"
     }
   },
   "fileToken": "c4430149-e7d0-4d2f-941a-81fcf8896828",

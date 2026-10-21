@@ -1,3 +1,4 @@
+import {UiLink} from "@/components/ui-link";
 import { requireAdmin } from "@/lib/auth";
 import {buildPageTitle, getDictionary, resolveLocale, resolveRouteParams} from "@/lib/site";
 
@@ -57,9 +58,9 @@ export default async function AdminPage({params}: AdminPageProps) {
               : "Edit content/posts/{slug}/{locale}.md locally and deploy through Git. The comment moderation screen also manages post comment quiz mappings."}
           </p>
           <div className="button-row">
-            <a className="button" href={`/${locale}/admin/comments`}>
+            <UiLink appearance="button" href={`/${locale}/admin/comments`}>
               {dictionary.admin.commentsLink}
-            </a>
+            </UiLink>
           </div>
         </div>
       </section>

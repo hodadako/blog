@@ -1,3 +1,5 @@
+import {Button, EmptyState, Input, TextLink, Textarea} from "@/components/ui";
+
 import type { AppLocale } from "@/lib/site";
 import type { CommentEditorState, CommentItem } from "@/lib/types";
 
@@ -72,16 +74,16 @@ function CommentNode({
       <p className="comment-item__body">{comment.content}</p>
       <div className="comment-item__actions">
         {!comment.parentId && comment.status === "published" ? (
-          <a className="text-link" href={`/${locale}/blog/${postSlug}?replyTo=${comment.id}#comment-form`}>
+          <TextLink href={`/${locale}/blog/${postSlug}?replyTo=${comment.id}#comment-form`}>
             {replyLabel}
-          </a>
+          </TextLink>
         ) : null}
-        <a className="text-link" href={`/${locale}/blog/${postSlug}?commentAction=edit&commentId=${comment.id}#comment-${comment.id}`}>
+        <TextLink href={`/${locale}/blog/${postSlug}?commentAction=edit&commentId=${comment.id}#comment-${comment.id}`}>
           {editLabel}
-        </a>
-        <a className="text-link" href={`/${locale}/blog/${postSlug}?commentAction=delete&commentId=${comment.id}#comment-${comment.id}`}>
+        </TextLink>
+        <TextLink href={`/${locale}/blog/${postSlug}?commentAction=delete&commentId=${comment.id}#comment-${comment.id}`}>
           {deleteLabel}
-        </a>
+        </TextLink>
       </div>
       {isEditing ? (
         <form action={`/api/comments/${comment.id}`} className="form-grid" id={`comment-${comment.id}`} method="post">
@@ -89,14 +91,14 @@ function CommentNode({
           <input name="redirectTo" type="hidden" value={`/${locale}/blog/${postSlug}`} />
           <label className="field">
             <span className="field__label">{passwordLabel}</span>
-            <input className="field__input" name="password" required type="password" />
+            <Input name="password" required type="password" />
           </label>
           <label className="field">
             <span className="field__label">{contentLabel}</span>
-            <textarea className="field__textarea" defaultValue={comment.content} name="content" required />
+            <Textarea defaultValue={comment.content} name="content" required />
           </label>
           <div className="button-row">
-            <button className="button button--secondary" type="submit">{submitEditLabel}</button>
+            <Button variant="secondary" type="submit">{submitEditLabel}</Button>
           </div>
         </form>
       ) : null}
@@ -106,10 +108,10 @@ function CommentNode({
           <input name="redirectTo" type="hidden" value={`/${locale}/blog/${postSlug}`} />
           <label className="field">
             <span className="field__label">{passwordLabel}</span>
-            <input className="field__input" name="password" required type="password" />
+            <Input name="password" required type="password" />
           </label>
           <div className="button-row">
-            <button className="button" type="submit">{submitDeleteLabel}</button>
+            <Button type="submit">{submitDeleteLabel}</Button>
           </div>
         </form>
       ) : null}
@@ -162,7 +164,7 @@ export function CommentList({
 
       <div className="stack-md">
         {comments.length === 0 ? (
-          <div className="surface-card empty-state">{emptyLabel}</div>
+          <EmptyState appearance="panel" className="surface-card">{emptyLabel}</EmptyState>
         ) : (
           comments.map((comment) => (
             <CommentNode

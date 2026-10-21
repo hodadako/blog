@@ -1,3 +1,5 @@
+import {EmptyState, Tag} from "@/components/ui";
+import {UiLink} from "@/components/ui-link";
 import {Suspense} from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -123,9 +125,9 @@ export default async function BlogPostPage({params}: BlogPostProps) {
           <p className="section-eyebrow">{dictionary.post.notFoundEyebrow}</p>
           <h1 className="section-title">{dictionary.post.notFoundTitle}</h1>
           <p className="page-copy">{dictionary.post.notFoundCopy}</p>
-          <Link className="button" href={`/${locale}/blog`}>
+          <UiLink appearance="button" href={`/${locale}/blog`}>
             {dictionary.post.backToBlog}
-          </Link>
+          </UiLink>
         </section>
       </div>
     );
@@ -156,9 +158,9 @@ export default async function BlogPostPage({params}: BlogPostProps) {
             </div>
             <div className="tag-list">
               {post.tags.map((tag) => (
-                <span className="pill" key={tag}>
+                <Tag key={tag}>
                   #{tag}
-                </span>
+                </Tag>
               ))}
             </div>
           </header>
@@ -172,7 +174,7 @@ export default async function BlogPostPage({params}: BlogPostProps) {
       <Suspense
         fallback={
           <section className="page-section comment-grid">
-            <div className="surface-card empty-state">{dictionary.post.commentsHeading}</div>
+            <EmptyState appearance="panel" className="surface-card">{dictionary.post.commentsHeading}</EmptyState>
           </section>
         }
       >
