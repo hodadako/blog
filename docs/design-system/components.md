@@ -19,7 +19,7 @@
 | EmptyState Plain `FLAIU` / Panel `Qu9OY` | `components/ui.tsx` EmptyState | Guitar/Records empty, 댓글/Admin panel. 기존 geometry 재사용 |
 | Desktop Header `M9C1W` | `site-header.tsx`, `site-nav-links.tsx`, locale/font/theme controls | 활성 경로·설정. 효과 정지/재생 제어 제거. 배경은 기기 reduced-motion 외 항상 재생 |
 | Mobile Header `O6WQ3` | `mobile-header-shell.tsx`와 SiteHeader | 닫힌 wordmark/menu. 열림·Escape·포커스 복원은 코드 사양 |
-| Footer `QLjAQ` | `site-footer.tsx`, Blog/Guitar layout | 공통 저자/글/GitHub; Guitar postsHref/label. Records 제외 |
+| Footer `QLjAQ` | `site-footer.tsx`, Blog/Guitar layout | 공통 저자/글/GitHub; Guitar postsHref/label. 개인정보 처리방침 링크는 사용자 요청으로 임시 숨김. Records 제외 |
 | Article Header `wNfKB` | Blog slug page의 article-header | 제목 길이별 font clamp는 코드. 원장의 대표 예시는 medium 제목 |
 | Article Body `QPR6q` | `lib/markdown.tsx` MarkdownArticle | 실제 Markdown과 읽기 폭. 페이지 시안은 대표 발췌 |
 | CodeBlock `N1tZX` | `code-block.tsx`, `code-block.module.css` | 캔버스 정적 코드 예시. 실제 Shiki syntax 색상, 복사 및 language는 구현 사양 |
