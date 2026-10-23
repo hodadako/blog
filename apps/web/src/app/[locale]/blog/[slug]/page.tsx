@@ -141,7 +141,7 @@ export default async function BlogPostPage({params}: BlogPostProps) {
 
   return (
     <div className="page-main blog-post-page">
-      <section className="page-section page-section--article">
+      <section className="page-section page-section--article article-reading-card">
         <article
           className="stack-lg article-column article-column--detail blog-post-page__article"
           data-article-translations=""

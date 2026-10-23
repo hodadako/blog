@@ -21,7 +21,7 @@
 | Mobile Header `O6WQ3` | `mobile-header-shell.tsx`와 SiteHeader | 닫힌 wordmark/menu. 열림·Escape·포커스 복원은 코드 사양 |
 | Footer `QLjAQ` | `site-footer.tsx`, Blog/Guitar layout | 공통 저자/글/GitHub; Guitar postsHref/label. 개인정보 처리방침 링크는 사용자 요청으로 임시 숨김. Records 제외 |
 | Article Header `wNfKB` | Blog slug page의 article-header | 제목 길이별 font clamp는 코드. 원장의 대표 예시는 medium 제목 |
-| Article Body `QPR6q` | `lib/markdown.tsx` MarkdownArticle | 실제 Markdown과 읽기 폭. 페이지 시안은 대표 발췌 |
+| Article Body `QPR6q` | `lib/markdown.tsx` MarkdownArticle, 글 상세 section의 `.article-reading-card` | 실제 Markdown과 최대 44rem 읽기 폭. 제목·본문은 기존 semantic surface의 불투명 카드로 감쌈. [검토·적용 기록](article-reading-card-experiment.md). Pen은 별도 실험 파일의 대표 발췌 |
 | CodeBlock `N1tZX` | `code-block.tsx`, `code-block.module.css` | 캔버스 정적 코드 예시. 실제 Shiki syntax 색상, 복사 및 language는 구현 사양 |
 | Guitar Header `l89K6m` | `app/guitar/layout.tsx`, guitar.module.css | 악보 텍스트 링크만 표시. 사용자 후속 요청으로 wordmark와 자동/눈/별 테마 선택기 제거 |
 | Guitar Search `AI7qw` / SongRow `yySqV` | `features/guitar/components/song-search.tsx` | 검색 하나와 전체 행 링크. 44rem 목록 폭, 검색 결과·초기화는 runtime |
