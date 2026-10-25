@@ -1,6 +1,7 @@
 import "@/design-system/tokens.css";
 import "@/design-system/tailwind.css";
 import "@/design-system/primitives.css";
+import "@/design-system/dropdown.css";
 import "@/app/globals.css";
 import Script from "next/script";
 import type { Metadata } from "next";

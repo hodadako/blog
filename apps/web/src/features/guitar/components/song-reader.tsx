@@ -1,6 +1,7 @@
 "use client";
 
-import {Button, IconButton, ToggleButton, Input, Select, TextLink} from "@/components/ui";
+import {Button, IconButton, ToggleButton, Input, TextLink} from "@/components/ui";
+import {SelectControl} from "@/components/select-control";
 
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import type { ChordProDocument, LyricLine, ParsedChord } from "../chordpro/types";
@@ -160,42 +161,39 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
         <div className={styles.controlGroup}>
           <span>조옮김 · 실음 {view.soundingKey ?? keyName}</span>
           <div aria-label="조옮김" className={styles.buttonRow}>
-            <IconButton variant="secondary" aria-label="한 음 낮추기" disabled={!ready || transpose <= -12} onClick={() => preferences.setTranspose(transpose - 1)} type="button">−</IconButton>
-            <Button variant="secondary" size="sm" aria-label={`조옮김 원복 (현재 ${transpose > 0 ? `+${transpose}` : transpose})`} disabled={!ready || transpose === 0} onClick={() => preferences.setTranspose(0)} type="button">{transpose > 0 ? `+${transpose}` : transpose}</Button>
-            <IconButton variant="secondary" aria-label="한 음 높이기" disabled={!ready || transpose >= 12} onClick={() => preferences.setTranspose(transpose + 1)} type="button">＋</IconButton>
+            <IconButton variant="ghost" aria-label="한 음 낮추기" disabled={!ready || transpose <= -12} onClick={() => preferences.setTranspose(transpose - 1)} type="button">−</IconButton>
+            <Button variant="ghost" size="sm" aria-label={`조옮김 원복 (현재 ${transpose > 0 ? `+${transpose}` : transpose})`} disabled={!ready || transpose === 0} onClick={() => preferences.setTranspose(0)} type="button">{transpose > 0 ? `+${transpose}` : transpose}</Button>
+            <IconButton variant="ghost" aria-label="한 음 높이기" disabled={!ready || transpose >= 12} onClick={() => preferences.setTranspose(transpose + 1)} type="button">＋</IconButton>
           </div>
         </div>
-        <ToggleButton variant="secondary" size="sm" aria-label={scroll.running ? "자동 스크롤 일시정지" : "자동 스크롤 시작 / 재개"} pressed={scroll.running} disabled={!ready} onClick={scroll.toggle} type="button">
+        <ToggleButton variant="ghost" size="sm" aria-label={scroll.running ? "자동 스크롤 일시정지" : "자동 스크롤 시작 / 재개"} pressed={scroll.running} disabled={!ready} onClick={scroll.toggle} type="button">
           {scroll.running ? "스크롤 정지" : "스크롤 시작"}
         </ToggleButton>
         <label className={styles.controlGroup}>
           <span>카포 위치</span>
-          <Select appearance="outline" density="compact" aria-label="카포 위치" disabled={!ready} onChange={(event) => preferences.setCapo(Number(event.currentTarget.value))} value={capo}>
-            {Array.from({ length: 13 }, (_, fret) => <option key={fret} value={fret}>{fret === 0 ? "카포 없음" : `${fret}프렛`}</option>)}
-          </Select>
+          <SelectControl aria-label="카포 위치" disabled={!ready} onValueChange={value => preferences.setCapo(Number(value))} value={String(capo)}
+            options={Array.from({length: 13}, (_, fret) => ({value: String(fret), label: fret === 0 ? "카포 없음" : `${fret}프렛`}))} />
         </label>
         {readings && <label className={styles.controlGroup}>
           <span>가사 표기</span>
-          <Select appearance="outline" density="compact" aria-label="가사 표기" onChange={event => setLyricMode(event.currentTarget.value as LyricMode)} value={lyricMode}>
-            <option value="original">원문</option><option value="romaji">Romaji</option><option value="english">English · 영어 뜻</option><option value="korean">한글 발음</option>
-          </Select>
+          <SelectControl aria-label="가사 표기" onValueChange={value => setLyricMode(value as LyricMode)} value={lyricMode}
+            options={[{value: "original", label: "원문"}, {value: "romaji", label: "Romaji"}, {value: "english", label: "English · 영어 뜻"}, {value: "korean", label: "한글 발음"}]} />
           <small className={styles.dialogCopy}>{lyricMode === "english" ? "영어 뜻은 원문 아래에 표시합니다." : "발음은 연주를 위한 참고 표기입니다."}</small>
         </label>}
         <div className={styles.controlGroup}>
           <span>악보 글자 크기</span>
           <div className={styles.buttonRow}>
-            <IconButton variant="secondary" aria-label="글자 작게" disabled={!ready || fontSize <= 14} onClick={() => preferences.setFontSize(fontSize - 2)} type="button">A−</IconButton>
+            <IconButton variant="ghost" aria-label="글자 작게" disabled={!ready || fontSize <= 14} onClick={() => preferences.setFontSize(fontSize - 2)} type="button">A−</IconButton>
             <span className={styles.controlValue}>{fontSize}px</span>
-            <IconButton variant="secondary" aria-label="글자 크게" disabled={!ready || fontSize >= 28} onClick={() => preferences.setFontSize(fontSize + 2)} type="button">A＋</IconButton>
+            <IconButton variant="ghost" aria-label="글자 크게" disabled={!ready || fontSize >= 28} onClick={() => preferences.setFontSize(fontSize + 2)} type="button">A＋</IconButton>
           </div>
         </div>
         <label className={styles.controlGroup}>
           <span>자동 스크롤 속도</span>
-          <Select appearance="outline" density="compact" aria-label="자동 스크롤 속도" disabled={!ready} onChange={(event) => preferences.setScrollSpeed(Number(event.currentTarget.value))} value={scrollSpeed}>
-            {Array.from({ length: 10 }, (_, index) => <option key={index + 1} value={index + 1}>{index + 1}</option>)}
-          </Select>
+          <SelectControl aria-label="자동 스크롤 속도" disabled={!ready} onValueChange={value => preferences.setScrollSpeed(Number(value))} value={String(scrollSpeed)}
+            options={Array.from({length: 10}, (_, index) => ({value: String(index + 1), label: String(index + 1)}))} />
         </label>
-        <Button variant="secondary" size="sm" disabled={!ready} onClick={preferences.resetSong} type="button">곡 설정 초기화</Button>
+        <Button variant="ghost" size="sm" disabled={!ready} onClick={preferences.resetSong} type="button">곡 설정 초기화</Button>
         <p aria-live="polite" className={styles.pitchSummary}>
           운지 조성 {view.displayKey ?? keyName} · 실음 조성 {view.soundingKey ?? keyName} · 원본 카포 {sourceCapo}프렛 · 조옮김 {transpose > 0 ? `+${transpose}` : transpose} · 자동 스크롤 {scrollSpeed * 5}px/s
         </p>
@@ -206,7 +204,7 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
           <Button variant="secondary" size="sm" disabled={!ready} onClick={savePreset} type="button">현재 키·카포 저장</Button>
           <p className={styles.dialogCopy}>이 브라우저에만 저장됩니다.</p>
           {presets.map(preset => <div className={styles.presetItem} key={preset.id}>
-            <Button variant="secondary" size="sm" className={styles.presetApply} onClick={() => applyPreset(preset)} type="button">{preset.name}<small>{preset.soundingKey} · 카포 {preset.capo}</small></Button>
+            <Button variant="ghost" size="sm" className={styles.presetApply} onClick={() => applyPreset(preset)} type="button">{preset.name}<small>{preset.soundingKey} · 카포 {preset.capo}</small></Button>
             <div className={styles.presetActions}>{preset.url && <TextLink href={preset.url} target="_blank" rel="noopener noreferrer">커버</TextLink>}
               <Button variant="destructive" size="sm" aria-label={`${preset.name} 프리셋 삭제`} onClick={() => {
                 const next = presets.filter(p => p.id !== preset.id);
@@ -250,7 +248,7 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
       <aside aria-label="코드 운지법" className={styles.chordInspector} data-active={Boolean(selectedVoicing)}>
         <div className={styles.dialogHeader}>
           <h2 aria-live="polite">{selectedChord?.raw ?? "코드 운지법"}</h2>
-          {selectedVoicing && <Button variant="secondary" size="sm" aria-label="운지법 닫기" onClick={() => {setSelectedChord(null); setSelectedVoicing(undefined); sheetRef.current?.focus({preventScroll:true});}} type="button">닫기</Button>}
+          {selectedVoicing && <Button variant="ghost" size="sm" aria-label="운지법 닫기" onClick={() => {setSelectedChord(null); setSelectedVoicing(undefined); sheetRef.current?.focus({preventScroll:true});}} type="button">닫기</Button>}
         </div>
         {selectedVoicing && (
           <Fretboard chordName={selectedChord?.raw ?? "코드"} voicing={selectedVoicing} />

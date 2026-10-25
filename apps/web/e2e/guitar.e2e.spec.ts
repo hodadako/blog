@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import {selectControlValue} from "./helpers/select-control";
 
 async function openSettings(page: Page) {
   const toggle = page.getByRole("button", {name: "악보 설정 열기", exact: true});
@@ -48,14 +49,14 @@ test("transposes and changes capo while keeping the original song model", async 
 
   await page.getByRole("button", { name: "한 음 높이기" }).click();
   await expect(status).toContainText("조옮김 +1");
-  await page.getByLabel("카포 위치").selectOption("2");
+  await selectControlValue(page, "카포 위치", "2");
   await expect(status).toContainText("실음 조성 F#");
 
   await page.reload();
   await openSettings(page);
   const restoredStatus = page.locator("p[aria-live='polite']");
   await expect(restoredStatus).toContainText("조옮김 +1");
-  await expect(page.getByLabel("카포 위치")).toHaveValue("2");
+  await expect(page.getByRole("combobox", {name: "카포 위치", exact: true})).toHaveAttribute("data-value", "2");
 
   await page.getByRole("button", { name: "곡 설정 초기화" }).click();
   await expect(restoredStatus).toContainText("운지 조성 F · 실음 조성 F");
@@ -66,7 +67,7 @@ test("pauses time-based scrolling on manual input and stays within mobile width"
   await page.setViewportSize({ width: 320, height: 740 });
   await page.goto("/songs/vaundy--shiawase");
   await openSettings(page);
-  await page.getByLabel("자동 스크롤 속도").selectOption("10");
+  await selectControlValue(page, "자동 스크롤 속도", "10");
   await page.keyboard.press("Escape");
   const scrollButton = page.getByRole("button", { name: "자동 스크롤 시작 / 재개" });
   await scrollButton.click();
@@ -88,7 +89,7 @@ test("accumulates slow automatic scrolling between frames", async ({ page }) => 
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/songs/vaundy--shiawase");
   await openSettings(page);
-  await page.getByLabel("자동 스크롤 속도").selectOption("1");
+  await selectControlValue(page, "자동 스크롤 속도", "1");
 
   await page.getByRole("button", { name: "자동 스크롤 시작 / 재개" }).click();
   const start = await page.evaluate(() => window.scrollY);

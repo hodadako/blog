@@ -55,9 +55,11 @@
 .field--compact {
   min-width: 0;
   min-height: var(--control-size);
-  padding: var(--control-padding);
+  padding: var(--button-padding-y) var(--space-3);
   border-radius: var(--radius-md);
-  font-size: var(--button-font-size);
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
+  font-weight: var(--button-weight);
 }
 :is(.field__input, .field__textarea, .field__select):disabled {
   opacity: var(--button-disabled-opacity);

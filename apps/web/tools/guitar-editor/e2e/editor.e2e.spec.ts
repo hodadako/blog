@@ -54,3 +54,18 @@ test("rejects invalid paths, stale revisions, and foreign Origins", async ({ req
   });
   expect(staleRevision.status()).toBe(409);
 });
+
+test("keeps dropdowns in the light preview theme", async ({page}) => {
+  await page.setViewportSize({width: 1000, height: 900});
+  await page.goto("/");
+  await page.getByRole("button", {name: /seed-song.chopro/}).click();
+  await page.getByRole("button", {name: "악보 설정 열기", exact: true}).click();
+  const capo = page.getByRole("combobox", {name: "카포 위치", exact: true});
+  await capo.click();
+  const list = page.getByRole("listbox", {name: "카포 위치", exact: true});
+  await expect(list).toBeVisible();
+  await expect(list).toHaveCSS("background-color", "rgb(254, 252, 251)");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.getByRole("option", {name: "1프렛", exact: true}).click();
+  await expect(capo).toHaveText("1프렛");
+});

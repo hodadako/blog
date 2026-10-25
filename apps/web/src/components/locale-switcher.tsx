@@ -147,12 +147,12 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
         {dictionary.navigation.languageLabel}
       </span>
 
-      <Button variant="ghost" size="sm"
+      <Button variant="outline" size="sm"
         aria-controls={menuId}
         aria-expanded={isOpen}
         aria-haspopup="menu"
         aria-labelledby={`${labelId} ${triggerLabelId}`}
-        className="locale-switcher__trigger"
+        className="locale-switcher__trigger dropdown-trigger"
         onClick={() => {
           setIsOpen((open) => !open);
         }}
@@ -166,7 +166,7 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
       </Button>
 
       {isOpen ? (
-        <div aria-labelledby={labelId} className="locale-switcher__menu" id={menuId} role="menu">
+        <div aria-labelledby={labelId} className="locale-switcher__menu dropdown-content" id={menuId} role="menu">
           <ul className="locale-switcher__list">
             {localeOptions.map(({locale, label}, index) => {
               const isCurrent = locale === currentLocale;
@@ -176,7 +176,7 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
                   <Button variant="ghost" size="sm"
                     aria-checked={isCurrent}
                     aria-current={isCurrent ? "true" : undefined}
-                    className="locale-switcher__option"
+                    className="locale-switcher__option dropdown-item"
                     onClick={() => {
                       handleLocaleSelect(locale);
                     }}
@@ -191,7 +191,7 @@ export function LocaleSwitcher({currentLocale}: LocaleSwitcherProps) {
                   >
                     <span>{label}</span>
                     {isCurrent ? (
-                      <span aria-hidden="true" className="locale-switcher__current-marker">
+                      <span aria-hidden="true" className="dropdown-indicator">
                         •
                       </span>
                     ) : null}

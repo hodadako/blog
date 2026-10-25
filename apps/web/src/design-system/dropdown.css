@@ -1,0 +1,78 @@
+/* Shared visual contract for action menus and single-value select menus. */
+.dropdown-trigger {
+  justify-content: space-between;
+  text-align: start;
+}
+
+.dropdown-trigger--stretch { width: 100%; }
+
+.dropdown-content {
+  z-index: var(--layer-popover);
+  padding: var(--space-2);
+  border: var(--border-width) solid var(--color-border-strong);
+  border-radius: var(--button-radius);
+  background: var(--color-surface-panel-strong);
+  box-shadow: var(--shadow-overlay);
+  color: var(--color-text);
+  font-family: var(--font-ui);
+  font-size: var(--text-caption);
+  font-weight: var(--button-weight);
+  line-height: normal;
+  letter-spacing: 0;
+}
+
+.dropdown-content--select {
+  min-width: var(--radix-select-trigger-width);
+  max-width: calc(100vw - var(--space-5) * 2);
+  max-height: var(--radix-select-content-available-height);
+}
+
+.dropdown-content--select[data-side="bottom"] { margin-top: var(--space-2); }
+.dropdown-content--select[data-side="top"] { margin-bottom: var(--space-2); }
+
+.dropdown-viewport {
+  max-height: min(calc(var(--control-size) * 6), var(--radix-select-content-available-height));
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--control-size);
+  padding: var(--button-padding-y) var(--space-3);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--button-radius);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.dropdown-item:is([aria-checked="true"], [data-state="checked"]) {
+  border-color: var(--control-selected-border);
+  background: var(--control-selected-background);
+  color: var(--color-text);
+}
+
+.dropdown-item:is(:hover, :focus-visible, [data-highlighted]) {
+  background: var(--control-selected-background);
+  color: var(--color-text);
+}
+
+.dropdown-item:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.dropdown-item:is([aria-disabled="true"], [data-disabled]) {
+  pointer-events: none;
+  opacity: var(--button-disabled-opacity);
+}
+
+.dropdown-indicator { color: var(--color-accent); }

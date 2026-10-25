@@ -14,6 +14,7 @@
     "test:editor:e2e": "playwright test -c tools/guitar-editor/playwright.config.mts"
   },
   "dependencies": {
+    "@radix-ui/react-select": "^2.4.1",
     "@radix-ui/react-toggle-group": "^1.2.1",
     "@supabase/supabase-js": "^2.49.1",
     "class-variance-authority": "^0.7.1",

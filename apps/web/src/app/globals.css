@@ -449,11 +449,6 @@
   top: calc(100% + var(--space-2));
   right: 0;
   min-width: calc(var(--space-8) + var(--space-6));
-  padding: var(--space-2);
-  border: var(--border-width) solid var(--color-border-strong);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-panel-strong);
-  box-shadow: var(--shadow-overlay);
 }
 
 .locale-switcher__list {
@@ -468,10 +463,6 @@
   width: 100%;
   justify-content: space-between;
   text-align: left;
-}
-
-.locale-switcher__current-marker {
-  color: var(--color-accent);
 }
 
 .page-main {

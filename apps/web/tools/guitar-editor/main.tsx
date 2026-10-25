@@ -6,6 +6,7 @@ import type { ChordProDocument } from "../../src/features/guitar/chordpro/types"
 import "../../src/design-system/tokens.css";
 import "../../src/design-system/tailwind.css";
 import "../../src/design-system/primitives.css";
+import "../../src/design-system/dropdown.css";
 import "./editor.css";
 
 interface SongItem { path: string; slug: string; title: string; artist: string; revision: string }

@@ -2,7 +2,7 @@ import {defineConfig, devices} from "@playwright/test";
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: ["design-system.e2e-spec.ts", "tailwind-ui.e2e-spec.ts"],
+  testMatch: ["design-system.e2e-spec.ts", "tailwind-ui.e2e-spec.ts", "dropdown.e2e-spec.ts"],
   workers: 1,
   outputDir: "test-results/design-system",
   use: {

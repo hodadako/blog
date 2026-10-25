@@ -1,4 +1,5 @@
 import {expect, test} from "@playwright/test";
+import {selectControlValue} from "./helpers/select-control";
 
 for (const width of [390, 768, 1440]) {
   for (const theme of ["light", "dark"]) {
@@ -67,13 +68,13 @@ test(`${theme}: shared guitar actions retain keyboard, forms, presets and search
   await expect(plus).toHaveCSS("outline-style", "solid");
   await page.keyboard.press("Enter");
   await expect(rail.getByRole("button", {name: "조옮김 원복 (현재 +1)", exact: true})).toBeEnabled();
-  await rail.getByLabel("카포 위치").selectOption("2");
+  await selectControlValue(page, "카포 위치", "2");
   await rail.getByLabel("커버 이름").fill("공통 UI 검증");
   await rail.getByRole("button", {name: "현재 키·카포 저장"}).click();
   await page.reload();
   await page.getByRole("button", {name: "악보 설정 열기"}).click();
   await rail.getByRole("button", {name: /공통 UI 검증.*카포 2/}).click();
-  await expect(rail.getByLabel("카포 위치")).toHaveValue("2");
+  await expect(rail.getByRole("combobox", {name: "카포 위치", exact: true})).toHaveAttribute("data-value", "2");
   await rail.screenshot({path: testInfo.outputPath(`settings-390-${theme}.png`), animations: "disabled"});
   for (const button of await rail.locator("button:visible").all()) {
     expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
