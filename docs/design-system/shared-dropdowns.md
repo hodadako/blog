@@ -48,6 +48,8 @@ Node 24.18.0 / pnpm 10.17.1. 현재 작업 외 dirty 파일과 새 곡을 포함
 
 브라우저 대표 증거는 `design/evidence/shared-dropdowns/browser/`에 보관한다. 로컬 미리보기는 Blog `http://127.0.0.1:4352/ko/blog`, Guitar `http://guitar.localhost:4352/songs/vaundy--shiawase`다.
 
+후속 Guitar 데스크톱 수정: 자체 스크롤되는 설정·운지법 rail에 기존 spacing token의 오른쪽 안쪽 여백을 두어 스크롤바가 버튼·입력 위에 겹치지 않게 했다. 1440px 실제 화면에서 수정 전 설정 버튼과 rail 오른쪽 경계가 맞닿았고, 수정 후 16px 간격을 확인했다. 격리 production build(68 pages) 통과. 이 runtime 스크롤바 동작은 기존 Pen 정적 시안에 표현되지 않아 코드와 브라우저가 검증 기준이다.
+
 ## Pen 검토 예외
 
 기존 `design/hodako.lib.pen`의 Outline Compact Select/Input, Compact/Quiet ActionButton origin을 참고했다. 변경 검토 자료 갱신 요청이 Pen 요금제 사용량 한도로 차단되어 이번 작업에서 `.pen` 파일은 변경하지 않았다. 기존 Pen의 native select/secondary 중심 표현과 운영 코드에 차이가 남는다. 사용량이 복구되면 기존 origin을 유지해 이번 공통 trigger/menu/상태를 반영하고 참조 문서를 다시 열어 검토한다. 코드와 디자인 파일의 자동 동기화는 없다.
