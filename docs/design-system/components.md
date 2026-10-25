@@ -15,7 +15,8 @@
 | ActionButton Compact `A5i6wJ` / Quiet `eKufu` | `components/ui.tsx` Button, CVA | secondary/ghost + sm. Guitar 설정·검색 초기화·커버 프리셋 |
 | Input Outline Compact `zas8N` | 같은 Input, `.field--outline.field--compact` | Guitar 커버 이름/URL. 기존 field origin을 참조 |
 | Textarea `zDBwx` | `components/ui.tsx` Textarea | 댓글 작성/수정, 관리자 퀴즈/문제. native resize/min-height |
-| Select Filled `wwCgl` / Outline Compact `sqztr` | `components/ui.tsx` Select | 관리자 카테고리/Guitar 카포·가사·속도. 실제 native select |
+| Select Filled `wwCgl` / Outline Compact `sqztr` | `components/ui.tsx` Select | 관리자 카테고리. native props/ref/events/form 계약 유지 |
+| SelectControl / Locale menu (기존 Outline Compact `sqztr` 참고) | `components/select-control.tsx`, `locale-switcher.tsx`, `design-system/dropdown.css` | Guitar 카포·가사·속도는 Radix Select. Blog 언어는 라우팅 menu. 서로 다른 시맨틱에 같은 outline trigger/메뉴/선택·포커스 스타일 사용. [API·검증·Pen 예외](shared-dropdowns.md) |
 | EmptyState Plain `FLAIU` / Panel `Qu9OY` | `components/ui.tsx` EmptyState | Guitar/Records empty, 댓글/Admin panel. 기존 geometry 재사용 |
 | Desktop Header `M9C1W` | `site-header.tsx`, `site-nav-links.tsx`, locale/font/theme controls | 활성 경로·설정. 효과 정지/재생 제어 제거. 배경은 기기 reduced-motion 외 항상 재생 |
 | Mobile Header `O6WQ3` | `mobile-header-shell.tsx`와 SiteHeader | 닫힌 wordmark/menu. 열림·Escape·포커스 복원은 코드 사양 |
@@ -30,7 +31,7 @@
 | Guitar Chord inspector `BVZyH` | 같은 SongReader / voicings.ts | hover/focus/tap. Desktop sticky right, mobile small non-modal inspector. 실제 SVG와 검증된 frets는 코드 책임 |
 | Manual AdSlot `GrQ3A` | `components/ads/ad-slot.tsx`, ad-slot.module.css | 허용된 설정+동의 뒤 표시. 44rem, 작은 locale label, 외부 creative 최소 250px 예약. 기본 OFF/미동의는 DOM 없음. 원장 `LpYsZ`는 승인 후 geometry 설명이며 실제 광고 미리보기가 아님 |
 
-테마 제어는 glyph/caret 없이 현재 선택 배경과 텍스트만 표시한다. Guitar의 native select/키보드 선택은 유지하고 목록 행·Songs 복귀 링크의 장식 화살표만 제거했다. 원장 `J4X2a`의 눈/별 문구는 text renderer의 string-variable literal 표시를 피하려 대표 light 문구로 materialize했다. 실제 테마·locale별 문구는 코드가 결정한다. 390/1440px Light/Dark에서 Blog/Guitar 전환과 overflow를 확인했다.
+테마 제어는 glyph/caret 없이 현재 선택 배경과 텍스트만 표시한다. Guitar 설정의 native select는 후속 공통 드롭다운 작업에서 SelectControl로 전환했다. 화살표/Home/End/Enter/Escape/typeahead를 지원하며 장식 화살표는 추가하지 않는다. 원장 `J4X2a`의 눈/별 문구는 text renderer의 string-variable literal 표시를 피하려 대표 light 문구로 materialize했다. 실제 테마·locale별 문구는 코드가 결정한다.
 
 Guitar 테마 선택기의 글자 쏠림과 로고 대비 세로 위치를 보정했다. 헤더는 원장과 같은 center 정렬, select는 공통 trigger padding과 `text-align`/`text-align-last: center`를 사용한다. 최소 폭도 같은 control-size를 참조하며 모든 viewport에서 공통 sm 44px을 사용한다. 로컬 브라우저에서 중앙 위치 일치, 390px 가로 overflow 없음, 자동/눈/별 선택 유지 확인. 새로운 dropdown 또는 theme 저장 정책을 만들지 않는다.
 
@@ -48,6 +49,9 @@ Guitar reading workspace는 `O4NtM1`/`qYzsl` Light/Dark 보드에 기록한다. 
 Pen 검토 보드는 Light `EvZPZ` / Dark `y7sA97`이며 Dark는 같은 Light 보드의 연결된 reference다. Outline `yDsir` / Destructive `Teapy`는 기존 Button origin의 variant ref다. 운영 사양은 아래 코드 API다.
 
 ## 현재 인터랙티브 API
+
+- 공통 유지 원칙: Blog/Guitar/Records/Admin/편집기에서 같은 역할의 UI는 같은 구현과 토큰을 사용한다. 도메인 전용 조작과 native form 계약은 명시된 경계로 보존한다. 공통 변경 시 실제 소비자를 함께 갱신·검증한다.
+- 값 선택 trigger는 outline/sm, 반복 조정·초기화·토글·닫기는 ghost, 프리셋 저장은 secondary를 사용한다. Guitar 코드 표기와 악보 링크의 시맨틱은 유지한다. [드롭다운 통합 기록](shared-dropdowns.md).
 
 - Blog 탐색 문구는 locale과 관계없이 `Posts` / `Records`, 현재 테마 이름은 `Snowy` / `Starry`를 사용한다. 언어·콘텐츠·라우팅·테마 저장 동작은 기존대로 유지한다. Pen의 이전 한글 문구는 과거 검토 자료다.
 - Guitar 헤더는 ‘악보’ 링크만 표시한다. 테마 선택기와 ‘호다코’ wordmark는 Guitar 헤더에서만 제거했으며 블로그 wordmark는 유지한다. 기존 정렬/테마 선택 기록과 Pen 헤더는 이전 검토 이력이다. 저장된 테마와 기본 Light 동작은 유지한다.

@@ -67,6 +67,8 @@ shell에서 `get_app_state()`, `list_libraries()`, `execute({input: 'Print(GetVa
 
 ## Approval Scope
 
+저장소 전체의 UI를 하나의 공통 컴포넌트 시스템으로 유지한다. 변경 전 실제 소비자를 검색하고 Blog/Guitar/Records/Admin/로컬 편집기에 별도 복제가 생기지 않도록 공통 API·토큰을 수정한다. 영향받는 소비자는 함께 반영·검증하고 기술적 예외를 registry에 남긴다. 최근 사례는 [버튼·드롭다운 통합](shared-dropdowns.md)을 참고한다.
+
 - Global: Primitive/Semantic/공통 spacing·typography. Blog/Article/Admin/Records/Guitar consumers를 확인한다.
 - Component: component alias 또는 component origin만 변경한다. 실제 사용처를 registry에서 확인한다.
 - Experimental: 별도 실험 공간/임시 변경. 제품 적용 여부를 명시한다. 공식 baseline에 섞지 않는다.

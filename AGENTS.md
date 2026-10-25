@@ -103,6 +103,8 @@ From `docs/git-rules.md`:
 5. Update docs when workflow or architecture changes.
 
 ## 12) Design System
+- 저장소 전체(Blog/Guitar/Records/Admin/로컬 편집기)의 UI는 하나의 공통 컴포넌트 시스템으로 유지한다. 같은 역할의 버튼·입력·드롭다운·토글·탐색 요소는 공통 구현과 토큰을 사용하며, 페이지/사이트별 복제나 개별 스타일 덮어쓰기로 분기하지 않는다. 기존 중복도 수정 범위 안에서 공통 구현으로 통합한다.
+- 공통 UI 변경은 실제 소비자를 검색하고 모든 영향 화면에 함께 반영·검증한다. 기능상 필요한 variant는 공통 API에 선언하고 registry에 목적을 남긴다. 링크/버튼/native form의 시맨틱과 악보 코드 같은 도메인 전용 조작은 보존하며, 기술적으로 별도 구현이 필요하면 이유와 공유하는 스타일 기준을 문서화한다.
 - UI 변경 전에 `docs/design-system/README.md`, `audit.md`, `components.md`, `workflow.md`와 `design/hodako.lib.pen`을 확인한다.
 - 운영 UI의 SSOT는 `tokens.css`와 공통 컴포넌트 코드다. Tailwind `@theme inline`은 기존 semantic token을 참조하고 CVA는 variant/size를 관리한다. Pen.dev는 디자인 검토와 시안에 사용한다.
 - 기존 토큰/컴포넌트를 우선 재사용한다. 기존 토큰으로 해결할 수 있는 스타일에 임의 Hex/Magic Number를 추가하지 않는다.
