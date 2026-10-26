@@ -5,7 +5,7 @@ const base = "{title: Sample}\n{artist: Writer}\n{key: C}\n{meta: added 2026-10-
 
 describe("parseChordPro", () => {
   it("parses metadata, sections, chords, annotations, comments, and original whitespace", () => {
-    const document = parseChordPro(`${base}\n# source note\n{start_of_chorus: label=\"Hook\"}\n[C][G]한글  lyric [*hold] tail\n{comment: 천천히}\n{end_of_chorus}`);
+    const document = parseChordPro(`${base}\n# source note\n{start_of_chorus: label="Hook"}\n[C][G]한글  lyric [*hold] tail\n{comment: 천천히}\n{end_of_chorus}`);
     expect(hasPublishErrors(document)).toBe(false);
     expect(document.metadata).toMatchObject({ title: "Sample", artist: "Writer", key: "C", capo: 0, added: "2026-10-09" });
     const lyric = document.lines.find((line) => line.kind === "lyrics");

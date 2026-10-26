@@ -80,7 +80,7 @@ for (const width of [360, 390, 768, 1440]) {
         await page.getByRole("button", {name: "한 음 높이기"}).click();
         const options = page.getByRole("complementary", {name: "악보 설정"});
         await expect(options).toBeVisible();
-        const larger = options.getByRole("button", {name: "글자 크게"});
+        const larger = options.getByRole("button", {name: "A＋ · 글자 크게"});
         for (let i = 0; i < 7 && await larger.isEnabled(); i++) await larger.click();
         await expect(options.getByText("28px", {exact: true})).toBeVisible();
         await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -115,7 +115,7 @@ for (const width of [360, 390, 768, 1440]) {
         await sheet.focus();
         await page.keyboard.press("ArrowRight");
         const controls = page.getByRole("complementary", {name: "악보 설정"});
-        await expect(controls.getByRole("button", {name: "자동 스크롤 시작 / 재개"})).toHaveCount(1);
+        await expect(controls.getByRole("button", {name: "스크롤 시작 · 자동 스크롤 시작 / 재개"})).toHaveCount(1);
         if (width < 720) {
           expect(await controls.evaluate((node) => getComputedStyle(node).position)).not.toBe("fixed");
           await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -147,8 +147,8 @@ test("retains manual playback in reduced motion with inline keyboard settings", 
   const expandedButton = page.getByRole("button", {name: "악보 설정 접기", exact: true});
   await expect(expandedButton).toHaveAttribute("aria-expanded", "true");
   await expect(expandedButton).toBeFocused();
-  await page.getByRole("button", {name: "자동 스크롤 시작 / 재개"}).click();
-  await expect(page.getByRole("button", {name: "자동 스크롤 일시정지"})).toBeVisible();
+  await page.getByRole("button", {name: "스크롤 시작 · 자동 스크롤 시작 / 재개"}).click();
+  await expect(page.getByRole("button", {name: "스크롤 정지 · 자동 스크롤 일시정지"})).toBeVisible();
   await page.keyboard.press("PageDown");
-  await expect(page.getByRole("button", {name: "자동 스크롤 시작 / 재개"})).toBeVisible();
+  await expect(page.getByRole("button", {name: "스크롤 시작 · 자동 스크롤 시작 / 재개"})).toBeVisible();
 });

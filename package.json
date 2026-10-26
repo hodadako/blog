@@ -14,7 +14,12 @@
     "guitar:editor:typecheck": "pnpm --filter web guitar:editor:typecheck",
     "guitar:editor:test:e2e": "pnpm --filter web test:editor:e2e",
     "test": "pnpm --filter web test && pnpm --dir infra/cloudflare-worker test",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "pnpm --filter web lint",
+    "storybook": "pnpm --filter web storybook",
+    "build-storybook": "pnpm --filter web build-storybook",
+    "test:storybook": "pnpm --filter web test:storybook",
+    "test:visual": "pnpm --filter web test:visual"
   },
   "devDependencies": {
     "husky": "^9.1.7",

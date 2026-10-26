@@ -6,7 +6,7 @@ for (const width of [390, 768, 1440]) for (const theme of ["light", "dark"]) {
     await page.addInitScript(theme => localStorage.setItem("site-theme", theme), theme);
     await page.goto("/ko/blog");
     if (width === 390) await page.getByRole("button", {name: "메뉴", exact: true}).click();
-    const language = page.locator(".locale-switcher__trigger");
+    const language = page.locator(".locale-switcher .dropdown-trigger");
     await language.focus();
     await page.keyboard.press("ArrowDown");
     const currentLanguage = page.getByRole("menuitemradio", {name: "한국어", exact: true});

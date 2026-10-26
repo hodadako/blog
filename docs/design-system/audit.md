@@ -1,6 +1,6 @@
 # 디자인 시스템 감사
 
-현재 감사와 결정은 [Tailwind 통합 기록](tailwind-ui-integration.md)을 따른다. 운영 UI는 코드/토큰이 SSOT이며 Pen.dev는 검토 자료다. 아래 CSS/Lab 및 Pen-first 감사는 이전 작업의 역사 기록이다.
+현재 감사와 결정은 [Storybook 마이그레이션](storybook-migration.md)을 따른다. 운영 UI는 코드/토큰이 SSOT이며 Storybook이 문서·검증 도구다. 아래 CSS/Lab 및 Pen-first 감사는 이전 작업의 역사 기록이다. Pen 갱신은 필수 작업이 아니다.
 
 2026-10-11 현재 워크트리 기준. 9월 감사는 제안 문서이며 현재 구현과 다르다. 미커밋 P0/Guitar 변경을 기준선으로 조사했다. 이번 단계는 코드 감사이며 화면 검증 결과는 README에 별도로 기록한다.
 

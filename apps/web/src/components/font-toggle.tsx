@@ -60,7 +60,7 @@ export function FontToggle({locale = "en"}: {locale?: AppLocale}) {
   return (
     <ToggleButton
       size="sm"
-      aria-label={switchLabel}
+      aria-label={`Ag${isPretendard ? "Pretendard" : locale === "ko" ? "기본" : "Default"} · ${switchLabel}`}
       pressed={isPretendard}
       className="font-toggle__trigger"
       onClick={() => {

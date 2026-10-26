@@ -48,14 +48,14 @@ function resolveTheme(preference: ThemePreference, systemTheme: ThemeMode): Them
   return preference === "system" ? systemTheme : preference;
 }
 
-export function ThemeProvider({children, persist = true}: {children: ReactNode; persist?: boolean}) {
-  const [preference, setPreferenceState] = useState<ThemePreference>("light");
+export function ThemeProvider({children, persist = true, initialPreference = "light"}: {children: ReactNode; persist?: boolean; initialPreference?: ThemeMode}) {
+  const [preference, setPreferenceState] = useState<ThemePreference>(initialPreference);
   const [systemTheme, setSystemTheme] = useState<ThemeMode>("light");
   const [isHydrated, setIsHydrated] = useState(false);
   const theme = resolveTheme(preference, systemTheme);
 
   useEffect(() => {
-    setPreferenceState(persist ? readStoredTheme() : "light");
+    setPreferenceState(persist ? readStoredTheme() : initialPreference);
     setSystemTheme(readSystemTheme());
     setIsHydrated(true);
 
@@ -70,7 +70,7 @@ export function ThemeProvider({children, persist = true}: {children: ReactNode; 
       media = undefined;
     }
     return () => media?.removeEventListener("change", handleSystemThemeChange);
-  }, [persist]);
+  }, [initialPreference, persist]);
 
   useEffect(() => {
     if (!isHydrated) {

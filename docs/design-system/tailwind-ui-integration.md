@@ -1,5 +1,7 @@
 # Tailwind 공통 UI 통합
 
+> 과거 구현 기록입니다. 현재 개발·검증 절차는 [Storybook workflow](workflow.md)와 [전환 결과](storybook-migration.md)를 따릅니다. 아래 Pen 갱신·동기화 후속 작업은 필수 작업에서 제외되었으며 선택적 보관 자료 검토로만 남습니다.
+
 작업 시작 2026-10-21, 검증 2026-10-22. 브랜치 `feat/tailwind-shared-ui`.
 운영 UI의 SSOT는 코드와 토큰이다. 이 결정은 이전 Pen-first 절차를 대체한다.
 

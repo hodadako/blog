@@ -34,7 +34,7 @@ test.describe("font preference", () => {
 
   test("Pretendard loads and survives CSS ordering, reload and locale switching", async ({page}) => {
     await page.goto("/ko/blog");
-    await page.getByRole("button", {name: "Pretendard 글꼴로 전환", exact: true}).click();
+    await page.getByRole("button", {name: "Ag기본 · Pretendard 글꼴로 전환", exact: true}).click();
     await expect(page.locator("html")).toHaveAttribute("data-font", "pretendard");
 
     const loaded = await page.evaluate(async () => {
@@ -50,14 +50,14 @@ test.describe("font preference", () => {
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-font", "pretendard");
     await page.goto("/ko/records");
-    await page.locator(".locale-switcher__trigger").click();
+    await page.locator(".locale-switcher .dropdown-trigger").click();
     await page.getByRole("menuitemradio", {name: "English", exact: true}).click();
     await page.waitForURL("**/en/records");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
     await expect(page.locator("html")).toHaveAttribute("data-font", "pretendard");
     expect(await page.locator("body").evaluate((element) => getComputedStyle(element).fontFamily)).toContain("Pretendard Variable");
 
-    await page.getByRole("button", {name: "Switch to default font", exact: true}).click();
+    await page.getByRole("button", {name: "AgPretendard · Switch to default font", exact: true}).click();
     await expect(page.locator("html")).not.toHaveAttribute("data-font", "pretendard");
     expect(await page.locator("body").evaluate((element) => getComputedStyle(element).fontFamily)).toContain("Blog Korean Title");
   });

@@ -1,0 +1,40 @@
+/* Documentation layout only. Components use the production cascade unchanged. */
+.sb-show-main {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.sb-show-main.sb-main-padded {
+  padding: var(--space-4);
+}
+.sb-docs-wrapper {
+  color: var(--color-text);
+}
+.catalog-stack {
+  display: grid;
+  gap: var(--space-5);
+}
+.catalog-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.catalog-fields {
+  display: grid;
+  gap: var(--space-4);
+  max-width: var(--panel-width);
+}
+.catalog-token {
+  display: grid;
+  grid-template-columns: minmax(10rem, 1fr) 2fr;
+  align-items: center;
+  gap: var(--space-4);
+}
+.catalog-swatch {
+  min-height: var(--control-size);
+  border: var(--border-width) solid var(--color-border-strong);
+}
+.catalog-measure {
+  max-width: var(--measure-width);
+  margin-inline: auto;
+}

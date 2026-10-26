@@ -1,5 +1,7 @@
 # Blog / Guitar 버튼·드롭다운 통합
 
+> 과거 구현 기록입니다. 현재 개발·검증 절차는 [Storybook workflow](workflow.md)와 [전환 결과](storybook-migration.md)를 따릅니다. 아래 Pen 갱신·동기화 후속 작업은 필수 작업에서 제외되었으며 선택적 보관 자료 검토로만 남습니다.
+
 사용자 요청: Guitar와 Blog의 버튼·드롭다운 차이를 수정하고, 저장소 전체의 컴포넌트를 하나의 공통 시스템으로 유지한다. 별도 브랜치 `fix/shared-dropdown-controls`에서 작업하며 코드·토큰을 운영 SSOT로 사용한다.
 
 ## 확인한 차이와 적용

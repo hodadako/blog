@@ -1,4 +1,4 @@
-/* Runtime token source of truth. Pen.dev is a design review reference. */
+/* Runtime token source of truth. Storybook documents and validates these tokens. */
 :root {
   --primitive-ink: #0a1128;
   --primitive-navy: #001f54;

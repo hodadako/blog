@@ -69,14 +69,14 @@ test("pauses time-based scrolling on manual input and stays within mobile width"
   await openSettings(page);
   await selectControlValue(page, "자동 스크롤 속도", "10");
   await page.keyboard.press("Escape");
-  const scrollButton = page.getByRole("button", { name: "자동 스크롤 시작 / 재개" });
+  const scrollButton = page.getByRole("button", { name: "스크롤 시작 · 자동 스크롤 시작 / 재개" });
   await scrollButton.click();
-  await expect(page.getByRole("button", { name: "자동 스크롤 일시정지" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "스크롤 정지 · 자동 스크롤 일시정지" })).toBeVisible();
   await page.waitForTimeout(600);
   const moved = await page.evaluate(() => window.scrollY);
   expect(moved).toBeGreaterThan(0);
   await page.mouse.wheel(0, 80);
-  await expect(page.getByRole("button", { name: "자동 스크롤 시작 / 재개" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "스크롤 시작 · 자동 스크롤 시작 / 재개" })).toBeVisible();
 
   for (const width of [320, 375, 768, 1280]) {
     await page.setViewportSize({ width, height: 740 });
@@ -91,7 +91,7 @@ test("accumulates slow automatic scrolling between frames", async ({ page }) => 
   await openSettings(page);
   await selectControlValue(page, "자동 스크롤 속도", "1");
 
-  await page.getByRole("button", { name: "자동 스크롤 시작 / 재개" }).click();
+  await page.getByRole("button", { name: "스크롤 시작 · 자동 스크롤 시작 / 재개" }).click();
   const start = await page.evaluate(() => window.scrollY);
   await expect.poll(() => page.evaluate((startPosition) => window.scrollY - startPosition, start), { timeout: 2000 }).toBeGreaterThan(0);
 });
@@ -190,12 +190,12 @@ test("keeps blog locale pages, theme preference, Records, and admin login availa
   await page.goto(`${blogOrigin}/ko/blog`);
   await expect(page.getByRole("heading", { name: "그래서 나는 Bean Validation을 그만두었다.", exact: true })).toBeVisible();
   const theme = page.locator("html");
-  const toggle = page.getByRole("button", { name: "Starry 테마로 전환" });
+  const toggle = page.getByRole("button", { name: "Snowy · Starry 테마로 전환" });
   await toggle.click();
   await expect(theme).toHaveAttribute("data-theme", "dark");
   await page.reload();
   await expect(theme).toHaveAttribute("data-theme", "dark");
-  await page.getByRole("button", { name: "Pretendard 글꼴로 전환" }).click();
+  await page.getByRole("button", { name: "Ag기본 · Pretendard 글꼴로 전환" }).click();
   await expect(theme).toHaveAttribute("data-font", "pretendard");
   await page.reload();
   await expect(theme).toHaveAttribute("data-font", "pretendard");

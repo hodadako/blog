@@ -1,7 +1,7 @@
-import {EmptyState, Tag} from "@/components/ui";
+import {ArticleReading} from "@/components/article-reading";
+import {EmptyState} from "@/components/ui";
 import {UiLink} from "@/components/ui-link";
 import {Suspense} from "react";
-import Link from "next/link";
 import type { Metadata } from "next";
 import {PostCommentsPanel} from "@/components/post-comments-panel";
 import { MarkdownArticle } from "@/lib/markdown";
@@ -19,15 +19,6 @@ interface BlogPostParams {
 
 interface BlogPostProps {
   params: Promise<BlogPostParams>;
-}
-
-function getArticleTitleVariant(title: string): "short" | "medium" | "long" | "xlong" {
-  const length = Array.from(title).length;
-
-  if (length <= 20) return "short";
-  if (length <= 40) return "medium";
-  if (length <= 80) return "long";
-  return "xlong";
 }
 
 interface BlogCommentsSectionProps {
@@ -141,33 +132,9 @@ export default async function BlogPostPage({params}: BlogPostProps) {
 
   return (
     <div className="page-main blog-post-page">
-      <section className="page-section page-section--article article-reading-card">
-        <article
-          className="stack-lg article-column article-column--detail blog-post-page__article"
-          data-article-translations=""
-          data-translation-ko={translationPath("ko")}
-          data-translation-en={translationPath("en")}
-        >
-          <header className="article-header article-header--framed">
-            <h1 className={`article-title article-title--${getArticleTitleVariant(post.title)}`}>{post.title}</h1>
-            <p className="article-summary">{post.description}</p>
-            <div className="meta-row">
-              <span>{post.publishedAt}</span>
-              <span>·</span>
-              <span>{post.readingTime}</span>
-            </div>
-            <div className="tag-list">
-              {post.tags.map((tag) => (
-                <Tag key={tag}>
-                  #{tag}
-                </Tag>
-              ))}
-            </div>
-          </header>
-
-          <MarkdownArticle content={post.body} locale={locale} />
-        </article>
-      </section>
+      <ArticleReading post={post} translationKo={translationPath("ko")} translationEn={translationPath("en")}>
+        <MarkdownArticle content={post.body} locale={locale} />
+      </ArticleReading>
 
       <AdPlacement site="blog" placement="article-end" locale={locale} />
 

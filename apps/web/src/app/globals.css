@@ -434,37 +434,6 @@
   outline-offset: 2px;
 }
 
-.locale-switcher {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.locale-switcher__trigger-label {
-  white-space: nowrap;
-}
-
-.locale-switcher__menu {
-  position: absolute;
-  top: calc(100% + var(--space-2));
-  right: 0;
-  min-width: calc(var(--space-8) + var(--space-6));
-}
-
-.locale-switcher__list {
-  display: grid;
-  gap: var(--space-1);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.locale-switcher__option {
-  width: 100%;
-  justify-content: space-between;
-  text-align: left;
-}
-
 .page-main {
   display: grid;
   gap: var(--space-8);

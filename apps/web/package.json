@@ -11,7 +11,12 @@
     "guitar:editor:typecheck": "tsc --noEmit -p tools/guitar-editor/tsconfig.json",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "test:editor:e2e": "playwright test -c tools/guitar-editor/playwright.config.mts"
+    "test:editor:e2e": "playwright test -c tools/guitar-editor/playwright.config.mts",
+    "lint": "eslint src .storybook *.config.{ts,mts}",
+    "storybook": "storybook dev -p 6006 --host 127.0.0.1 --no-open --disable-telemetry",
+    "build-storybook": "storybook build --disable-telemetry",
+    "test:storybook": "vitest run --config vitest.storybook.config.mts",
+    "test:visual": "playwright test -c storybook.playwright.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-select": "^2.4.1",
@@ -32,14 +37,24 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.64.0",
+    "@storybook/addon-a11y": "10.6.3",
+    "@storybook/addon-docs": "10.6.3",
+    "@storybook/addon-vitest": "10.6.3",
+    "@storybook/nextjs-vite": "10.6.3",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
+    "@vitest/browser": "4.1.10",
+    "@vitest/browser-playwright": "4.1.10",
+    "eslint": "^10.13.0",
     "postcss": "^8.5.25",
+    "storybook": "10.6.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.8.3",
+    "typescript-eslint": "^8.72.0",
     "vite": "^8.2.0"
   }
 }

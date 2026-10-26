@@ -4,9 +4,10 @@ import {Button, IconButton, ToggleButton, Input, TextLink} from "@/components/ui
 import {SelectControl} from "@/components/select-control";
 
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {ChordControl, type OpenChord} from "./chord-control";
 import type { ChordProDocument, LyricLine, ParsedChord } from "../chordpro/types";
 import { deriveSongView, parseKey } from "../chords/music";
-import { getChordVoicing, type ChordVoicing } from "../chords/voicings";
+import { type ChordVoicing } from "../chords/voicings";
 import { useGuitarPreferences } from "../preferences/use-guitar-preferences";
 import { useAutoScroll } from "../preferences/use-auto-scroll";
 import { coverUrl, readCoverPresets, writeCoverPresets, type CoverPreset } from "../preferences/cover-presets";
@@ -60,21 +61,6 @@ function Fretboard({ voicing, chordName }: { voicing: ChordVoicing; chordName: s
         return <rect key={`barre-${index}`} x={xStart + barre.fromString * xGap - 9} y={y - 7} width={(barre.toString - barre.fromString) * xGap + 18} height="14" rx="7" fill="currentColor" />;
       })}
     </svg>
-  );
-}
-
-type OpenChord = (chord: ParsedChord, voicing: ChordVoicing, trigger: HTMLButtonElement) => void;
-
-function ChordControl({ chord, onOpen }: { chord: ParsedChord; onOpen: OpenChord }) {
-  const voicing = getChordVoicing(chord);
-  if (!voicing) return <span className={styles.chordText}>{chord.raw}</span>;
-  return (
-    <button aria-label={`${chord.raw} 운지법 보기`} className={styles.chordButton}
-      onPointerEnter={event => { if (event.pointerType === "mouse") onOpen(chord, voicing, event.currentTarget); }}
-      onFocus={event => onOpen(chord, voicing, event.currentTarget)}
-      onClick={(event) => onOpen(chord, voicing, event.currentTarget)} type="button">
-      {chord.raw}
-    </button>
   );
 }
 
@@ -162,11 +148,11 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
           <span>조옮김 · 실음 {view.soundingKey ?? keyName}</span>
           <div aria-label="조옮김" className={styles.buttonRow}>
             <IconButton variant="ghost" aria-label="한 음 낮추기" disabled={!ready || transpose <= -12} onClick={() => preferences.setTranspose(transpose - 1)} type="button">−</IconButton>
-            <Button variant="ghost" size="sm" aria-label={`조옮김 원복 (현재 ${transpose > 0 ? `+${transpose}` : transpose})`} disabled={!ready || transpose === 0} onClick={() => preferences.setTranspose(0)} type="button">{transpose > 0 ? `+${transpose}` : transpose}</Button>
+            <Button variant="ghost" size="sm" aria-label={`${transpose > 0 ? `+${transpose}` : transpose} · 조옮김 원복`} disabled={!ready || transpose === 0} onClick={() => preferences.setTranspose(0)} type="button">{transpose > 0 ? `+${transpose}` : transpose}</Button>
             <IconButton variant="ghost" aria-label="한 음 높이기" disabled={!ready || transpose >= 12} onClick={() => preferences.setTranspose(transpose + 1)} type="button">＋</IconButton>
           </div>
         </div>
-        <ToggleButton variant="ghost" size="sm" aria-label={scroll.running ? "자동 스크롤 일시정지" : "자동 스크롤 시작 / 재개"} pressed={scroll.running} disabled={!ready} onClick={scroll.toggle} type="button">
+        <ToggleButton variant="ghost" size="sm" aria-label={scroll.running ? "스크롤 정지 · 자동 스크롤 일시정지" : "스크롤 시작 · 자동 스크롤 시작 / 재개"} pressed={scroll.running} disabled={!ready} onClick={scroll.toggle} type="button">
           {scroll.running ? "스크롤 정지" : "스크롤 시작"}
         </ToggleButton>
         <label className={styles.controlGroup}>
@@ -183,9 +169,9 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
         <div className={styles.controlGroup}>
           <span>악보 글자 크기</span>
           <div className={styles.buttonRow}>
-            <IconButton variant="ghost" aria-label="글자 작게" disabled={!ready || fontSize <= 14} onClick={() => preferences.setFontSize(fontSize - 2)} type="button">A−</IconButton>
+            <IconButton variant="ghost" aria-label="A− · 글자 작게" disabled={!ready || fontSize <= 14} onClick={() => preferences.setFontSize(fontSize - 2)} type="button">A−</IconButton>
             <span className={styles.controlValue}>{fontSize}px</span>
-            <IconButton variant="ghost" aria-label="글자 크게" disabled={!ready || fontSize >= 28} onClick={() => preferences.setFontSize(fontSize + 2)} type="button">A＋</IconButton>
+            <IconButton variant="ghost" aria-label="A＋ · 글자 크게" disabled={!ready || fontSize >= 28} onClick={() => preferences.setFontSize(fontSize + 2)} type="button">A＋</IconButton>
           </div>
         </div>
         <label className={styles.controlGroup}>

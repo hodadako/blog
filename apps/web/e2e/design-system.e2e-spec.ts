@@ -67,7 +67,7 @@ test(`${theme}: shared guitar actions retain keyboard, forms, presets and search
   await plus.focus();
   await expect(plus).toHaveCSS("outline-style", "solid");
   await page.keyboard.press("Enter");
-  await expect(rail.getByRole("button", {name: "조옮김 원복 (현재 +1)", exact: true})).toBeEnabled();
+  await expect(rail.getByRole("button", {name: "+1 · 조옮김 원복", exact: true})).toBeEnabled();
   await selectControlValue(page, "카포 위치", "2");
   await rail.getByLabel("커버 이름").fill("공통 UI 검증");
   await rail.getByRole("button", {name: "현재 키·카포 저장"}).click();

@@ -76,3 +76,34 @@
 }
 
 .dropdown-indicator { color: var(--color-accent); }
+
+.dropdown-menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dropdown-menu__trigger-label {
+  white-space: nowrap;
+}
+
+.dropdown-menu__content {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: calc(var(--space-8) + var(--space-6));
+}
+
+.dropdown-menu__list {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dropdown-menu__option {
+  width: 100%;
+  justify-content: space-between;
+  text-align: left;
+}

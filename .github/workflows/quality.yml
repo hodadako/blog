@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Lint web application and Storybook
+        run: pnpm lint
+
       - name: Test application security helpers
         run: pnpm test
 
@@ -51,6 +54,15 @@ jobs:
 
       - name: Install browser test engines
         run: pnpm --filter web exec playwright install --with-deps chromium webkit
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Test Storybook interactions and accessibility
+        run: pnpm test:storybook
+
+      - name: Test Storybook native browser behavior
+        run: pnpm --filter web test:visual --grep "native dialog|header language"
 
       - name: Test Guitar browser flows
         run: pnpm --filter web test:e2e

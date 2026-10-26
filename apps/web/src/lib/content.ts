@@ -551,20 +551,20 @@ function formatArray(values: string[]): string {
     return "[]";
   }
 
-  return `[${values.map((value) => `\"${value.replace(/\"/g, '\\\"')}\"`).join(", ")}]`;
+  return `[${values.map((value) => `"${value.replace(/"/g, '\\"')}"`).join(", ")}]`;
 }
 
 export function serializeMarkdownDocument(input: LocalizedPostInput): string {
   const lines = [
     "---",
-    `title: \"${input.title.replace(/\"/g, '\\\"')}\"`,
-    `description: \"${input.description.replace(/\"/g, '\\\"')}\"`,
-    `publishedAt: \"${input.publishedAt}\"`,
-    `updatedAt: \"${input.updatedAt}\"`,
+    `title: "${input.title.replace(/"/g, '\\"')}"`,
+    `description: "${input.description.replace(/"/g, '\\"')}"`,
+    `publishedAt: "${input.publishedAt}"`,
+    `updatedAt: "${input.updatedAt}"`,
     `tags: ${formatArray(input.tags)}`,
     `draft: ${input.draft ? "true" : "false"}`,
-    `locale: \"${input.locale}\"`,
-    `slug: \"${input.slug.replace(/\"/g, '\\\"')}\"`,
+    `locale: "${input.locale}"`,
+    `slug: "${input.slug.replace(/"/g, '\\"')}"`,
     "---",
     "",
     input.body.trim(),

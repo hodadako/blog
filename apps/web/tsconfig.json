@@ -34,7 +34,11 @@
     "src/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "*.config.mts",
+    "storybook.playwright.config.ts"
   ],
   "exclude": [
     "node_modules"

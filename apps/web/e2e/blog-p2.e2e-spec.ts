@@ -47,7 +47,7 @@ test("mobile navigation: Escape restores focus, locale and theme persist", async
   await menu.focus();
   await page.keyboard.press("Enter");
   await expect(menu).toHaveAttribute("aria-expanded", "true");
-  const locale = page.locator(".locale-switcher__trigger");
+  const locale = page.locator(".locale-switcher .dropdown-trigger");
   await locale.focus();
   await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("menuitemradio").first()).toBeFocused();
@@ -151,7 +151,7 @@ for (const width of [390, 1440]) {
       await expectRunning();
       await page.goto("/ko/records");
       if (width === 390) await page.locator(".mobile-header-shell__toggle").click();
-      await page.locator(".locale-switcher__trigger").click();
+      await page.locator(".locale-switcher .dropdown-trigger").click();
       await page.getByRole("menuitemradio", {name: "English", exact: true}).click();
       await page.waitForURL("**/en/records");
       await expectRunning();

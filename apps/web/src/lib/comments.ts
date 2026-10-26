@@ -43,10 +43,6 @@ interface CommentQuizRow {
   updated_at: string;
 }
 
-interface BlacklistRow {
-  ip_hash: string;
-}
-
 function formatPasswordHash(salt: Buffer, hash: Buffer): string {
   return `scrypt$${salt.toString("hex")}$${hash.toString("hex")}`;
 }

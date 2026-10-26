@@ -15,7 +15,7 @@ export function ThemeToggle({locale = "en"}: {locale?: AppLocale}) {
     <ToggleButton
       pressed={isDark}
       size="sm"
-      aria-label={switchLabel}
+      aria-label={`${themeLabel} · ${switchLabel}`}
       className="theme-toggle__trigger"
       onClick={toggleTheme}
       title={switchLabel}

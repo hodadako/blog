@@ -12,7 +12,7 @@ interface ProjectLinkCardProps {
   titleLevel?: "h2" | "h3";
 }
 
-export function ProjectLinkCard({project, locale, copy, titleLevel = "h2"}: ProjectLinkCardProps) {
+export function ProjectLinkCard({project, locale: _locale, copy, titleLevel = "h2"}: ProjectLinkCardProps) {
   const TitleTag = titleLevel;
 
   return (

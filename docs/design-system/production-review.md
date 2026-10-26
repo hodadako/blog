@@ -1,5 +1,7 @@
 # Shared components — production consolidation
 
+> 과거 구현 기록입니다. 현재 개발·검증 절차는 [Storybook workflow](workflow.md)와 [전환 결과](storybook-migration.md)를 따릅니다. 아래 Pen 갱신·동기화 후속 작업은 필수 작업에서 제외되었으며 선택적 보관 자료 검토로만 남습니다.
+
 이 문서는 Tailwind 전환 이전의 공통화 이력이다. 현재 API/토큰/검증은 [Tailwind 통합 기록](tailwind-ui-integration.md)을 따른다.
 
 ## 기준과 범위

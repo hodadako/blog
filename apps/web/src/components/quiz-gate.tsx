@@ -1,5 +1,6 @@
 "use client";
 
+import {QuizOptions} from "@/components/quiz-options";
 import {Button, Input, Tag} from "@/components/ui";
 
 import { useEffect, useMemo, useState } from "react";
@@ -28,10 +29,6 @@ interface QuizGateProps {
 
 const QUIZ_REQUEST_TIMEOUT_MS = 8000;
 
-function createTimedSignal(timeoutMs: number): AbortSignal {
-  return AbortSignal.timeout(timeoutMs);
-}
-
 function statusMessage(error: unknown, labels: QuizGateProps["labels"], method: "quiz" | "invite"): string {
   if (error instanceof WorkerApiError && method === "quiz" && error.code === "quiz-answer-incorrect") {
     return labels.quizIncorrect;
@@ -52,7 +49,6 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
   const [authorizationToken, setAuthorizationToken] = useState("");
   const [message, setMessage] = useState(labels.loading);
   const [submitting, setSubmitting] = useState(false);
-  const [imageFailures, setImageFailures] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     let cancelled = false;
@@ -138,47 +134,7 @@ export function QuizGate({ locale, slug, onStatusChange, onAuthorizationTokenCha
             <Tag aria-label={challenge.category.name}>{challenge.category.name}</Tag>
             <p className="quiz-challenge__prompt">{challenge.question.prompt}</p>
           </div>
-          <div className={challenge.question.type === "IMAGE_MULTIPLE_CHOICE" ? "quiz-options quiz-options--image" : "quiz-options"} role="radiogroup" aria-label={labels.answer}>
-            {challenge.options.map((option, index) => {
-              const failed = imageFailures.has(option.id);
-              const optionText = option.label ?? option.text;
-              return (
-                <button
-                  aria-checked={selectedOptionId === option.id}
-                  aria-label={optionText ?? option.altText ?? `${labels.answer} ${index + 1}`}
-                  className={selectedOptionId === option.id ? "quiz-option quiz-option--selected" : "quiz-option"}
-                  key={option.id}
-                  onClick={() => setSelectedOptionId(option.id)}
-                  role="radio"
-                  tabIndex={selectedOptionId === option.id || (!selectedOptionId && index === 0) ? 0 : -1}
-                  onKeyDown={(event) => {
-                    const direction = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1
-                      : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
-                    if (!direction) return;
-                    event.preventDefault();
-                    const nextIndex = (index + direction + challenge.options.length) % challenge.options.length;
-                    setSelectedOptionId(challenge.options[nextIndex].id);
-                    event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[nextIndex]?.focus();
-                  }}
-                  type="button"
-                >
-                  {option.imageUrl && !failed ? (
-                    <img
-                      alt={option.altText ?? option.label ?? `${labels.answer} ${index + 1}`}
-                      className="quiz-option__image"
-                      loading="lazy"
-                      onError={() => setImageFailures((current) => new Set(current).add(option.id))}
-                      src={option.imageUrl}
-                    />
-                  ) : null}
-                  <span className="quiz-option__caption">
-                    <span aria-hidden="true" className="quiz-option__number">{index + 1}</span>
-                    {optionText ? <span className="quiz-option__label">{optionText}</span> : null}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <QuizOptions options={challenge.options} value={selectedOptionId} onValueChange={setSelectedOptionId} label={labels.answer} imageChoices={challenge.question.type === "IMAGE_MULTIPLE_CHOICE"} />
           <div className="button-row">
             <Button variant="secondary" disabled={!canVerify} onClick={() => void verifySelectedOption()} type="button">
               {isAuthorized ? labels.verified : labels.verify}
