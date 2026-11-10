@@ -20,7 +20,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "The production ArticleReading layout and Markdown renderer, extracted from the server route without changing markup. Server loading, translations and comments stay in the route. The reading measure is still 44rem; the opaque reading surface and typography remain unchanged.",
+          "The production ArticleReading layout and Markdown renderer, extracted from the server route without changing markup. Server loading, translations and comments stay in the route. The reading measure is still 44rem; the opaque reading surface and typography remain unchanged. Header groups use 16px spacing and embedded videos keep a direct YouTube link.",
       },
     },
   },
@@ -44,5 +44,11 @@ export const Mobile: Story = {
       value: "mobile",
       isRotated: false,
     },
+  },
+};
+
+export const EmbeddedVideo: Story = {
+  args: {
+    children: <MarkdownArticle locale="ko" content={'<iframe src="https://www.youtube-nocookie.com/embed/example" title="영상 예시"></iframe>'} />,
   },
 };

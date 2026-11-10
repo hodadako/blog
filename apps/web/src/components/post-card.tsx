@@ -22,8 +22,8 @@ export function PostCard({locale, post}: PostCardProps) {
             <h2 className="post-card__title">{post.title}</h2>
             <p className="post-card__summary">{post.description}</p>
             <div className="meta-row">
-              <span>{post.publishedAt}</span>
-              <span>·</span>
+              <time dateTime={post.publishedAt}>{post.publishedAt}</time>
+              <span aria-hidden="true">·</span>
               <span>{post.readingTime}</span>
             </div>
           </div>

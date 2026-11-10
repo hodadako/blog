@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import {TextLink} from "@/components/ui";
 import {CodeBlock} from "@/components/code-block";
 import type {AppLocale} from "@/lib/site";
 
@@ -204,17 +205,27 @@ export function MarkdownArticle({content, locale = "en"}: {content: string; loca
     <div className="detail-content markdown-body">
       {segments.map((segment, index) => {
         if (segment.type === "iframe") {
+          const videoId = new URL(segment.props.src!).pathname.slice("/embed/".length);
+          const watchUrl = `https://www.youtube.com/watch?${new URLSearchParams({v: videoId})}`;
+
           return (
-            <div className="detail-content__embed" key={`iframe-${index}`}>
-              <iframe
-                allow={segment.props.allow}
-                allowFullScreen={segment.props.allowFullScreen}
-                loading={segment.props.loading}
-                referrerPolicy={segment.props.referrerPolicy}
-                src={segment.props.src}
-                title={segment.props.title}
-              />
-            </div>
+            <figure className="detail-content__embed-figure" key={`iframe-${index}`}>
+              <div className="detail-content__embed">
+                <iframe
+                  allow={segment.props.allow}
+                  allowFullScreen={segment.props.allowFullScreen}
+                  loading={segment.props.loading}
+                  referrerPolicy={segment.props.referrerPolicy}
+                  src={segment.props.src}
+                  title={segment.props.title}
+                />
+              </div>
+              <figcaption className="detail-content__embed-caption">
+                <TextLink href={watchUrl}>
+                  {locale === "ko" ? "YouTube에서 영상 열기" : "Watch on YouTube"}
+                </TextLink>
+              </figcaption>
+            </figure>
           );
         }
 

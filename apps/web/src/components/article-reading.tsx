@@ -44,8 +44,8 @@ export function ArticleReading({
           </h1>
           <p className="article-summary">{post.description}</p>
           <div className="meta-row">
-            <span>{post.publishedAt}</span>
-            <span>·</span>
+            <time dateTime={post.publishedAt}>{post.publishedAt}</time>
+            <span aria-hidden="true">·</span>
             <span>{post.readingTime}</span>
           </div>
           <div className="tag-list">

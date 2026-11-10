@@ -14,7 +14,7 @@ export default function GuitarSongsPage() {
 
   return (
     <section className={styles.index}>
-      <h1 className="page-title">Songs</h1>
+      <h1 className="page-title">곡 목록</h1>
       <SongSearch emptyMessage="아직 등록된 곡이 없습니다." songs={songs} />
     </section>
   );

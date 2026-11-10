@@ -33,7 +33,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Production SongReader includes transpose, capo, font size, autoscroll, lyrics, presets, chord controls and song navigation. Settings remain sticky on desktop and collapsible on mobile; the 16px scroll clearance is preserved. Score notation is not restyled as generic buttons.",
+          "Production SongReader includes transpose, capo, font size, autoscroll, lyrics, presets, chord controls and song navigation. Settings remain sticky on desktop and collapsible on mobile; the 16px scroll clearance is preserved. Settings groups use 16px gaps and navigation uses Korean labels. Score notation is not restyled as generic buttons.",
       },
     },
   },

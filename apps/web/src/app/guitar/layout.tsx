@@ -24,7 +24,7 @@ export default function GuitarLayout({ children }: { children: ReactNode }) {
           </nav>
         </header>
         <main className={styles.main}>{children}</main>
-        <div className={styles.footer}><SiteFooter locale="ko" postsHref={guitarHref("/songs")} postsLabel="Songs" /></div>
+        <div className={styles.footer}><SiteFooter locale="ko" postsHref={guitarHref("/songs")} postsLabel="곡 목록" /></div>
       </div>
     </ThemeProvider>
     </SiteDocument>
