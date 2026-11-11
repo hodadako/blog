@@ -33,3 +33,9 @@ Scope is component-level: PostCard, ArticleReading/MarkdownArticle and Guitar na
 - WebKit not run: downloaded browser requires system libraries absent from this environment (`libgtk-4`, Graphene, HarfBuzz ICU, Manette, Hyphen, GLES). Neither the scoped package helper nor sudo is available. Chromium completed successfully.
 
 External YouTube playback is not claimed to work; the direct-link fallback was verified. No deployment, merge, environment configuration update or publication was performed.
+
+## CodeRabbit follow-up
+
+All seven actionable findings were verified and addressed: required final viewport/theme checks are exempt from the skill's intermediate render limit; production tokens and brand Bold weights take precedence; the glyph example supports reduced motion and live preference changes; light positive text uses a darker green; the story server confines regular files using real paths and handles malformed requests; videoseries embeds link to their original playlists. The snapshot CLI also rejects non-HTML output names and handles uppercase HTML extensions, addressing the additional filename suggestion (the originally claimed overwrite could not occur because `.live.png` was appended).
+
+Validation: web typecheck and lint passed; 59 web + 7 Worker unit tests passed, including direct video and playlist-link regressions. The story server's Node test covers encoded traversal, symlink escape, directory/missing/NUL paths, malformed encoding, valid files and the stage response. The glyph example was exercised with a mocked animation/media environment to verify static reduced-motion rendering, live toggling and cleanup. JavaScript syntax checks and invalid snapshot-output rejection passed. The production build passed with 68 generated pages.

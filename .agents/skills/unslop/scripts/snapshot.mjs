@@ -33,7 +33,7 @@ for (let i = 0; i < args.length; i++) {
 }
 const [url, out, label] = positionals;
 const scheme = args.includes("--dark") ? "dark" : args.includes("--light") ? "light" : "no-preference";
-if (!url || !out) {
+if (!url || !out || !/\.html?$/i.test(out)) {
   console.error(usage);
   process.exit(1);
 }
@@ -190,7 +190,7 @@ try {
   mkdirSync(dirname(resolve(out)), { recursive: true });
   writeFileSync(resolve(out), html);
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: resolve(out).replace(/\.html?$/, "") + ".live.png" });
+  await page.screenshot({ path: resolve(out).replace(/\.html?$/i, "") + ".live.png" });
   console.log(`saved ${resolve(out)}${label ? ` as ${label}` : ""}`);
 } finally {
   await browser.close();

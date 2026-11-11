@@ -52,7 +52,7 @@ For apps and dashboards use graphite, or a ramp just as grey, for every surface.
 
 Muted text is for meta and captions only and stays near 4.5 to 1 on its surface. Body text uses primary or secondary.
 
-Semantic colors, toned to sit inside any ramp: positive #4cc38a on dark and #16a34a on light, negative #e5484d on dark and #dc2626 on light.
+Semantic colors, toned to sit inside any ramp: positive #4cc38a on dark and #166534 for text on light surfaces (at least 4.5:1 against the listed light backgrounds), negative #e5484d on dark and #dc2626 on light.
 
 ## Accent
 

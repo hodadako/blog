@@ -72,15 +72,32 @@ function glyphs(canvas, image, { cell = 8, chars = ". :1740$%", font = "Geist Mo
   let last = 0;
   let step = 0;
   let visible = true;
-  new IntersectionObserver(([entry]) => (visible = entry.isIntersecting)).observe(canvas);
+  const observer = new IntersectionObserver(([entry]) => (visible = entry.isIntersecting));
+  observer.observe(canvas);
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const loop = (now) => {
+    if (reducedMotion.matches) return;
     frame = requestAnimationFrame(loop);
     if (!visible || now - last < 1000 / fps) return;
     last = now;
     draw(step++);
   };
-  frame = requestAnimationFrame(loop);
-  return () => cancelAnimationFrame(frame);
+  const updateMotion = () => {
+    cancelAnimationFrame(frame);
+    if (reducedMotion.matches) {
+      draw(0);
+    } else {
+      last = 0;
+      frame = requestAnimationFrame(loop);
+    }
+  };
+  reducedMotion.addEventListener("change", updateMotion);
+  updateMotion();
+  return () => {
+    cancelAnimationFrame(frame);
+    observer.disconnect();
+    reducedMotion.removeEventListener("change", updateMotion);
+  };
 }
 ```
 

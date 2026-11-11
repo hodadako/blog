@@ -10,6 +10,8 @@ metadata:
 
 # Unslop
 
+Project adaptation: repository design-system precedence and validation exceptions are documented below; original credit and license are retained.
+
 unslop was created by Damir Sokolovsky ([@heydamir](https://x.com/heydamir)), who started the Unslopping series on X. It is licensed under CC BY 4.0, so keep this credit in any copy or adaptation.
 
 Vibecoded UI fails in the same predictable ways. Every surface glows, every label has an emoji, spacing is whatever the model typed that day, and the copy shouts. Unslopping fixes the craft and keeps the product. The features, content and order of sections stay. What changes is that every size, color, word and image becomes deliberate.
@@ -47,9 +49,9 @@ Which visual styles tend to work, and which fail, is in [references/visuals.md](
 7. **Report** the direction, a few lines per pass about what changed, and any image prompt you wrote.
 8. **Record, when asked or when the user wants something to share.** Build the story file and render the video described in [Story video](#story-video). If the user asks for it at the start, write each pass into the story file as you go.
 
-Keep a run quick. Render the screen to check it at most three times. When you generate an image, start it right after the direction is confirmed and keep doing the first passes while it runs, instead of waiting for it.
+Keep a run quick. Limit quick intermediate design checks to three rendering rounds. This limit never applies to final validation: complete the required Light/Dark and 390/768/1440px checks for the changed scope, including interaction and accessibility states. When you generate an image, start it right after the direction is confirmed and keep doing the first passes while it runs, instead of waiting for it.
 
-Exact values for every pass live in [references/tokens.md](references/tokens.md).
+The values in [references/tokens.md](references/tokens.md) are optional starting points. Existing design systems take precedence: use `apps/web/src/design-system/tokens.css` and production components as the source of truth, without creating a separate palette or spacing system.
 
 ## Direction
 
@@ -115,7 +117,7 @@ If the product already has a real brand, like a logo file, a color or a typeface
 ## 5. Type
 
 - Choose type for the character in the direction, from the families in the tokens. Keep the project's font when it is part of a real brand. A default like Inter that nobody chose may be swapped when another family fits the character better. One family for the interface, plus at most one partner from any row of the tokens, a mono for figures and meta or a display face for large headlines.
-- A few sizes from a scale and two weights, 400 and 500, with 600 at most for rare emphasis. No 700 to 900 headings, no gradient text.
+- For newly introduced type, use a few sizes and restrained weights (400 and 500, with 600 for rare emphasis); avoid introducing excessive 700 to 900 headings or gradient text. Preserve existing brand faces and weights, including 경기천년제목 Light/Medium/Bold, Blog Korean Title heading weights and the Pretendard toggle.
 - Hierarchy comes from size and color, not from weight.
 - Sentence case everywhere. Labels like `NAVIGATION` or `PAID THIS MONTH` with wide tracking become `Navigation` and `Paid this month`.
 - Small text never gets negative letter spacing. Readability on small text means bigger, a bit bolder or slightly looser. Tight tracking is only for large display text.
@@ -223,7 +225,7 @@ It adds a few minutes, so make it only when the user wants it.
 - [ ] No hue gradients, gradient text, glows, colored shadows or color blobs
 - [ ] No emoji left in the interface
 - [ ] One icon set at one size and stroke
-- [ ] Type chosen for the character, weights 400 to 600, no uppercase tracked labels, no italic, no negative tracking on small text
+- [ ] Type chosen for the character, restrained new weights (400 to 600) while preserving existing brand Bold and Blog Korean Title headings, no uppercase tracked labels, no italic, no negative tracking on small text
 - [ ] No exclamation marks, no trailing periods on short strings, no greeting headline, no unverified claims
 - [ ] Numbers in one format with tabular figures
 - [ ] Nested radii add up
