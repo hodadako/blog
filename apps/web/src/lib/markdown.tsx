@@ -208,9 +208,15 @@ export function MarkdownArticle({content, locale = "en"}: {content: string; loca
           const embedUrl = new URL(segment.props.src!);
           const videoId = embedUrl.pathname.slice("/embed/".length);
           const playlistId = embedUrl.searchParams.get("list");
-          const watchUrl = videoId === "videoseries"
-            ? `https://www.youtube.com/playlist?${new URLSearchParams(playlistId ? {list: playlistId} : {})}`
-            : `https://www.youtube.com/watch?${new URLSearchParams({v: videoId})}`;
+          const isPlaylist = videoId === "videoseries";
+          const watchParams = new URLSearchParams(isPlaylist
+            ? (playlistId ? {list: playlistId} : {})
+            : {v: videoId});
+          const start = embedUrl.searchParams.get("start");
+          if (start !== null && /^\d+$/.test(start)) {
+            watchParams.set("t", start);
+          }
+          const watchUrl = `https://www.youtube.com/${isPlaylist ? "playlist" : "watch"}?${watchParams}`;
 
           return (
             <figure className="detail-content__embed-figure" key={`iframe-${index}`}>

@@ -51,7 +51,7 @@ Which visual styles tend to work, and which fail, is in [references/visuals.md](
 
 Keep a run quick. Limit quick intermediate design checks to three rendering rounds. This limit never applies to final validation: complete the required Light/Dark and 390/768/1440px checks for the changed scope, including interaction and accessibility states. When you generate an image, start it right after the direction is confirmed and keep doing the first passes while it runs, instead of waiting for it.
 
-The values in [references/tokens.md](references/tokens.md) are optional starting points. Existing design systems take precedence: use `apps/web/src/design-system/tokens.css` and production components as the source of truth, without creating a separate palette or spacing system.
+The values in [references/tokens.md](references/tokens.md) are optional starting points. Existing design systems take precedence. For work within this repository’s `apps/web`, use `apps/web/src/design-system/tokens.css` and its production components as the source of truth, without creating a separate palette or spacing system. For external sites, snapshots or other products, follow that product’s own existing design system and brand palette; do not apply the blog’s tokens or components.
 
 ## Direction
 
