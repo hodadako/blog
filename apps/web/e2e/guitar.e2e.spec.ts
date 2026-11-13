@@ -106,7 +106,7 @@ test("returns 404 for Guitar locale prefixes and internal route paths", async ({
 test("searches the catalog on the Guitar home and songs index", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/songs$/);
-  await expect(page.getByRole("heading", {name: "Songs", exact: true})).toBeVisible();
+  await expect(page.getByRole("heading", {name: "곡 목록", exact: true})).toBeVisible();
   await page.getByLabel("곡 검색").fill("Vaundy");
   await expect(page.getByRole("link", { name: "しわあわせ" })).toBeVisible();
 

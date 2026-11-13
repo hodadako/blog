@@ -205,7 +205,7 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
       </aside>
       <div className={styles.readingColumn}>
       <header className={styles.songHeader}>
-        {backHref && <TextLink className={styles.backLink} href={backHref}>Songs</TextLink>}
+        {backHref && <TextLink className={styles.backLink} href={backHref}>곡 목록</TextLink>}
         <h1 className={`article-title ${styles.songHeading}`}>{title}</h1>
         <p className={styles.artist}>{artist}</p>
         <p className={styles.sourceMeta}>기본 운지 조성 {keyName} · 원본 카포 {sourceCapo}프렛</p>

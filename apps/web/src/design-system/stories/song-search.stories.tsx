@@ -13,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Production song search, category selection, reset and whole-row links. Search is an input, category is a required selection, and a song row remains a link.",
+          "Production song search, category selection, reset and whole-row links. Search is an input, category is a required selection, and a song row remains a link. Search copy is Korean and row focus uses the shared accent.",
       },
     },
   },

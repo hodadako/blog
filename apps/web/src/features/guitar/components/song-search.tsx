@@ -31,7 +31,7 @@ export function SongSearch({ songs, emptyMessage }: SongSearchProps) {
     <>
       <form className={styles.search} onSubmit={preventSubmit} role="search">
         <label className="sr-only" htmlFor="guitar-song-query">곡 검색</label>
-        <Input className={styles.searchInput} id="guitar-song-query" onChange={(event) => setQuery(event.target.value)} placeholder="Search songs…" type="search" value={query} />
+        <Input className={styles.searchInput} id="guitar-song-query" onChange={(event) => setQuery(event.target.value)} placeholder="곡명 또는 아티스트 검색" type="search" value={query} />
         {query && <Button variant="ghost" size="sm" aria-label="검색 초기화" className={styles.searchClear} onClick={() => setQuery("")} type="button">지우기</Button>}
       </form>
       {categories.length > 0 && <SegmentedControl aria-label="곡 카테고리" className={styles.categoryFilters}

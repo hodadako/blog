@@ -13,7 +13,7 @@ test("redirects the root permanently and uses one searchable editorial index", a
   expect(response.headers().location).toBe("/songs");
   await page.goto("/");
   await expect(page).toHaveURL(/\/songs$/);
-  await expect(page.locator("h1")).toHaveText("Songs");
+  await expect(page.locator("h1")).toHaveText("곡 목록");
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://guitar.hodako.dev/songs");
   await expect(page.getByRole("button", {name: "검색", exact: true})).toHaveCount(0);
   const originalSongCount = await page.locator("main li").count();

@@ -7,7 +7,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Blog List remains the homepage. These are production PostCards with data fixtures, not a second card implementation. The current list uses flat dividers and mobile image hiding.",
+          "Blog List remains the homepage. These are production PostCards with data fixtures, not a second card implementation. The current list uses flat dividers and mobile image hiding. Title and summary are grouped with an 8px gap; compact tabular dates keep metadata secondary.",
       },
     },
   },
