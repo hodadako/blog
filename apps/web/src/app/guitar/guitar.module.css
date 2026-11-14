@@ -279,6 +279,16 @@
   line-height: var(--leading-body);
 }
 
+.pitchSummary, .dialogCopy {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.settingsFields .railReset {
+  justify-self: start;
+  margin-inline-start: calc(var(--space-3) * -1);
+}
+
 /* Preserve original rows and chord-to-character anchors. Long rows scroll
    inside the sheet rather than reflowing individual lyric segments. */
 .songSheet {
@@ -326,7 +336,9 @@
 }
 
 .lyricLine[data-has-lyrics="false"] .lyricText {
+  height: 0;
   min-height: 0;
+  overflow: hidden;
 }
 
 .lyricSegment[data-chord-kind] .chordCell {
