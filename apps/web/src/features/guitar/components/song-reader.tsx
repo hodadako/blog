@@ -152,7 +152,7 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
             <IconButton variant="ghost" aria-label="한 음 높이기" disabled={!ready || transpose >= 12} onClick={() => preferences.setTranspose(transpose + 1)} type="button">＋</IconButton>
           </div>
         </div>
-        <ToggleButton variant="ghost" size="sm" aria-label={scroll.running ? "스크롤 정지 · 자동 스크롤 일시정지" : "스크롤 시작 · 자동 스크롤 시작 / 재개"} pressed={scroll.running} disabled={!ready} onClick={scroll.toggle} type="button">
+        <ToggleButton variant="secondary" size="sm" aria-label={scroll.running ? "스크롤 정지 · 자동 스크롤 일시정지" : "스크롤 시작 · 자동 스크롤 시작 / 재개"} pressed={scroll.running} disabled={!ready} onClick={scroll.toggle} type="button">
           {scroll.running ? "스크롤 정지" : "스크롤 시작"}
         </ToggleButton>
         <label className={styles.controlGroup}>
@@ -179,9 +179,9 @@ export function SongReader({ title, artist, keyName, sourceCapo, slug, document,
           <SelectControl aria-label="자동 스크롤 속도" disabled={!ready} onValueChange={value => preferences.setScrollSpeed(Number(value))} value={String(scrollSpeed)}
             options={Array.from({length: 10}, (_, index) => ({value: String(index + 1), label: String(index + 1)}))} />
         </label>
-        <Button variant="ghost" size="sm" disabled={!ready} onClick={preferences.resetSong} type="button">곡 설정 초기화</Button>
+        <Button variant="ghost" size="sm" className={styles.railReset} disabled={!ready} onClick={preferences.resetSong} type="button">곡 설정 초기화</Button>
         <p aria-live="polite" className={styles.pitchSummary}>
-          운지 조성 {view.displayKey ?? keyName} · 실음 조성 {view.soundingKey ?? keyName} · 원본 카포 {sourceCapo}프렛 · 조옮김 {transpose > 0 ? `+${transpose}` : transpose} · 자동 스크롤 {scrollSpeed * 5}px/s
+          운지 조성 {view.displayKey ?? keyName} · 실음 조성 {view.soundingKey ?? keyName} · 원본 카포 {sourceCapo}프렛 · 조옮김 {transpose > 0 ? `+${transpose}` : transpose} · 자동 스크롤 속도 {scrollSpeed}
         </p>
         <section className={styles.presetSection} aria-label="내 커버 프리셋">
           <h3>내 커버 프리셋</h3>

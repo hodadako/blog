@@ -41,3 +41,18 @@ All seven actionable findings were verified and addressed: required final viewpo
 Validation: web typecheck and lint passed; 59 web + 7 Worker unit tests passed, including direct video and playlist-link regressions. The story server's Node test covers encoded traversal, symlink escape, directory/missing/NUL paths, malformed encoding, valid files and the stage response. The glyph example was exercised with a mocked animation/media environment to verify static reduced-motion rendering, live toggling and cleanup. JavaScript syntax checks and invalid snapshot-output rejection passed. The production build passed with 68 generated pages.
 
 The subsequent two findings are also addressed: the blog-token instructions now apply only to this repository's `apps/web`; external products retain their own design system. Direct YouTube links preserve a valid embedded `start` value as `t`, including zero, while missing or invalid values retain the untimed link. Web unit coverage now includes both timed and untimed links: 64 tests passed, along with typecheck and lint.
+
+## Re-audit (2026-11-14)
+
+A second polish pass over the same Blog and Guitar screens, with the direction unchanged. The audit found no color, type, icon or motion signs; the remaining items were spacing and alignment.
+
+1. Header: the wordmark and navigation now share the content column on desktop. `.site-header__inner` no longer applies the container inset a second time inside `MobileHeaderShell`.
+2. Blog footer: on short pages the footer sits at the bottom of the viewport, as it already does on Guitar. The gap above it is the page's own bottom padding only, so the last post rule and the footer rule no longer frame an empty band.
+3. PostCard with thumbnail: title, date and tags keep the plain card's 12px rhythm; the thumbnail spans the row and is centered against the text. Markup is unchanged.
+4. Guitar settings: the autoscroll toggle uses the existing `secondary` variant; reset stays `ghost` and aligns with the label column. The summary reports the scroll speed in the same unit as its select. Helper and summary copy break between words.
+5. Guitar score: chord-only rows no longer reserve an empty lyric row. Segment widths, chord spacing and source anchors are unchanged.
+6. Parser: `parseChordPro` returns plain metadata without the non-enumerable capo marker, which removes the Server-to-Client serialization error on song pages.
+
+Scope is Global for the header and shell layout rules (Blog, Records, Admin share `SiteShell`), Component for PostCard and the Guitar reader.
+
+Validation: web typecheck, lint and 64 unit tests passed; production build passed; Storybook interaction/a11y 65 passed; Chromium e2e passed for Guitar (22), Blog P2 (18), locale (4) and design-system/dropdown (18). Real Blog and Guitar pages were inspected at 390px Dark, 768px Light and 1440px Light/Dark with no horizontal overflow; Records was checked for overflow at the same widths. The remaining theme/width combinations and Admin were not inspected. `test:visual` fails on `patterns-article--reading` with and without these changes (image 11px taller than the macOS baseline), so the Guitar controls baseline was not reached; baselines were not updated. WebKit was not run.

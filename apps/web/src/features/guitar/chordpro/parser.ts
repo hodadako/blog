@@ -275,7 +275,8 @@ export function parseChordPro(source: string): ChordProDocument {
   }
   if (!metadata.added) diagnostic(diagnostics, "warning", "missing-added", "added 날짜가 없어 목록에서 날짜 지정 곡 뒤에 표시됩니다.", range(1, 1, 1));
 
-  return { metadata, lines, diagnostics };
+  // Drop the non-enumerable capo marker so the document stays a plain object for Client Components.
+  return { metadata: { ...metadata }, lines, diagnostics };
 }
 
 export function hasPublishErrors(document: ChordProDocument): boolean {

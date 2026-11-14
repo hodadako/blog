@@ -103,6 +103,8 @@
 
 .site-shell__chrome {
   --site-header-layer: 10;
+  display: flex;
+  flex-direction: column;
   position: relative;
   z-index: 1;
   min-height: 100vh;
@@ -123,9 +125,22 @@
 }
 
 .site-shell__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   width: 100%;
   margin: 0 auto;
   padding-bottom: var(--space-6);
+}
+
+.site-shell__content > main:has(> .publication-footer) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.site-shell__content > main > .publication-footer {
+  margin-top: auto;
 }
 
 .site-shell__sky,
@@ -315,6 +330,10 @@
   align-items: end;
   gap: var(--space-5);
   padding: var(--space-4) 0;
+}
+
+.mobile-header-shell .site-header__inner {
+  width: 100%;
 }
 
 .brand-lockup,
@@ -1490,8 +1509,32 @@ html[data-records-direction]::view-transition-new(record-label) {
   gap: var(--space-3);
 }
 
+/* The thumbnail spans flexible outer rows so title, date and tags keep the plain card's rhythm. */
+.post-card--with-icon .post-card__surface {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: 1fr auto auto 1fr;
+  row-gap: 0;
+}
+
 .post-card--with-icon .post-card__lead {
-  align-items: center;
+  display: contents;
+}
+
+.post-card--with-icon .post-card__content {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.post-card--with-icon .post-card__icon-frame {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
+}
+
+.post-card--with-icon .post-card__aside {
+  grid-column: 1;
+  grid-row: 3;
+  margin-top: var(--post-gap);
 }
 
 .post-card--with-icon .post-card__content {
@@ -2284,7 +2327,7 @@ html[data-records-direction]::view-transition-new(record-label) {
     padding-top: var(--space-4);
   }
 
-  .blog-index-page .post-card__lead--with-icon {
+  .blog-index-page .post-card--with-icon .post-card__surface {
     grid-template-columns: minmax(0, 1fr);
   }
 
